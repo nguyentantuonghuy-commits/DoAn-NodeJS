@@ -1,0 +1,136 @@
+extends ../../layouts/main
+
+block content
+  .admin-layout
+    //- Admin Sidebar
+    aside.admin-sidebar
+      .admin-nav
+        a(href="/admin")
+          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+          | Bảng Điều Khiển
+        a.active(href="/admin/products")
+          i(data-lucide="package", style="width: 18px; height: 18px;")
+          | Quản Lý Sản Phẩm
+        a(href="/admin/categories")
+          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+          | Quản Lý Danh Mục
+        a(href="/admin/orders")
+          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+          | Quản Lý Đơn Hàng
+        a(href="/admin/users")
+          i(data-lucide="users", style="width: 18px; height: 18px;")
+          | Quản Lý Người Dùng
+        hr(style="border-color: #1F242C; margin: 16px 0;")
+        a(href="/")
+          i(data-lucide="external-link", style="width: 18px; height: 18px;")
+          | Xem Website
+        a(href="/logout", style="color: var(--accent-coral);")
+          i(data-lucide="log-out", style="width: 18px; height: 18px;")
+          | Đăng Xuất
+
+    //- Main Content
+    main.admin-content
+      .admin-header(style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;")
+        div
+          h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;") Quản Lý Sản Phẩm Phụ Kiện
+          p(style="color: var(--text-muted); font-size: 0.9375rem;") Xem, thêm mới, cập nhật giá và tồn kho sản phẩm.
+        a.btn.btn-primary(href="/admin/products/new")
+          i(data-lucide="plus", style="width: 18px; height: 18px;")
+          | Thêm Sản Phẩm Mới
+
+      //- Filter Bar
+      .admin-card(style="padding: 16px 20px; margin-bottom: 24px;")
+        form(action="/admin/products", method="GET", style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;")
+          input.form-control(
+            type="text",
+            name="search",
+            placeholder="Tìm theo tên sản phẩm...",
+            value=(query && query.search ? query.search : ''),
+            style="max-width: 280px;"
+          )
+          select.form-control(name="category", style="max-width: 220px;")
+            option(value="") Tất cả danh mục
+            each cat in categories
+              option(value=cat.slug, selected=(query && query.category === cat.slug))= cat.name
+          button.btn.btn-secondary(type="submit") Lọc Dữ Liệu
+          if query && (query.search || query.category)
+            a.btn.btn-sm(href="/admin/products", style="color: var(--text-muted);") Xóa lọc
+
+      //- Products Table
+      .admin-card
+        .table-responsive
+          table.data-table
+            thead
+              tr
+                th Hình Ảnh
+                th Tên Sản Phẩm
+                th Danh Mục
+                th Giá Bán
+                th Tồn Kho
+                th Đã Bán
+                th Đánh Giá
+                th Thao Tác
+            tbody
+              if products && products.length
+                each p in products
+                  tr
+                    td
+                      img(src=p.images[0], alt=p.name, style="width: 50px; height: 60px; object-fit: cover; border-radius: 4px; background: var(--bg-tertiary);")
+                    td
+                      strong: a(href=`/product/${p.slug}`, target="_blank", style="color: var(--text-main);")= p.name
+                      div(style="font-size: 0.75rem; color: var(--text-muted);")= `SKU: ${p.id}`
+                    td= p.categoryName || 'Phụ kiện'
+                    td
+                      strong= new Intl.NumberFormat('vi-VN').format(p.price) + 'đ'
+                      if p.originalPrice > p.price
+                        div(style="font-size: 0.75rem; color: var(--text-light); text-decoration: line-through;")
+                          = new Intl.NumberFormat('vi-VN').format(p.originalPrice) + 'đ'
+                    td
+                      if p.stock <= 5
+                        span.badge.badge-soft-red= `${p.stock} cái`
+                      else
+                        span= `${p.stock} cái`
+                    td= p.soldCount
+                    td
+                      span(style="color: #F59E0B; font-weight: 700;")= `★ ${p.rating}`
+                    td
+                      div(style="display: flex; gap: 8px;")
+                        a.btn.btn-sm.btn-secondary(href=`/admin/products/edit/${p.id}`, title="Chỉnh sửa")
+                          i(data-lucide="edit", style="width: 14px; height: 14px;")
+                          | Sửa
+                        button.btn.btn-sm(
+                          type="button",
+                          style="background: #FEE2E2; color: #991B1B;",
+                          onclick=`deleteProduct('${p.id}', '${p.name}')`,
+                          title="Xóa sản phẩm"
+                        )
+                          i(data-lucide="trash-2", style="width: 14px; height: 14px;")
+                          | Xóa
+              else
+                tr
+                  td(colspan="8", style="text-align: center; color: var(--text-muted); padding: 40px;") Không tìm thấy sản phẩm nào.
+
+        //- Pagination
+        include ../../partials/pagination
+
+  script.
+    async function deleteProduct(id, name) {
+      if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${name}" không? Thao tác này không thể hoàn tác.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/products/${id}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Xóa sản phẩm thành công!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi khi xóa sản phẩm', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }

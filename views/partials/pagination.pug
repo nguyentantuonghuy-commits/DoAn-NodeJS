@@ -1,0 +1,32 @@
+//- Reusable SSR Pagination Component
+if pagination && pagination.totalPages > 1
+  nav.pagination(aria-label="Phân trang")
+    //- Helper function to build page link with preserved query params
+    - 
+      function getPageUrl(pageNum) {
+        const params = new URLSearchParams();
+        if (query) {
+          Object.keys(query).forEach(key => {
+            if (key !== 'page') params.set(key, query[key]);
+          });
+        }
+        params.set('page', pageNum);
+        return '?' + params.toString();
+      }
+
+    //- Previous Button
+    if pagination.page > 1
+      a.page-item(href=getPageUrl(pagination.page - 1), title="Trang trước")
+        i(data-lucide="chevron-left", style="width: 18px; height: 18px;")
+
+    //- Page Numbers
+    - for (let p = 1; p <= pagination.totalPages; p++)
+      if p === pagination.page
+        span.page-item.active= p
+      else
+        a.page-item(href=getPageUrl(p))= p
+
+    //- Next Button
+    if pagination.page < pagination.totalPages
+      a.page-item(href=getPageUrl(pagination.page + 1), title="Trang tiếp theo")
+        i(data-lucide="chevron-right", style="width: 18px; height: 18px;")

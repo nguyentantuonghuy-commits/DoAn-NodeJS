@@ -1,0 +1,66 @@
+//- Reusable Product Card Component
+.product-card(
+  data-id=product.id,
+  data-name=product.name,
+  data-price=product.price,
+  data-image=product.images[0],
+  data-color=(product.colors && product.colors.length ? product.colors[0].name : 'Tiêu chuẩn')
+)
+  //- Thumbnail with dual-image hover effect
+  .product-thumb
+    a(href=`/product/${product.slug}`)
+      img.primary-img(src=product.images[0], alt=product.name, loading="lazy")
+      if product.images[1]
+        img.hover-img(src=product.images[1], alt=product.name, loading="lazy")
+      else
+        img.hover-img(src=product.images[0], alt=product.name, loading="lazy")
+
+    //- Status Badges
+    .product-badges
+      if product.isSale
+        span.badge.badge-sale= `-${product.discount}%`
+      if product.isFeatured
+        span.badge.badge-hot HOT
+      if product.stock <= 5 && product.stock > 0
+        span.badge(style="background: #FEF3C7; color: #92400E;") SẮP HẾT
+
+    //- Quick Action Buttons on Hover
+    .product-actions
+      a.quick-view-btn(href=`/product/${product.slug}`, title="Xem chi tiết")
+        i(data-lucide="eye", style="width: 14px; height: 14px;")
+        | Xem
+      button.quick-add-btn(type="button", title="Thêm nhanh vào giỏ")
+        i(data-lucide="plus", style="width: 14px; height: 14px;")
+        | Thêm giỏ
+
+  //- Color Swatches
+  if product.colors && product.colors.length > 1
+    .color-swatches
+      each color, idx in product.colors
+        span.swatch-dot(
+          class=(idx === 0 ? 'active' : ''),
+          style=`background-color: ${color.hex};`,
+          title=color.name,
+          data-img=color.image
+        )
+
+  //- Category & Title
+  .product-category= product.categoryName || 'Phụ kiện'
+  a(href=`/product/${product.slug}`)
+    h3.product-title= product.name
+
+  //- Price Row
+  .product-price-row
+    span.current-price= new Intl.NumberFormat('vi-VN').format(product.price) + 'đ'
+    if product.originalPrice > product.price
+      span.original-price= new Intl.NumberFormat('vi-VN').format(product.originalPrice) + 'đ'
+      span.discount-rate= `-${product.discount}%`
+
+  //- Sold Count Progress for Flash Sale items
+  if product.isSale
+    .sales-progress
+      .progress-track
+        .progress-fill(style=`width: ${Math.min(95, Math.floor((product.soldCount / (product.soldCount + product.stock)) * 100))}%`)
+      .progress-label
+        span= `Đã bán ${product.soldCount}`
+        span(style="color: var(--accent-coral); font-weight: 700;") Sắp hết hàng

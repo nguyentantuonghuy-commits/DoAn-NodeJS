@@ -1,0 +1,155 @@
+extends ../../layouts/main
+
+block content
+  .admin-layout
+    //- Admin Sidebar
+    aside.admin-sidebar
+      .admin-nav
+        a(href="/admin")
+          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+          | Bảng Điều Khiển
+        a(href="/admin/products")
+          i(data-lucide="package", style="width: 18px; height: 18px;")
+          | Quản Lý Sản Phẩm
+        a(href="/admin/categories")
+          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+          | Quản Lý Danh Mục
+        a.active(href="/admin/orders")
+          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+          | Quản Lý Đơn Hàng
+        a(href="/admin/users")
+          i(data-lucide="users", style="width: 18px; height: 18px;")
+          | Quản Lý Người Dùng
+        hr(style="border-color: #1F242C; margin: 16px 0;")
+        a(href="/")
+          i(data-lucide="external-link", style="width: 18px; height: 18px;")
+          | Xem Website
+
+    //- Main Content
+    main.admin-content
+      .admin-header(style="margin-bottom: 24px;")
+        h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;") Quản Lý Đơn Hàng &amp; Vận Chuyển
+        p(style="color: var(--text-muted); font-size: 0.9375rem;") Cập nhật tiến độ xử lý đơn hàng: Xác nhận, Vận chuyển, Hoàn thành hoặc Hủy đơn.
+
+      .admin-card
+        .table-responsive
+          table.data-table
+            thead
+              tr
+                th Mã Đơn Hàng
+                th Khách Hàng
+                th Địa Chỉ Giao Hàng
+                th Sản Phẩm
+                th Tổng Tiền
+                th Trạng Thái
+                th Cập Nhật Tiến Độ
+            tbody
+              if orders && orders.length
+                each ord in orders
+                  tr
+                    td
+                      strong= ord.orderCode
+                      div(style="font-size: 0.75rem; color: var(--text-muted);")= new Date(ord.createdAt).toLocaleDateString('vi-VN')
+                    td
+                      strong= ord.customerName
+                      div(style="font-size: 0.75rem; color: var(--text-muted);")= ord.customerPhone
+                    td(style="max-width: 200px; font-size: 0.8125rem;")= ord.shippingAddress
+                    td
+                      if ord.items
+                        div(style="font-size: 0.8125rem;")
+                          each item in ord.items
+                            div= `• ${item.productName} (${item.color}) x${item.quantity}`
+                    td
+                      strong(style="color: var(--accent-coral);")= new Intl.NumberFormat('vi-VN').format(ord.totalAmount) + 'đ'
+                    td
+                      if ord.orderStatus === 'pending'
+                        span.badge.badge-soft-amber Chờ xác nhận
+                      else if ord.orderStatus === 'confirmed'
+                        span.badge.badge-soft-blue Đã xác nhận
+                      else if ord.orderStatus === 'shipping'
+                        span.badge.badge-soft-blue Đang vận chuyển
+                      else if ord.orderStatus === 'completed'
+                        span.badge.badge-soft-green Hoàn thành
+                      else if ord.orderStatus === 'cancelled'
+                        span.badge.badge-soft-red Đã hủy
+                    td
+                      div(style="display: flex; gap: 6px; flex-wrap: wrap;")
+                        if ord.orderStatus === 'pending'
+                          button.btn.btn-sm.btn-primary(
+                            type="button",
+                            onclick=`confirmOrder('${ord.id}')`,
+                            title="Xác nhận đơn hàng"
+                          ) Xác nhận
+                          button.btn.btn-sm(
+                            type="button",
+                            style="background: #FEE2E2; color: #991B1B;",
+                            onclick=`cancelOrder('${ord.id}')`
+                          ) Hủy
+                        else if ord.orderStatus === 'confirmed'
+                          button.btn.btn-sm(
+                            type="button",
+                            style="background: #DBEAFE; color: #1E40AF; font-weight: 700;",
+                            onclick=`updateStatus('${ord.id}', 'shipping')`
+                          ) Giao hàng
+                        else if ord.orderStatus === 'shipping'
+                          button.btn.btn-sm(
+                            type="button",
+                            style="background: #D1FAE5; color: #065F46; font-weight: 700;",
+                            onclick=`updateStatus('${ord.id}', 'completed')`
+                          ) Hoàn tất
+                        else
+                          span(style="font-size: 0.75rem; color: var(--text-muted);") Đã đóng
+              else
+                tr
+                  td(colspan="7", style="text-align: center; color: var(--text-muted); padding: 40px;") Chưa có đơn hàng nào trong hệ thống.
+
+  script.
+    async function confirmOrder(id) {
+      try {
+        const res = await fetch(`/api/orders/${id}/confirm`, { method: 'PATCH' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đã xác nhận đơn hàng thành công!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi khi xác nhận đơn', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }
+
+    async function updateStatus(id, status) {
+      try {
+        const res = await fetch(`/api/orders/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Cập nhật trạng thái sang "${status}" thành công!`, 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi cập nhật trạng thái', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }
+
+    async function cancelOrder(id) {
+      if (!confirm('Bạn có chắc muốn hủy đơn hàng này không?')) return;
+      try {
+        const res = await fetch(`/api/orders/${id}/cancel`, { method: 'PATCH' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đã hủy đơn hàng!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi khi hủy đơn', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }

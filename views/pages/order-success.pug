@@ -1,0 +1,33 @@
+extends ../layouts/main
+
+block content
+  .container(style="padding: 60px 24px; text-align: center; max-width: 680px;")
+    .success-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 50px 40px; box-shadow: var(--shadow-md);")
+      .success-icon(style="width: 72px; height: 72px; background: #D1FAE5; color: var(--accent-emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;")
+        i(data-lucide="check-circle-2", style="width: 44px; height: 44px;")
+
+      h1(style="font-size: 2rem; font-weight: 800; margin-bottom: 12px;") Đặt Hàng Thành Công!
+      p(style="color: var(--text-muted); font-size: 1rem; margin-bottom: 24px;")
+        | Cảm ơn bạn đã tin tưởng và lựa chọn Atelier Accessories. Đơn hàng của bạn đã được ghi nhận vào hệ thống và đang được chuẩn bị để đóng gói.
+
+      if order
+        .order-meta-box(style="background: var(--bg-secondary); border-radius: var(--radius-md); padding: 20px; margin-bottom: 30px; text-align: left;")
+          .meta-row(style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9375rem;")
+            span(style="color: var(--text-muted);") Mã Đơn Hàng:
+            strong(style="color: var(--text-main); font-size: 1.0625rem;")= order.orderCode
+          .meta-row(style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9375rem;")
+            span(style="color: var(--text-muted);") Người nhận:
+            span= order.customerName
+          .meta-row(style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9375rem;")
+            span(style="color: var(--text-muted);") Số điện thoại:
+            span= order.customerPhone
+          .meta-row(style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9375rem;")
+            span(style="color: var(--text-muted);") Địa chỉ giao:
+            span= order.shippingAddress
+          .meta-row(style="display: flex; justify-content: space-between; font-size: 0.9375rem; border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-top: 10px;")
+            span(style="color: var(--text-muted);") Tổng thanh toán:
+            strong(style="color: var(--accent-coral); font-size: 1.125rem;")= new Intl.NumberFormat('vi-VN').format(order.totalAmount) + 'đ'
+
+      .actions-row(style="display: flex; gap: 14px; justify-content: center;")
+        a.btn.btn-primary(href="/shop") Tiếp Tục Mua Sắm
+        a.btn.btn-secondary(href="/profile") Quản Lý Đơn Hàng

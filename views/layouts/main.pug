@@ -1,0 +1,159 @@
+doctype html
+html(lang="vi")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= title || "Atelier Accessories | Phụ Kiện Thời Trang Cao Cấp"
+    meta(name="description", content="Thương hiệu phụ kiện thời trang nam nữ đương đại: Thắt lưng da bò, Ví da thủ công, Mũ nón streetwear, Kính mát thời trang, Trang sức titan chống gỉ.")
+    
+    // Fonts & Stylesheet
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(rel="stylesheet", href="/css/style.css")
+    
+    // Lucide Icons
+    script(src="https://unpkg.com/lucide@latest")
+
+  body
+    // 1. Top Announcement Bar (Coolmate / ACFC Style)
+    .announcement-bar
+      .announcement-ticker
+        span
+          span.badge-pill DEAL HỜI
+          | MIỄN PHÍ VẬN CHUYỂN CHO MỌI ĐƠN HÀNG TỪ 299.000Đ
+        span •
+        span
+          span.badge-pill CAM KẾT
+          | 100% DA THẬT &amp; THÉP TITAN 316L KHÔNG GỈ
+        span •
+        span
+          span.badge-pill YÊN TÂM
+          | ĐỔI TRẢ 30 NGÀY TẬN NƠI MIỄN PHÍ
+
+    // 2. Master Header & Navigation
+    header.site-header
+      .container.header-inner
+        // Brand Logo
+        a.brand-logo(href="/")
+          span.logo-main ATELIER
+          span.logo-sub ACCESSORIES
+
+        // Navigation Menu
+        nav.main-nav
+          a.nav-link(href="/", class=(currentPath === '/' ? 'active' : '')) Trang Chủ
+          a.nav-link(href="/shop", class=(currentPath === '/shop' ? 'active' : '')) Cửa Hàng
+          a.nav-link(href="/shop?category=that-lung-da") Thắt Lưng
+          a.nav-link(href="/shop?category=vi-da") Ví Da
+          a.nav-link(href="/shop?category=mu-non") Mũ Nón
+          a.nav-link(href="/shop?category=kinh-mat") Kính Mát
+          a.nav-link(href="/shop?category=trang-suc-titan") Trang Sức
+          a.nav-link.sale-tag(href="/shop?isSale=true") Flash Sale -50%
+
+        // Header Actions (Search, Wishlist, Cart, User)
+        .header-actions
+          form.header-search(action="/shop", method="GET")
+            span.search-icon
+              i(data-lucide="search", style="width: 16px; height: 16px;")
+            input(type="text", name="search", placeholder="Tìm phụ kiện, thắt lưng, ví...", value=(query && query.search ? query.search : ''))
+
+          // Cart Button
+          a.action-btn(href="/cart", title="Giỏ hàng")
+            i(data-lucide="shopping-bag", style="width: 20px; height: 20px;")
+            span.badge-count.accent.cart-count-badge(style="display: none;") 0
+
+          // User Menu
+          if currentUser
+            .user-menu-wrapper
+              button.action-btn(type="button", title="Tài khoản")
+                img(src=currentUser.avatar, alt=currentUser.name, style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;")
+              .user-dropdown
+                .user-dropdown-header
+                  .user-name= currentUser.name
+                  .user-role= currentUser.role === 'admin' ? 'Quản Trị Viên (Admin)' : 'Khách Hàng Thân Thiết'
+                if currentUser.role === 'admin'
+                  a(href="/admin")
+                    i(data-lucide="layout-dashboard", style="width: 16px; height: 16px;")
+                    | Trang Quản Trị (Admin)
+                  a(href="/admin/products")
+                    i(data-lucide="package", style="width: 16px; height: 16px;")
+                    | Quản Lý Sản Phẩm
+                a(href="/profile")
+                  i(data-lucide="user", style="width: 16px; height: 16px;")
+                  | Hồ Sơ &amp; Đơn Hàng
+                a(href="/logout", style="color: var(--accent-coral);")
+                  i(data-lucide="log-out", style="width: 16px; height: 16px;")
+                  | Đăng Xuất
+          else
+            a.btn.btn-sm.btn-primary(href="/login") Đăng Nhập
+
+    // Main Page Content Injection
+    main
+      block content
+
+    // 3. Mega Footer (Comprehensive 4 Columns)
+    footer.site-footer
+      .container
+        .footer-grid
+          // Col 1: Brand Info
+          .footer-col
+            a.brand-logo(href="/", style="margin-bottom: 16px;")
+              span.logo-main(style="color: #FFF;") ATELIER
+              span.logo-sub ACCESSORIES
+            p(style="margin-bottom: 20px; line-height: 1.7;")
+              | Thương hiệu phụ kiện thời trang phong cách đương đại hàng đầu Việt Nam. Chúng tôi tỉ mỉ trong từng đường kim mũi chỉ, mang đến trải nghiệm thời trang tinh tế và tự tin cho thế hệ mới.
+            p(style="font-size: 0.8125rem; color: #6B7280;")
+              | Hotline: 
+              strong(style="color: #FFF;") 1900 8888 (8:00 - 22:00)
+              br
+              | Email: support@atelier.vn
+
+          // Col 2: Categories
+          .footer-col
+            h4 DANH MỤC SẢN PHẨM
+            ul
+              li: a(href="/shop?category=that-lung-da") Thắt Lưng Da Bò Ý
+              li: a(href="/shop?category=vi-da") Ví Da Bifold &amp; Cardholder
+              li: a(href="/shop?category=mu-non") Mũ Nón Snapback &amp; Bucket
+              li: a(href="/shop?category=kinh-mat") Kính Mát Phi Công UV400
+              li: a(href="/shop?category=trang-suc-titan") Trang Sức Titan 316L
+              li: a(href="/shop?category=tui-balo") Túi Đeo Chéo Crossbody
+
+          // Col 3: Customer Care (Coolmate Policies)
+          .footer-col
+            h4 CHĂM SÓC KHÁCH HÀNG
+            ul
+              li: a(href="/profile") Tra cứu tình trạng đơn hàng
+              li: a(href="#") Chính sách đổi trả 30 ngày
+              li: a(href="#") Chính sách bảo hành trọn đời phụ kiện
+              li: a(href="#") Hướng dẫn đo size thắt lưng &amp; nón
+              li: a(href="#") Quy chuẩn bảo quản da &amp; titan
+
+          // Col 4: Store Locations & Certification
+          .footer-col
+            h4 HỆ THỐNG CỬA HÀNG
+            ul
+              li
+                strong(style="color: #FFF;") Flagship Store Q1:
+                br
+                | 128 Nguyễn Trãi, P. Bến Thành, Quận 1, TP.HCM
+              li
+                strong(style="color: #FFF;") Store Hoàn Kiếm:
+                br
+                | 45 Phố Tràng Tiền, Hoàn Kiếm, Hà Nội
+            .payment-badges(style="margin-top: 24px;")
+              span.payment-pill COD
+              span.payment-pill VNPAY
+              span.payment-pill MOMO
+              span.payment-pill VISA/MASTER
+
+        .footer-bottom
+          p &copy; 2026 ATELIER ACCESSORIES. All rights reserved. Đồ án Web Backend Node.js &amp; Server-side Rendering Pug.
+          p(style="font-size: 0.8125rem; color: #6B7280;") Thiết kế giao diện lấy cảm hứng từ YaMe, Coolmate, Real Clothes &amp; ACFC.
+
+    // Global Toast Container
+    .toast-container
+
+    // Client Scripts
+    script(src="/js/main.js")
+    script.
+      lucide.createIcons();

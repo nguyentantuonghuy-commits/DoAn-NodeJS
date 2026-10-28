@@ -1,0 +1,18 @@
+extends ../layouts/main
+
+block content
+  .container(style="padding: 100px 24px; text-align: center; max-width: 600px;")
+    .error-number(style="font-size: 7rem; font-weight: 800; line-height: 1; letter-spacing: -3px; color: var(--text-main); margin-bottom: 16px;")
+      | 404
+    h1(style="font-size: 1.75rem; font-weight: 800; margin-bottom: 12px;")
+      = message || 'Trang Bạn Tìm Kiếm Không Tồn Tại'
+    p(style="color: var(--text-muted); font-size: 1rem; margin-bottom: 32px; line-height: 1.6;")
+      | Có thể đường dẫn đã bị thay đổi, sản phẩm phụ kiện đã hết hàng hoặc bạn vừa nhập sai địa chỉ URL. Hãy khám phá các phụ kiện nổi bật khác nhé!
+    
+    .error-actions(style="display: flex; gap: 14px; justify-content: center;")
+      a.btn.btn-lg.btn-primary(href="/")
+        i(data-lucide="home", style="width: 18px; height: 18px;")
+        | Về Trang Chủ
+      a.btn.btn-lg.btn-secondary(href="/shop")
+        i(data-lucide="shopping-bag", style="width: 18px; height: 18px;")
+        | Xem Cửa Hàng Phụ Kiện

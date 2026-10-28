@@ -1,0 +1,86 @@
+extends ../../layouts/main
+
+block content
+  .auth-wrapper
+    //- Visual Side
+    .auth-visual
+      img(src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80", alt="Atelier Fashion Register")
+      .auth-visual-content
+        span(style="color: var(--accent-gold); font-size: 0.8125rem; font-weight: 700; letter-spacing: 2px;") ATELIER PRIVILEGE
+        h2 Trở Thành Thành Viên Thân Thiết.
+        p(style="color: #E5E7EB; max-width: 440px; line-height: 1.6;")
+          | Tận hưởng voucher 100.000đ, miễn phí vận chuyển trọn đời cho mọi đơn hàng phụ kiện và quyền mua trước các phiên bản giới hạn.
+
+    //- Form Side
+    .auth-form-container
+      .auth-card
+        h1 Tạo Tài Khoản
+        p.auth-sub Điền thông tin để bắt đầu trải nghiệm mua sắm phụ kiện cao cấp.
+
+        if errorMessage
+          .toast.toast-error(style="position: static; transform: none; margin-bottom: 20px; width: 100%;")
+            span.toast-icon ✕
+            span.toast-message= errorMessage
+
+        form#register-form(onsubmit="handleRegister(event)")
+          .form-group
+            label.form-label Họ và tên *
+            input#reg-name.form-control(type="text", name="name", placeholder="Ví dụ: Nguyễn Hoàng Nam", required)
+
+          .form-group
+            label.form-label Địa chỉ email *
+            input#reg-email.form-control(type="email", name="email", placeholder="email@example.com", required)
+
+          .form-row(style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;")
+            .form-group
+              label.form-label Số điện thoại
+              input#reg-phone.form-control(type="tel", name="phone", placeholder="0901234567")
+            .form-group
+              label.form-label Mật khẩu (từ 6 ký tự) *
+              input#reg-password.form-control(type="password", name="password", placeholder="Tối thiểu 6 ký tự", required)
+
+          .form-group
+            label.form-label Địa chỉ nhận hàng mặc định
+            input#reg-address.form-control(type="text", name="address", placeholder="Địa chỉ giao hàng của bạn...")
+
+          button#reg-btn.btn.btn-primary.btn-full.btn-lg(type="submit", style="margin-top: 10px;")
+            | Đăng Ký Tài Khoản
+
+        p(style="margin-top: 24px; text-align: center; font-size: 0.875rem; color: var(--text-muted);")
+          | Bạn đã có tài khoản? 
+          a(href="/login", style="color: var(--text-main); font-weight: 700; text-decoration: underline;") Đăng nhập ngay
+
+  script.
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const address = document.getElementById('reg-address').value.trim();
+
+      const btn = document.getElementById('reg-btn');
+      btn.disabled = true;
+      btn.textContent = 'Đang tạo tài khoản...';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, password, address })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đăng ký tài khoản thành công!', 'success');
+          setTimeout(() => { window.location.href = '/profile'; }, 500);
+        } else {
+          showToast(data.message || 'Lỗi khi đăng ký', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Đăng Ký Tài Khoản';
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Đăng Ký Tài Khoản';
+      }
+    }

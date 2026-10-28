@@ -1,0 +1,233 @@
+extends ../../layouts/main
+
+block content
+  .admin-layout
+    //- Admin Sidebar
+    aside.admin-sidebar
+      .admin-nav
+        a(href="/admin")
+          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+          | Bảng Điều Khiển
+        a.active(href="/admin/products")
+          i(data-lucide="package", style="width: 18px; height: 18px;")
+          | Quản Lý Sản Phẩm
+        a(href="/admin/categories")
+          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+          | Quản Lý Danh Mục
+        a(href="/admin/orders")
+          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+          | Quản Lý Đơn Hàng
+        a(href="/admin/users")
+          i(data-lucide="users", style="width: 18px; height: 18px;")
+          | Quản Lý Người Dùng
+        hr(style="border-color: #1F242C; margin: 16px 0;")
+        a(href="/")
+          i(data-lucide="external-link", style="width: 18px; height: 18px;")
+          | Xem Website
+
+    //- Main Content Form
+    main.admin-content
+      .admin-header(style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;")
+        div
+          h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;")
+            = isEdit ? `Chỉnh Sửa Sản Phẩm: ${product.name}` : 'Thêm Sản Phẩm Phụ Kiện Mới'
+          p(style="color: var(--text-muted); font-size: 0.9375rem;")
+            = isEdit ? 'Cập nhật giá bán, số lượng tồn kho và thông tin chi tiết.' : 'Tạo mới sản phẩm phụ kiện vào hệ thống.'
+        a.btn.btn-secondary(href="/admin/products")
+          i(data-lucide="arrow-left", style="width: 16px; height: 16px;")
+          | Quay Lại Danh Sách
+
+      .admin-card(style="max-width: 900px;")
+        form#product-form(onsubmit="handleProductSubmit(event)")
+          input#productId(type="hidden", value=(product ? product.id : ''))
+
+          .form-group
+            label.form-label Tên sản phẩm *
+            input#name.form-control(
+              type="text",
+              name="name",
+              value=(product ? product.name : ''),
+              placeholder="Ví dụ: Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+              required
+            )
+
+          .form-row(style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;")
+            .form-group
+              label.form-label Danh mục sản phẩm *
+              select#category.form-control(name="category", required)
+                option(value="") -- Chọn danh mục --
+                each cat in categories
+                  option(
+                    value=cat.id,
+                    selected=(product && (product.category === cat.id || product.category === cat.slug))
+                  )= cat.name
+
+            .form-group
+              label.form-label Số lượng tồn kho *
+              input#stock.form-control(
+                type="number",
+                name="stock",
+                min="0",
+                value=(product ? product.stock : 20),
+                required
+              )
+
+          .form-row(style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;")
+            .form-group
+              label.form-label Giá bán hiện tại (VNĐ) *
+              input#price.form-control(
+                type="number",
+                name="price",
+                min="0",
+                step="1000",
+                value=(product ? product.price : 299000),
+                required
+              )
+
+            .form-group
+              label.form-label Giá gốc niêm yết (VNĐ)
+              input#originalPrice.form-control(
+                type="number",
+                name="originalPrice",
+                min="0",
+                step="1000",
+                value=(product ? product.originalPrice : 399000)
+              )
+
+            .form-group
+              label.form-label Giảm giá (%)
+              input#discount.form-control(
+                type="number",
+                name="discount",
+                min="0",
+                max="100",
+                value=(product ? product.discount : 0)
+              )
+
+          .form-group
+            label.form-label Link Hình Ảnh Chính (URL) *
+            input#image1.form-control(
+              type="url",
+              name="images",
+              value=(product && product.images && product.images[0] ? product.images[0] : 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80'),
+              placeholder="https://images.unsplash.com/...",
+              required
+            )
+
+          .form-group
+            label.form-label Link Hình Ảnh Phụ (Khi rê chuột)
+            input#image2.form-control(
+              type="url",
+              name="images2",
+              value=(product && product.images && product.images[1] ? product.images[1] : 'https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80'),
+              placeholder="https://images.unsplash.com/..."
+            )
+
+          .form-group
+            label.form-label Mô tả chi tiết sản phẩm *
+            textarea#description.form-control(name="description", rows="4", placeholder="Mô tả kỹ về chất liệu, kiểu dáng, điểm vượt trội...", required)
+              = product ? product.description : ''
+
+          h3(style="font-size: 1.125rem; font-weight: 700; margin: 28px 0 16px;") Thông Số Kỹ Thuật (Specs)
+
+          .form-row(style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;")
+            .form-group
+              label.form-label Chất liệu:
+              input#specMaterial.form-control(
+                type="text",
+                value=(product && product.specs ? product.specs.material : '100% Da bò Top-Grain Ý')
+              )
+            .form-group
+              label.form-label Kích thước:
+              input#specDimensions.form-control(
+                type="text",
+                value=(product && product.specs ? product.specs.dimensions : 'Bản 3.5cm x Dài 120cm')
+              )
+
+          .form-row(style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;")
+            .form-group
+              label.form-label Kiểu khóa:
+              input#specLockType.form-control(
+                type="text",
+                value=(product && product.specs ? product.specs.lockType : 'Khóa tự động hợp kim titan')
+              )
+            .form-group
+              label.form-label Chế độ bảo hành:
+              input#specWarranty.form-control(
+                type="text",
+                value=(product && product.specs ? product.specs.warranty : '24 tháng')
+              )
+
+          h3(style="font-size: 1.125rem; font-weight: 700; margin: 24px 0 16px;") Nhãn Khuyến Mãi &amp; Nổi Bật
+
+          .checkbox-group(style="display: flex; gap: 24px; margin-bottom: 30px;")
+            label.checkbox-label
+              input#isFeatured(type="checkbox", checked=(product ? product.isFeatured : true))
+              strong Đánh dấu là Sản Phẩm Nổi Bật (Featured)
+            label.checkbox-label
+              input#isSale(type="checkbox", checked=(product ? product.isSale : false))
+              strong Đưa vào Flash Sale Giảm Giá
+
+          .form-actions(style="display: flex; gap: 14px;")
+            button#submit-btn.btn.btn-primary.btn-lg(type="submit")
+              i(data-lucide="save", style="width: 18px; height: 18px;")
+              = isEdit ? 'Lưu Thay Đổi' : 'Tạo Sản Phẩm Mới'
+            a.btn.btn-secondary.btn-lg(href="/admin/products") Hủy Bỏ
+
+  script.
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      const isEdit = #{isEdit};
+      const productId = document.getElementById('productId').value;
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Đang lưu...';
+
+      const images = [document.getElementById('image1').value];
+      const img2 = document.getElementById('image2').value;
+      if (img2) images.push(img2);
+
+      const payload = {
+        name: document.getElementById('name').value.trim(),
+        category: document.getElementById('category').value,
+        stock: Number(document.getElementById('stock').value),
+        price: Number(document.getElementById('price').value),
+        originalPrice: Number(document.getElementById('originalPrice').value),
+        discount: Number(document.getElementById('discount').value),
+        images,
+        description: document.getElementById('description').value.trim(),
+        specs: {
+          material: document.getElementById('specMaterial').value.trim(),
+          dimensions: document.getElementById('specDimensions').value.trim(),
+          lockType: document.getElementById('specLockType').value.trim(),
+          warranty: document.getElementById('specWarranty').value.trim()
+        },
+        isFeatured: document.getElementById('isFeatured').checked,
+        isSale: document.getElementById('isSale').checked
+      };
+
+      try {
+        const url = isEdit ? `/api/products/${productId}` : '/api/products';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(isEdit ? 'Cập nhật sản phẩm thành công!' : 'Tạo sản phẩm mới thành công!', 'success');
+          setTimeout(() => { window.location.href = '/admin/products'; }, 800);
+        } else {
+          showToast(data.message || 'Lỗi khi lưu sản phẩm', 'error');
+          btn.disabled = false;
+          btn.textContent = isEdit ? 'Lưu Thay Đổi' : 'Tạo Sản Phẩm Mới';
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+        btn.disabled = false;
+        btn.textContent = isEdit ? 'Lưu Thay Đổi' : 'Tạo Sản Phẩm Mới';
+      }
+    }

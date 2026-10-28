@@ -1,0 +1,145 @@
+extends ../layouts/main
+
+block content
+  .container(style="padding-top: 24px;")
+    //- Breadcrumb
+    nav(aria-label="Breadcrumb", style="margin-bottom: 20px; font-size: 0.8125rem; color: var(--text-muted);")
+      a(href="/") Trang Chủ
+      span(style="margin: 0 8px;") /
+      if activeCategory
+        a(href="/shop") Cửa Hàng
+        span(style="margin: 0 8px;") /
+        span(style="color: var(--text-main); font-weight: 600;")= activeCategory.name
+      else
+        span(style="color: var(--text-main); font-weight: 600;") Tất Cả Phụ Kiện
+
+    //- Shop Hero Banner
+    .shop-header(style="margin-bottom: 30px;")
+      h1(style="font-size: 2.25rem; font-weight: 800; margin-bottom: 8px;")
+        = activeCategory ? activeCategory.name : 'Tất Cả Phụ Kiện Thời Trang'
+      p(style="color: var(--text-muted); max-width: 650px;")
+        = activeCategory ? activeCategory.description : 'Khám phá trọn bộ sưu tập phụ kiện nam nữ phong cách đương đại: Da bò nguyên miếng, kim loại titan 316L y tế và thiết kế tinh gọn sang trọng.'
+
+    //- Main Shop Layout: Sidebar + Product Grid
+    .shop-layout
+      //- 1. FILTER SIDEBAR
+      aside.filter-sidebar
+        form#filter-form(action="/shop", method="GET")
+          if query && query.search
+            input(type="hidden", name="search", value=query.search)
+
+          //- Category Filter
+          .filter-box
+            .filter-title Danh Mục Sản Phẩm
+            .filter-options
+              label.checkbox-label
+                input(type="radio", name="category", value="", checked=(!query || !query.category), onchange="document.getElementById('filter-form').submit()")
+                | Tất cả sản phẩm
+              each cat in categories
+                label.checkbox-label
+                  input(
+                    type="radio",
+                    name="category",
+                    value=cat.slug,
+                    checked=(query && query.category === cat.slug),
+                    onchange="document.getElementById('filter-form').submit()"
+                  )
+                  = cat.name
+                  span.filter-count= `(${cat.itemCount})`
+
+          //- Price Filter
+          .filter-box
+            .filter-title Khoảng Giá
+            .filter-options
+              label.checkbox-label
+                input(type="radio", name="priceRange", value="all", checked=(!query || !query.priceMin && !query.priceMax), onchange="window.location.href='/shop' + (query && query.category ? '?category=' + query.category : '')")
+                | Tất cả mức giá
+              label.checkbox-label
+                input(type="radio", name="priceRange", value="under200", checked=(query && query.priceMax === '200000'), onchange="window.location.href='/shop?priceMax=200000' + (query && query.category ? '&category=' + query.category : '')")
+                | Dưới 200.000đ
+              label.checkbox-label
+                input(type="radio", name="priceRange", value="200to350", checked=(query && query.priceMin === '200000' && query.priceMax === '350000'), onchange="window.location.href='/shop?priceMin=200000&priceMax=350000' + (query && query.category ? '&category=' + query.category : '')")
+                | 200.000đ - 350.000đ
+              label.checkbox-label
+                input(type="radio", name="priceRange", value="above350", checked=(query && query.priceMin === '350000'), onchange="window.location.href='/shop?priceMin=350000' + (query && query.category ? '&category=' + query.category : '')")
+                | Trên 350.000đ
+
+          //- Special Promotions Filter
+          .filter-box
+            .filter-title Ưu Đãi &amp; Khuyến Mãi
+            .filter-options
+              label.checkbox-label
+                input(
+                  type="checkbox",
+                  name="isSale",
+                  value="true",
+                  checked=(query && query.isSale === 'true'),
+                  onchange="document.getElementById('filter-form').submit()"
+                )
+                span(style="color: var(--accent-coral); font-weight: 700;") Chỉ xem Flash Sale
+                i(data-lucide="zap", style="width: 14px; height: 14px; color: var(--accent-coral);")
+
+          //- Clear Filters
+          if query && (query.category || query.search || query.priceMin || query.priceMax || query.isSale)
+            a.btn.btn-sm.btn-secondary.btn-full(href="/shop", style="margin-top: 10px;")
+              i(data-lucide="x", style="width: 14px; height: 14px;")
+              | Xóa Tất Cả Bộ Lọc
+
+      //- 2. PRODUCT AREA
+      .shop-content
+        //- Toolbar (Total Count & Sorting Dropdown)
+        .shop-toolbar
+          .shop-count
+            | Hiển thị 
+            strong(style="color: var(--text-main);")= products.length
+            |  trên tổng số 
+            strong= pagination.total
+            |  sản phẩm
+
+          //- Sorting Selector
+          .shop-sort
+            form#sort-form(action="/shop", method="GET", style="display: flex; align-items: center; gap: 8px;")
+              if query
+                each val, key in query
+                  if key !== 'sort' && key !== 'page'
+                    input(type="hidden", name=key, value=val)
+              label(for="sort-select", style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;") Sắp xếp:
+              select#sort-select(name="sort", onchange="this.form.submit()")
+                option(value="newest", selected=(!query || query.sort === 'newest')) Mới nhất &amp; Nổi bật
+                option(value="popular", selected=(query && query.sort === 'popular')) Bán chạy nhất
+                option(value="price_asc", selected=(query && (query.sort === 'price_asc' || query.sort === 'price-asc'))) Giá: Thấp đến Cao
+                option(value="price_desc", selected=(query && (query.sort === 'price_desc' || query.sort === 'price-desc'))) Giá: Cao đến Thấp
+                option(value="rating", selected=(query && query.sort === 'rating')) Đánh giá cao nhất
+
+        //- Active Filter Badges
+        if query && (query.category || query.search || query.priceMin || query.priceMax || query.isSale)
+          .active-filters
+            span(style="font-size: 0.8125rem; color: var(--text-muted);") Đang lọc theo:
+            if query.search
+              span.filter-tag
+                = `Từ khóa: "${query.search}"`
+                a(href="/shop") &times;
+            if activeCategory
+              span.filter-tag
+                = `Danh mục: ${activeCategory.name}`
+                a(href="/shop") &times;
+            if query.isSale === 'true'
+              span.filter-tag(style="color: var(--accent-coral); border-color: var(--accent-coral);")
+                | Đang giảm giá
+                a(href="/shop") &times;
+
+        //- Product Grid
+        if products && products.length
+          .product-grid
+            each product in products
+              include ../partials/product-card
+
+          //- Pagination
+          include ../partials/pagination
+        else
+          //- Empty State
+          .empty-state(style="text-align: center; padding: 80px 20px; background: var(--bg-secondary); border-radius: var(--radius-lg);")
+            i(data-lucide="package-x", style="width: 56px; height: 56px; color: var(--text-light); margin-bottom: 16px;")
+            h3(style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;") Không tìm thấy sản phẩm phù hợp
+            p(style="color: var(--text-muted); margin-bottom: 24px;") Hãy thử bỏ bớt bộ lọc hoặc tìm kiếm với từ khóa khác.
+            a.btn.btn-primary(href="/shop") Xem Tất Cả Sản Phẩm

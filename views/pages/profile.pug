@@ -1,0 +1,191 @@
+extends ../layouts/main
+
+block content
+  .container(style="padding: 40px 24px 80px;")
+    //- Admin Access Notice Banner
+    if user.role === 'admin'
+      .admin-alert(style="background: #111827; color: #FFF; border-radius: var(--radius-md); padding: 18px 24px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap: 16px;")
+        div
+          strong(style="color: var(--accent-gold); font-size: 1rem;") 🛡️ Bạn đang đăng nhập với quyền QUẢN TRỊ VIÊN (ADMIN)
+          p(style="font-size: 0.875rem; color: #9CA3AF; margin-top: 4px;") Bạn có toàn quyền quản lý sản phẩm, đơn hàng, danh mục và người dùng hệ thống.
+        a.btn.btn-sm(href="/admin", style="background: var(--accent-gold); color: #000; font-weight: 700;") Truy Cập Admin Portal &rarr;
+
+    .profile-layout(style="display: grid; grid-template-columns: 280px 1fr; gap: 40px;")
+      //- Left Profile Sidebar
+      aside.profile-sidebar
+        .user-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px; text-align: center; margin-bottom: 24px;")
+          img(src=user.avatar, alt=user.name, style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 14px; border: 3px solid var(--border-subtle);")
+          h2(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 4px;")= user.name
+          p(style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 12px;")= user.email
+          span.badge(class=(user.role === 'admin' ? 'badge-hot' : 'badge-new'))
+            = user.role === 'admin' ? 'Quản Trị Viên' : 'Thành Viên Thân Thiết'
+
+        .profile-nav(style="display: flex; flex-direction: column; gap: 6px; background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px;")
+          button.profile-tab-btn.active(type="button", onclick="switchTab('orders')", style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 600; text-align: left; width: 100%;")
+            i(data-lucide="package", style="width: 18px; height: 18px;")
+            | Đơn Hàng Của Tôi
+          button.profile-tab-btn(type="button", onclick="switchTab('info')", style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 600; text-align: left; width: 100%;")
+            i(data-lucide="user", style="width: 18px; height: 18px;")
+            | Thông Tin Tài Khoản
+          button.profile-tab-btn(type="button", onclick="switchTab('password')", style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 600; text-align: left; width: 100%;")
+            i(data-lucide="key", style="width: 18px; height: 18px;")
+            | Đổi Mật Khẩu
+          a(href="/logout", style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 600; color: var(--accent-coral);")
+            i(data-lucide="log-out", style="width: 18px; height: 18px;")
+            | Đăng Xuất
+
+      //- Right Tab Contents
+      .profile-main-content
+        //- TAB 1: ORDERS (Default)
+        #tab-orders.tab-content
+          h2(style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;") Lịch Sử Đơn Hàng
+          if orders && orders.length
+            .orders-list(style="display: flex; flex-direction: column; gap: 20px;")
+              each ord in orders
+                .order-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px;")
+                  .order-card-header(style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;")
+                    div
+                      strong(style="font-size: 1.0625rem;")= `Mã đơn: ${ord.orderCode}`
+                      span(style="color: var(--text-muted); font-size: 0.8125rem; margin-left: 12px;")= new Date(ord.createdAt).toLocaleDateString('vi-VN')
+                    div(style="display: flex; align-items: center; gap: 12px;")
+                      if ord.orderStatus === 'pending'
+                        span.badge.badge-soft-amber Chờ xác nhận
+                      else if ord.orderStatus === 'confirmed'
+                        span.badge.badge-soft-blue Đã xác nhận
+                      else if ord.orderStatus === 'shipping'
+                        span.badge.badge-soft-blue Đang vận chuyển
+                      else if ord.orderStatus === 'completed'
+                        span.badge.badge-soft-green Hoàn thành
+                      else if ord.orderStatus === 'cancelled'
+                        span.badge.badge-soft-red Đã hủy
+
+                      // Business API Action: Cancel Order
+                      if ord.orderStatus === 'pending'
+                        button.btn.btn-sm(
+                          type="button",
+                          style="background: #FEE2E2; color: #991B1B; font-weight: 700;",
+                          onclick=`cancelUserOrder('${ord.id}')`
+                        ) Hủy đơn hàng
+
+                  // Order items
+                  if ord.items
+                    .order-card-items(style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;")
+                      each item in ord.items
+                        .order-item-row(style="display: flex; align-items: center; gap: 14px; font-size: 0.875rem;")
+                          img(src=item.image, alt=item.productName, style="width: 50px; height: 60px; object-fit: cover; border-radius: 4px;")
+                          .item-name-info(style="flex: 1;")
+                            strong= item.productName
+                            div(style="color: var(--text-muted); font-size: 0.75rem;")= `Phân loại: ${item.color} | Số lượng: ${item.quantity}`
+                          strong= new Intl.NumberFormat('vi-VN').format(item.price * item.quantity) + 'đ'
+
+                  .order-card-footer(style="border-top: 1px solid var(--border-subtle); padding-top: 14px; display: flex; justify-content: space-between; align-items: center;")
+                    span(style="font-size: 0.875rem; color: var(--text-muted);")
+                      = `Thanh toán: ${ord.paymentMethod === 'cod' ? 'COD (Tiền mặt)' : 'Chuyển khoản / Ví'}`
+                    div
+                      span(style="font-size: 0.875rem; color: var(--text-muted); margin-right: 8px;") Tổng tiền:
+                      strong(style="color: var(--accent-coral); font-size: 1.25rem;")= new Intl.NumberFormat('vi-VN').format(ord.totalAmount) + 'đ'
+          else
+            .empty-orders(style="text-align: center; padding: 60px 20px; background: #FFF; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);")
+              i(data-lucide="package", style="width: 48px; height: 48px; color: var(--text-light); margin-bottom: 12px;")
+              p(style="color: var(--text-muted); margin-bottom: 16px;") Bạn chưa có đơn hàng nào tại Atelier Accessories.
+              a.btn.btn-primary(href="/shop") Mua Sắm Ngay
+
+        //- TAB 2: USER INFO
+        #tab-info.tab-content(style="display: none;")
+          .admin-card
+            h2(style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;") Thông Tin Cá Nhân
+            .form-group
+              label.form-label Họ và tên:
+              input.form-control(type="text", value=user.name, readonly)
+            .form-group
+              label.form-label Địa chỉ email:
+              input.form-control(type="email", value=user.email, readonly)
+            .form-group
+              label.form-label Số điện thoại:
+              input.form-control(type="text", value=user.phone || 'Chưa cập nhật', readonly)
+            .form-group
+              label.form-label Địa chỉ nhận hàng mặc định:
+              input.form-control(type="text", value=user.address || 'Chưa cập nhật', readonly)
+
+        //- TAB 3: CHANGE PASSWORD
+        #tab-password.tab-content(style="display: none;")
+          .admin-card
+            h2(style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;") Đổi Mật Khẩu
+            form(onsubmit="handleChangePassword(event)")
+              .form-group
+                label.form-label Mật khẩu hiện tại *
+                input#currentPassword.form-control(type="password", required)
+              .form-group
+                label.form-label Mật khẩu mới (tối thiểu 6 ký tự) *
+                input#newPassword.form-control(type="password", required)
+              .form-group
+                label.form-label Xác nhận mật khẩu mới *
+                input#confirmPassword.form-control(type="password", required)
+              button.btn.btn-primary(type="submit") Cập Nhật Mật Khẩu
+
+  script.
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.profile-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+        btn.style.color = 'var(--text-main)';
+      });
+
+      const activeTab = document.getElementById(`tab-${tabName}`);
+      if (activeTab) activeTab.style.display = 'block';
+
+      const activeBtn = event.currentTarget;
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = 'var(--bg-secondary)';
+      }
+    }
+
+    async function cancelUserOrder(orderId) {
+      if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) return;
+
+      try {
+        const res = await fetch(`/api/orders/${orderId}/cancel`, {
+          method: 'PATCH'
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Hủy đơn hàng thành công!', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          showToast(data.message || 'Không thể hủy đơn hàng', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi khi hủy đơn hàng', 'error');
+      }
+    }
+
+    async function handleChangePassword(e) {
+      e.preventDefault();
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        showToast('Mật khẩu mới không trùng khớp!', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/change-password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đổi mật khẩu thành công!', 'success');
+          e.target.reset();
+        } else {
+          showToast(data.message || 'Lỗi đổi mật khẩu', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi xảy ra', 'error');
+      }
+    }

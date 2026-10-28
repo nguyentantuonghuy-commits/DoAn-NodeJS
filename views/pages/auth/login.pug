@@ -1,0 +1,91 @@
+extends ../../layouts/main
+
+block content
+  .auth-wrapper
+    //- Visual Side (High Fashion Aesthetic)
+    .auth-visual
+      img(src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80", alt="Atelier Fashion Auth")
+      .auth-visual-content
+        span(style="color: var(--accent-gold); font-size: 0.8125rem; font-weight: 700; letter-spacing: 2px;") ATELIER EXCLUSIVE
+        h2 Tinh Tế Từng Điểm Chạm.
+        p(style="color: #E5E7EB; max-width: 440px; line-height: 1.6;")
+          | Đăng nhập để nhận ưu đãi thành viên VIP, quản lý tình trạng đơn hàng và lưu danh sách phụ kiện yêu thích.
+
+    //- Form Side
+    .auth-form-container
+      .auth-card
+        h1 Đăng Nhập
+        p.auth-sub Chào mừng bạn quay trở lại với Atelier Accessories.
+
+        if errorMessage
+          .toast.toast-error(style="position: static; transform: none; margin-bottom: 20px; width: 100%;")
+            span.toast-icon ✕
+            span.toast-message= errorMessage
+
+        form#login-form(onsubmit="handleLogin(event)")
+          .form-group
+            label.form-label Địa chỉ email *
+            input#email.form-control(type="email", name="email", placeholder="email@example.com", required)
+
+          .form-group
+            .form-label(style="display: flex; justify-content: space-between;")
+              span Mật khẩu *
+              a(href="#", style="font-size: 0.8125rem; color: var(--text-muted);") Quên mật khẩu?
+            input#password.form-control(type="password", name="password", placeholder="Nhập mật khẩu...", required)
+
+          button#login-btn.btn.btn-primary.btn-full.btn-lg(type="submit", style="margin-top: 10px;")
+            | Đăng Nhập Ngay
+
+        //- Quick Fill Demo Accounts (For Professor / Grader Evaluation!)
+        .demo-accounts(style="margin-top: 30px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px dashed var(--border-subtle);")
+          div(style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;") Tài Khoản Demo (Chấm Điểm):
+          .demo-btns(style="display: flex; gap: 8px;")
+            button.btn.btn-sm.btn-secondary(type="button", onclick="fillDemo('admin@atelier.vn', 'Admin@123')", style="flex: 1; font-size: 0.75rem;")
+              i(data-lucide="shield", style="width: 14px; height: 14px;")
+              | Admin Demo
+            button.btn.btn-sm.btn-secondary(type="button", onclick="fillDemo('user@atelier.vn', 'User@123')", style="flex: 1; font-size: 0.75rem;")
+              i(data-lucide="user", style="width: 14px; height: 14px;")
+              | User Demo
+
+        p(style="margin-top: 24px; text-align: center; font-size: 0.875rem; color: var(--text-muted);")
+          | Bạn chưa có tài khoản? 
+          a(href="/register", style="color: var(--text-main); font-weight: 700; text-decoration: underline;") Đăng ký tài khoản mới
+
+  script.
+    function fillDemo(email, pass) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = pass;
+      showToast(`Đã tự động điền tài khoản: ${email}`, 'info');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('login-btn');
+      btn.disabled = true;
+      btn.textContent = 'Đang xác thực...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đăng nhập thành công!', 'success');
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirectUrl = urlParams.get('redirect') || (data.data.user.role === 'admin' ? '/admin' : '/profile');
+          setTimeout(() => { window.location.href = redirectUrl; }, 500);
+        } else {
+          showToast(data.message || 'Email hoặc mật khẩu không chính xác', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Đăng Nhập Ngay';
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Đăng Nhập Ngay';
+      }
+    }

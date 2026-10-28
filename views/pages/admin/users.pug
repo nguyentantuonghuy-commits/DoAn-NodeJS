@@ -1,0 +1,113 @@
+extends ../../layouts/main
+
+block content
+  .admin-layout
+    //- Admin Sidebar
+    aside.admin-sidebar
+      .admin-nav
+        a(href="/admin")
+          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+          | Bảng Điều Khiển
+        a(href="/admin/products")
+          i(data-lucide="package", style="width: 18px; height: 18px;")
+          | Quản Lý Sản Phẩm
+        a(href="/admin/categories")
+          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+          | Quản Lý Danh Mục
+        a(href="/admin/orders")
+          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+          | Quản Lý Đơn Hàng
+        a.active(href="/admin/users")
+          i(data-lucide="users", style="width: 18px; height: 18px;")
+          | Quản Lý Người Dùng
+        hr(style="border-color: #1F242C; margin: 16px 0;")
+        a(href="/")
+          i(data-lucide="external-link", style="width: 18px; height: 18px;")
+          | Xem Website
+
+    //- Main Content
+    main.admin-content
+      .admin-header(style="margin-bottom: 24px;")
+        h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;") Quản Lý Người Dùng &amp; Phân Quyền (RBAC)
+        p(style="color: var(--text-muted); font-size: 0.9375rem;") Xem danh sách tài khoản, chuyển đổi quyền Admin / User và xóa tài khoản.
+
+      .admin-card
+        .table-responsive
+          table.data-table
+            thead
+              tr
+                th Avatar
+                th Họ và Tên
+                th Email
+                th Vai Trò (Role)
+                th Số Điện Thoại
+                th Địa Chỉ
+                th Thay Đổi Quyền
+            tbody
+              each u in users
+                tr
+                  td
+                    img(src=u.avatar, alt=u.name, style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;")
+                  td: strong= u.name
+                  td= u.email
+                  td
+                    if u.role === 'admin'
+                      span.badge.badge-hot ADMIN (Quản trị)
+                    else
+                      span.badge.badge-new USER (Khách hàng)
+                  td= u.phone || 'Chưa có'
+                  td(style="max-width: 180px; font-size: 0.8125rem;")= u.address || 'Chưa có'
+                  td
+                    if u.id === currentUser.id
+                      span(style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;") (Tài khoản hiện tại của bạn)
+                    else
+                      div(style="display: flex; gap: 8px; align-items: center;")
+                        select.form-control(
+                          style="max-width: 130px; padding: 6px 10px; font-size: 0.8125rem;",
+                          onchange=`updateRole('${u.id}', this.value)`
+                        )
+                          option(value="user", selected=(u.role === 'user')) User
+                          option(value="admin", selected=(u.role === 'admin')) Admin
+                        button.btn.btn-sm(
+                          type="button",
+                          style="background: #FEE2E2; color: #991B1B;",
+                          onclick=`deleteUser('${u.id}', '${u.name}')`,
+                          title="Xóa tài khoản"
+                        )
+                          i(data-lucide="trash-2", style="width: 14px; height: 14px;")
+
+  script.
+    async function updateRole(userId, newRole) {
+      try {
+        const res = await fetch(`/api/users/${userId}/role`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: newRole })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Đã đổi quyền thành công sang ${newRole.toUpperCase()}!`, 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi cập nhật quyền', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }
+
+    async function deleteUser(userId, name) {
+      if (!confirm(`Bạn có chắc muốn xóa tài khoản "${name}" khỏi hệ thống không?`)) return;
+      try {
+        const res = await fetch(`/api/users/${userId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đã xóa người dùng thành công!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi xóa người dùng', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }

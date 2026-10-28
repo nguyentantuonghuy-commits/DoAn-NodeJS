@@ -1,0 +1,98 @@
+extends ../../layouts/main
+
+block content
+  .admin-layout
+    //- Admin Sidebar
+    aside.admin-sidebar
+      .admin-nav
+        a.active(href="/admin")
+          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+          | Bảng Điều Khiển
+        a(href="/admin/products")
+          i(data-lucide="package", style="width: 18px; height: 18px;")
+          | Quản Lý Sản Phẩm
+        a(href="/admin/categories")
+          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+          | Quản Lý Danh Mục
+        a(href="/admin/orders")
+          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+          | Quản Lý Đơn Hàng
+        a(href="/admin/users")
+          i(data-lucide="users", style="width: 18px; height: 18px;")
+          | Quản Lý Người Dùng
+        hr(style="border-color: #1F242C; margin: 16px 0;")
+        a(href="/")
+          i(data-lucide="external-link", style="width: 18px; height: 18px;")
+          | Xem Website
+        a(href="/logout", style="color: var(--accent-coral);")
+          i(data-lucide="log-out", style="width: 18px; height: 18px;")
+          | Đăng Xuất
+
+    //- Main Admin Content
+    main.admin-content
+      .admin-header(style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;")
+        div
+          h1(style="font-size: 1.875rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;") Bảng Điều Khiển Quản Trị
+          p(style="color: var(--text-muted); font-size: 0.9375rem;") Tổng quan số liệu kinh doanh và tình trạng vận hành hệ thống Atelier.
+        a.btn.btn-primary(href="/admin/products/new")
+          i(data-lucide="plus", style="width: 18px; height: 18px;")
+          | Thêm Sản Phẩm Mới
+
+      //- 4 KPI CARDS
+      .kpi-grid
+        .kpi-card
+          .kpi-label Tổng Doanh Thu
+          .kpi-value(style="color: var(--accent-emerald);")
+            = new Intl.NumberFormat('vi-VN').format(stats.totalRevenue) + 'đ'
+        .kpi-card
+          .kpi-label Tổng Đơn Hàng
+          .kpi-value= stats.totalOrders
+        .kpi-card
+          .kpi-label Đơn Chờ Xác Nhận
+          .kpi-value(style="color: var(--accent-gold);")= stats.pendingOrders
+        .kpi-card
+          .kpi-label Sản Phẩm Phụ Kiện
+          .kpi-value= stats.totalProducts
+
+      //- RECENT ORDERS TABLE
+      .admin-card
+        .card-header(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;")
+          h3(style="font-size: 1.125rem; font-weight: 700;") Đơn Hàng Mới Nhất
+          a.btn.btn-sm.btn-secondary(href="/admin/orders") Xem Tất Cả Đơn &rarr;
+
+        .table-responsive
+          table.data-table
+            thead
+              tr
+                th Mã Đơn
+                th Khách Hàng
+                th Ngày Đặt
+                th Tổng Tiền
+                th Trạng Thái
+                th Thao Tác
+            tbody
+              if recentOrders && recentOrders.length
+                each ord in recentOrders
+                  tr
+                    td: strong= ord.orderCode
+                    td
+                      div(style="font-weight: 600;")= ord.customerName
+                      div(style="font-size: 0.75rem; color: var(--text-muted);")= ord.customerPhone
+                    td= new Date(ord.createdAt).toLocaleDateString('vi-VN')
+                    td: strong(style="color: var(--accent-coral);")= new Intl.NumberFormat('vi-VN').format(ord.totalAmount) + 'đ'
+                    td
+                      if ord.orderStatus === 'pending'
+                        span.badge.badge-soft-amber Chờ xác nhận
+                      else if ord.orderStatus === 'confirmed'
+                        span.badge.badge-soft-blue Đã xác nhận
+                      else if ord.orderStatus === 'shipping'
+                        span.badge.badge-soft-blue Đang vận chuyển
+                      else if ord.orderStatus === 'completed'
+                        span.badge.badge-soft-green Hoàn thành
+                      else if ord.orderStatus === 'cancelled'
+                        span.badge.badge-soft-red Đã hủy
+                    td
+                      a.btn.btn-sm.btn-secondary(href="/admin/orders") Chi tiết
+              else
+                tr
+                  td(colspan="6", style="text-align: center; color: var(--text-muted); padding: 30px;") Chưa có đơn hàng nào.

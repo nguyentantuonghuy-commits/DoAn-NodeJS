@@ -1,0 +1,184 @@
+extends ../layouts/main
+
+block content
+  .container(style="padding-top: 30px;")
+    h1(style="font-size: 2rem; font-weight: 800; margin-bottom: 24px;") Giỏ Hàng Của Bạn
+
+    //- Empty Cart Container
+    #empty-cart-state(style="display: none; text-align: center; padding: 80px 20px; background: var(--bg-secondary); border-radius: var(--radius-lg);")
+      i(data-lucide="shopping-bag", style="width: 64px; height: 64px; color: var(--text-light); margin-bottom: 16px;")
+      h3(style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;") Giỏ hàng của bạn đang trống
+      p(style="color: var(--text-muted); margin-bottom: 24px;") Hãy chọn ngay những món phụ kiện yêu thích để hoàn thiện set đồ của bạn nhé!
+      a.btn.btn-primary(href="/shop") Khám Phá Cửa Hàng
+
+    //- Filled Cart Container
+    #cart-content-wrapper.cart-layout
+      //- Left: Cart Items Table
+      .cart-items-section
+        //- Coolmate Free Shipping Alert
+        .shipping-progress-box
+          .shipping-progress-text#shipping-alert-text
+            i(data-lucide="truck", style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px;")
+            | Thêm sản phẩm để nhận MIỄN PHÍ VẬN CHUYỂN toàn quốc (đơn từ 299.000đ)
+          .progress-track
+            .progress-fill#shipping-progress-fill(style="width: 0%;")
+
+        .table-responsive(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);")
+          table.cart-table
+            thead
+              tr
+                th Sản phẩm
+                th Đơn giá
+                th Số lượng
+                th Thành tiền
+                th Xóa
+            tbody#cart-items-tbody
+              //- Injected dynamically via JS from localStorage
+
+      //- Right: Order Summary Card
+      .order-summary-card
+        h3(style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px;") Tóm Tắt Đơn Hàng
+
+        // Coupon Box
+        .coupon-box(style="margin-bottom: 20px; display: flex; gap: 8px;")
+          input#coupon-input.form-control(type="text", placeholder="Mã giảm giá (ví dụ: ATELIER10)", style="text-transform: uppercase;")
+          button.btn.btn-secondary(type="button", onclick="applyCoupon()") Áp dụng
+
+        .summary-row
+          span Tạm tính:
+          span#summary-subtotal(style="font-weight: 700;") 0đ
+        .summary-row
+          span Phí vận chuyển:
+          span#summary-shipping(style="font-weight: 700; color: var(--accent-emerald);") Miễn phí
+        .summary-row#discount-row(style="display: none; color: var(--accent-coral);")
+          span Giảm giá voucher:
+          span#summary-discount -0đ
+        .summary-row.total
+          span Tổng thanh toán:
+          span#summary-total(style="color: var(--accent-coral);") 0đ
+
+        a.btn.btn-lg.btn-primary.btn-full(href="/checkout", style="margin-top: 24px;")
+          | Tiến Hành Đặt Hàng
+          i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
+
+        p(style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 14px;")
+          i(data-lucide="shield-check", style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;")
+          | Bảo mật thông tin thanh toán tuyệt đối 100%
+
+  script.
+    let appliedDiscount = 0;
+
+    function renderCartTable() {
+      const cart = getCart();
+      const emptyState = document.getElementById('empty-cart-state');
+      const cartWrapper = document.getElementById('cart-content-wrapper');
+      const tbody = document.getElementById('cart-items-tbody');
+
+      if (!cart || cart.length === 0) {
+        emptyState.style.display = 'block';
+        cartWrapper.style.display = 'none';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      cartWrapper.style.display = 'grid';
+
+      let subtotal = 0;
+      tbody.innerHTML = '';
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * (item.quantity || 1);
+        subtotal += itemTotal;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div class="cart-item-info">
+              <img class="cart-item-thumb" src="${item.image}" alt="${item.name}">
+              <div>
+                <a href="#" style="font-weight: 700; font-size: 0.9375rem; display: block; margin-bottom: 4px;">${item.name}</a>
+                <span style="font-size: 0.8125rem; color: var(--text-muted);">Phân loại: ${item.color || 'Tiêu chuẩn'}</span>
+              </div>
+            </div>
+          </td>
+          <td style="font-weight: 700;">${new Intl.NumberFormat('vi-VN').format(item.price)}đ</td>
+          <td>
+            <div class="qty-spinner" style="max-width: 110px;">
+              <button class="qty-btn" type="button" onclick="changeQty(${index}, -1)">-</button>
+              <input class="qty-input" type="text" value="${item.quantity || 1}" readonly>
+              <button class="qty-btn" type="button" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+          </td>
+          <td style="font-weight: 800; color: var(--text-main);">${new Intl.NumberFormat('vi-VN').format(itemTotal)}đ</td>
+          <td>
+            <button type="button" onclick="removeItem(${index})" style="color: var(--text-muted); padding: 6px;" title="Xóa món này">
+              <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update Subtotals and Shipping
+      const shippingAlert = document.getElementById('shipping-alert-text');
+      const shippingFill = document.getElementById('shipping-progress-fill');
+      const summarySubtotal = document.getElementById('summary-subtotal');
+      const summaryShipping = document.getElementById('summary-shipping');
+      const summaryTotal = document.getElementById('summary-total');
+
+      summarySubtotal.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
+
+      let shippingFee = 0;
+      if (subtotal >= 299000) {
+        shippingAlert.innerHTML = '🎉 Chúc mừng! Bạn đã đủ điều kiện được <strong>MIỄN PHÍ VẬN CHUYỂN</strong>!';
+        shippingFill.style.width = '100%';
+        summaryShipping.textContent = 'Miễn phí';
+      } else {
+        const remaining = 299000 - subtotal;
+        shippingAlert.innerHTML = `Mua thêm <strong>${new Intl.NumberFormat('vi-VN').format(remaining)}đ</strong> để được MIỄN PHÍ VẬN CHUYỂN toàn quốc!`;
+        shippingFill.style.width = `${Math.min(100, Math.floor((subtotal / 299000) * 100))}%`;
+        shippingFee = 25000;
+        summaryShipping.textContent = new Intl.NumberFormat('vi-VN').format(shippingFee) + 'đ';
+      }
+
+      const total = Math.max(0, subtotal + shippingFee - appliedDiscount);
+      summaryTotal.textContent = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+
+      lucide.createIcons();
+    }
+
+    function changeQty(index, delta) {
+      const cart = getCart();
+      if (!cart[index]) return;
+      cart[index].quantity = (cart[index].quantity || 1) + delta;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      saveCart(cart);
+      renderCartTable();
+    }
+
+    function removeItem(index) {
+      const cart = getCart();
+      cart.splice(index, 1);
+      saveCart(cart);
+      renderCartTable();
+      showToast('Đã xóa sản phẩm khỏi giỏ hàng', 'info');
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+      if (code === 'ATELIER10' || code === 'ATELIER100') {
+        appliedDiscount = 50000;
+        document.getElementById('discount-row').style.display = 'flex';
+        document.getElementById('summary-discount').textContent = '-50.000đ';
+        showToast('Áp dụng mã giảm giá 50.000đ thành công!', 'success');
+        renderCartTable();
+      } else {
+        showToast('Mã giảm giá không hợp lệ hoặc đã hết hạn!', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCartTable();
+    });

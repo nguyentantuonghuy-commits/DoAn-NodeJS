@@ -1,0 +1,123 @@
+extends ../../layouts/main
+
+block content
+  .admin-layout
+    //- Admin Sidebar
+    aside.admin-sidebar
+      .admin-nav
+        a(href="/admin")
+          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+          | Bảng Điều Khiển
+        a(href="/admin/products")
+          i(data-lucide="package", style="width: 18px; height: 18px;")
+          | Quản Lý Sản Phẩm
+        a.active(href="/admin/categories")
+          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+          | Quản Lý Danh Mục
+        a(href="/admin/orders")
+          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+          | Quản Lý Đơn Hàng
+        a(href="/admin/users")
+          i(data-lucide="users", style="width: 18px; height: 18px;")
+          | Quản Lý Người Dùng
+        hr(style="border-color: #1F242C; margin: 16px 0;")
+        a(href="/")
+          i(data-lucide="external-link", style="width: 18px; height: 18px;")
+          | Xem Website
+
+    //- Main Content
+    main.admin-content
+      .admin-header(style="margin-bottom: 24px;")
+        h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;") Quản Lý Danh Mục Phụ Kiện
+        p(style="color: var(--text-muted); font-size: 0.9375rem;") Danh sách các nhóm phụ kiện thời trang và thêm danh mục mới.
+
+      .categories-split(style="display: grid; grid-template-columns: 1fr 360px; gap: 30px;")
+        //- Categories List Table
+        .admin-card
+          h3(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px;") Danh Sách Danh Mục Hiện Tại
+          .table-responsive
+            table.data-table
+              thead
+                tr
+                  th Hình Ảnh
+                  th Tên Danh Mục
+                  th Đường Dẫn (Slug)
+                  th Số Mẫu
+                  th Thao Tác
+              tbody
+                each cat in categories
+                  tr
+                    td
+                      img(src=cat.image, alt=cat.name, style="width: 44px; height: 50px; object-fit: cover; border-radius: 4px;")
+                    td: strong= cat.name
+                    td: code= cat.slug
+                    td= `${cat.itemCount} sản phẩm`
+                    td
+                      button.btn.btn-sm(
+                        type="button",
+                        style="background: #FEE2E2; color: #991B1B;",
+                        onclick=`deleteCategory('${cat.id}', '${cat.name}')`
+                      )
+                        i(data-lucide="trash-2", style="width: 14px; height: 14px;")
+
+        //- Add Category Form
+        .admin-card
+          h3(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px;") Thêm Danh Mục Mới
+          form(onsubmit="handleAddCategory(event)")
+            .form-group
+              label.form-label Tên danh mục *
+              input#catName.form-control(type="text", placeholder="Ví dụ: Khăn Choàng Lụa", required)
+            .form-group
+              label.form-label Đường dẫn slug (tùy chọn)
+              input#catSlug.form-control(type="text", placeholder="khan-choang-lua")
+            .form-group
+              label.form-label Link hình ảnh đại diện (URL)
+              input#catImage.form-control(type="url", placeholder="https://images.unsplash.com/...", required)
+            .form-group
+              label.form-label Mô tả ngắn danh mục
+              textarea#catDesc.form-control(rows="3", placeholder="Mô tả phong cách danh mục...")
+            button.btn.btn-primary.btn-full(type="submit")
+              i(data-lucide="plus", style="width: 16px; height: 16px;")
+              | Tạo Danh Mục
+
+  script.
+    async function handleAddCategory(e) {
+      e.preventDefault();
+      const name = document.getElementById('catName').value.trim();
+      const slug = document.getElementById('catSlug').value.trim();
+      const image = document.getElementById('catImage').value.trim();
+      const description = document.getElementById('catDesc').value.trim();
+
+      try {
+        const res = await fetch('/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, slug, image, description })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Tạo danh mục mới thành công!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi khi tạo danh mục', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }
+
+    async function deleteCategory(id, name) {
+      if (!confirm(`Bạn có chắc muốn xóa danh mục "${name}" không?`)) return;
+      try {
+        const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Đã xóa danh mục!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Lỗi khi xóa', 'error');
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+      }
+    }
