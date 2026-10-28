@@ -1,0 +1,118 @@
+//- 3. Mega Footer (5 Columns - ACFC / Coolmate / YaMe Standard)
+footer.site-footer
+  .container
+    .footer-top-strip
+      .footer-usp-item
+        i(data-lucide="shield-check", style="width: 24px; height: 24px;")
+        .usp-content
+          strong 100% Da Thật &amp; Titan
+          p Bảo hành chính hãng 24 tháng
+      .footer-usp-item
+        i(data-lucide="truck", style="width: 24px; height: 24px;")
+        .usp-content
+          strong Freeship Đơn Từ 299K
+          p Giao hàng hỏa tốc toàn quốc
+      .footer-usp-item
+        i(data-lucide="refresh-cw", style="width: 24px; height: 24px;")
+        .usp-content
+          strong Đổi Trả 60 Ngày Tận Nơi
+          p Đổi size đổi mẫu không mất phí
+      .footer-usp-item
+        i(data-lucide="gift", style="width: 24px; height: 24px;")
+        .usp-content
+          strong Đóng Gói Premium Box
+          p Hộp quà sang trọng có thiệp
+
+    .footer-grid
+      // Col 1: Brand Info & Philosophy
+      .footer-col.footer-brand-col
+        a.brand-logo(href="/", style="margin-bottom: 16px;")
+          span.logo-main(style="color: #FFF;") ATELIER
+          span.logo-sub CONTEMPORARY ACCESSORIES
+        p.footer-desc
+          | Thương hiệu phụ kiện thời trang đương đại hàng đầu Việt Nam. Tỉ mỉ từ đường kim mũi chỉ da bò Top-Grain đến hợp kim titan PVD siêu bền, mang đến khí chất sắc sảo cho người mặc.
+        .footer-contact-info
+          p
+            i(data-lucide="phone-call", style="width: 15px; height: 15px;")
+            | Hotline: 
+            strong(style="color: #FFF;") 1900 8888 (8:00 - 22:00)
+          p
+            i(data-lucide="mail", style="width: 15px; height: 15px;")
+            | Email: support@atelier.vn
+          p
+            i(data-lucide="clock", style="width: 15px; height: 15px;")
+            | Làm việc: Thứ Hai - Chủ Nhật (Kể cả ngày Lễ)
+
+      // Col 2: Categories
+      .footer-col
+        h4.footer-heading PHỤ KIỆN CAO CẤP
+        ul.footer-links
+          li: a(href="/shop?category=that-lung-da") Thắt Lưng Da Bò Ý
+          li: a(href="/shop?category=vi-da") Ví Da Bifold &amp; Cardholder
+          li: a(href="/shop?category=mu-non") Mũ &amp; Nón Snapback Streetwear
+          li: a(href="/shop?category=kinh-mat") Kính Mát Phi Công Phân Cực UV400
+          li: a(href="/shop?category=trang-suc-titan") Trang Sức Titan 316L Không Gỉ
+          li: a(href="/shop?category=tui-balo") Túi Đeo Chéo Crossbody &amp; Balo
+
+      // Col 3: Customer Care & Policies
+      .footer-col
+        h4.footer-heading CHĂM SÓC KHÁCH HÀNG
+        ul.footer-links
+          li: a(href="/profile") Tra cứu tình trạng đơn hàng
+          li: a(href="/about") Câu chuyện thương hiệu Atelier
+          li: a(href="/blog") Cẩm nang phối đồ &amp; Tạp chí
+          li: a(href="/contact") Chính sách đổi trả 60 ngày tận nơi
+          li: a(href="/contact") Chính sách bảo hành trọn đời
+          li: a(href="/contact") Hướng dẫn chọn size thắt lưng &amp; nón
+
+      // Col 4: Store Locations
+      .footer-col
+        h4.footer-heading HỆ THỐNG SHOWROOM
+        ul.footer-stores
+          li
+            strong Flagship Bến Thành (TP.HCM):
+            br
+            | 128 Nguyễn Trãi, P. Bến Thành, Q.1
+          li
+            strong Vạn Hạnh Mall (TP.HCM):
+            br
+            | Tầng 3 Vạn Hạnh Mall, Q.10
+          li
+            strong Flagship Tràng Tiền (Hà Nội):
+            br
+            | 45 Phố Tràng Tiền, Hoàn Kiếm
+          li
+            strong Vincom Bà Triệu (Hà Nội):
+            br
+            | Tầng 2 Vincom Center, Hai Bà Trưng
+        a.view-stores-link(href="/contact") Xem bản đồ &amp; chỉ đường &rarr;
+
+      // Col 5: VIP Newsletter & Certifications
+      .footer-col.footer-newsletter-col
+        h4.footer-heading ĐẶC QUYỀN THÀNH VIÊN
+        p(style="font-size: 0.875rem; color: #9CA3AF; margin-bottom: 14px;")
+          | Đăng ký nhận thông báo bộ sưu tập giới hạn và nhận ngay 
+          strong(style="color: #F59E0B;") voucher 100K
+          |  cho đơn hàng đầu tiên:
+        form.footer-subscribe-form(onsubmit="event.preventDefault(); showToast('Đã đăng ký thành công! Mã ATELIER100 đã gửi đến email của bạn.', 'success');")
+          input(type="email", placeholder="Nhập email của bạn...", required)
+          button(type="submit")
+            i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
+
+        .cert-badges(style="margin-top: 24px;")
+          .cert-bocongthuong
+            span.bocongthuong-icon ✓
+            span ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG
+        
+        .payment-badges(style="margin-top: 16px;")
+          span.payment-pill COD
+          span.payment-pill VNPAY
+          span.payment-pill MOMO
+          span.payment-pill VISA
+          span.payment-pill MASTER
+          span.payment-pill APPLE PAY
+
+    .footer-bottom
+      .footer-bottom-inner
+        p &copy; 2026 ATELIER ACCESSORIES. All rights reserved. Đồ án Web Backend Node.js &amp; Server-side Rendering Pug.
+        p.footer-inspired Thiết kế chuẩn e-commerce lấy cảm hứng từ YaMe.vn, Coolmate.me, Real Clothes &amp; ACFC.
