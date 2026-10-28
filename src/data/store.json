@@ -655,7 +655,7 @@
       "shippingAddress": "Số 88 Đường Nguyễn Trãi, Phường 3, Quận 5, TP. Hồ Chí Minh",
       "paymentMethod": "bank_transfer",
       "paymentStatus": "paid",
-      "orderStatus": "pending",
+      "orderStatus": "confirmed",
       "totalAmount": 199000,
       "shippingFee": 0,
       "discountAmount": 0,
