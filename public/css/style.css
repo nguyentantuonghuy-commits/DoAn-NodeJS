@@ -3271,6 +3271,7 @@ ul, ol {
   margin-bottom: 6px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   height: 2.8em;
@@ -3832,7 +3833,228 @@ ul, ol {
 }
 
 /* ==========================================================================
-   20. RESPONSIVE BREAKPOINTS (Mobile & Tablet)
+   21. AUTHENTICATION PAGES (Split-Screen Modern)
+   ========================================================================== */
+.auth-wrapper {
+  min-height: calc(100vh - var(--header-height));
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  background: #FFFFFF;
+}
+
+.auth-visual {
+  position: relative;
+  background: #0B0E14;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 60px;
+  color: #FFFFFF;
+  min-height: 600px;
+}
+
+.auth-visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  filter: brightness(0.85);
+}
+
+.auth-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 14, 20, 0.2) 0%, rgba(11, 14, 20, 0.88) 100%);
+  pointer-events: none;
+}
+
+.auth-visual-content {
+  position: relative;
+  z-index: 10;
+}
+
+.auth-visual-content h2 {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-top: 10px;
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+
+.auth-form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
+  background: #FFFFFF;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-card h1 {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.auth-sub {
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-size: 0.9375rem;
+}
+
+.demo-accounts {
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-medium);
+}
+
+.demo-btns {
+  display: flex;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   22. CART & CHECKOUT PAGES
+   ========================================================================== */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 36px;
+  padding: 30px 0 80px;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart-table th {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.cart-table td {
+  padding: 20px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+
+.cart-item-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cart-item-thumb {
+  width: 76px;
+  height: 92px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.order-summary-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  height: fit-content;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 0.9375rem;
+  color: #334155;
+}
+
+.summary-row.total {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+/* Shipping Progress Alert (Coolmate Style) */
+.shipping-progress-box {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.shipping-progress-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1E40AF;
+  margin-bottom: 10px;
+}
+
+.progress-track {
+  background: #DBEAFE;
+  height: 8px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: var(--accent-blue);
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+/* ==========================================================================
+   23. USER PROFILE PAGE
+   ========================================================================== */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
+}
+
+.profile-tab-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.profile-tab-btn:hover, .profile-tab-btn.active {
+  background: var(--bg-secondary);
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   24. RESPONSIVE BREAKPOINTS (Mobile & Tablet)
    ========================================================================== */
 @media (max-width: 1200px) {
   .category-grid {
@@ -3885,6 +4107,21 @@ ul, ol {
   }
   .footer-top-strip {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .auth-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .auth-visual {
+    display: none;
+  }
+  .auth-form-container {
+    padding: 40px 20px;
+  }
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+  .profile-layout {
+    grid-template-columns: 1fr;
   }
 }
 
