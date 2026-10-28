@@ -147,6 +147,71 @@ const logoutWeb = (req, res) => {
   res.redirect('/');
 };
 
+// @desc    Render About Page
+// @route   GET /about
+const renderAbout = (req, res) => {
+  res.render('pages/about', {
+    title: 'Về Atelier Accessories | Câu Chuyện Thương Hiệu & Di Sản Chế Tác',
+    currentPath: '/about'
+  });
+};
+
+// @desc    Render Contact & Stores Page
+// @route   GET /contact
+const renderContact = (req, res) => {
+  const stores = dbStore.getStores();
+  res.render('pages/contact', {
+    title: 'Hệ Thống Cửa Hàng & Liên Hệ | Atelier Accessories',
+    stores,
+    currentPath: '/contact'
+  });
+};
+
+// @desc    Render Fashion Journal / Blog Page
+// @route   GET /blog
+const renderBlog = (req, res) => {
+  const blogs = dbStore.getBlogPosts();
+  res.render('pages/blog', {
+    title: 'Tạp Chí Thời Trang & Mẹo Phối Đồ | Atelier Journal',
+    blogs,
+    currentPath: '/blog'
+  });
+};
+
+// @desc    Render Blog Detail Page
+// @route   GET /blog/:slug
+const renderBlogDetail = (req, res) => {
+  const { slug } = req.params;
+  const blog = dbStore.getBlogPostBySlug(slug);
+  if (!blog) {
+    return res.status(404).render('pages/404', {
+      title: 'Không Tìm Thấy Bài Viết | Atelier Journal',
+      message: 'Bài viết bạn đang tìm không tồn tại hoặc đã bị gỡ bỏ.'
+    });
+  }
+  const relatedBlogs = dbStore.getBlogPosts().filter(b => b.slug !== slug).slice(0, 2);
+  const featuredProducts = dbStore.getProducts({ isFeatured: true, limit: 3 }).products;
+
+  res.render('pages/blog-detail', {
+    title: `${blog.title} | Atelier Journal`,
+    blog,
+    relatedBlogs,
+    featuredProducts,
+    currentPath: '/blog'
+  });
+};
+
+// @desc    Render Lookbook Page
+// @route   GET /lookbook
+const renderLookbook = (req, res) => {
+  const featuredProducts = dbStore.getProducts({ isFeatured: true, limit: 6 }).products;
+  res.render('pages/lookbook', {
+    title: 'Bộ Sưu Tập Lookbook Thu Đông 2026 | Atelier Style',
+    featuredProducts,
+    currentPath: '/lookbook'
+  });
+};
+
 module.exports = {
   renderHome,
   renderShop,
@@ -157,5 +222,11 @@ module.exports = {
   renderLogin,
   renderRegister,
   renderProfile,
+  renderAbout,
+  renderContact,
+  renderBlog,
+  renderBlogDetail,
+  renderLookbook,
   logoutWeb
 };
+

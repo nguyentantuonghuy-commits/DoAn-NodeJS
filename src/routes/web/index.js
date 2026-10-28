@@ -5,13 +5,27 @@ const { optionalAuth, protect, authorize } = require('../../middleware/auth');
 const webCtrl = require('../../controllers/web/webController');
 const adminCtrl = require('../../controllers/web/adminController');
 
+const dbStore = require('../../services/dbStore');
+
 // Apply optionalAuth to public SSR pages so logged-in state is reflected in header
 router.use(optionalAuth);
+
+// Inject all categories & active path to every SSR view for mega dropdown
+router.use((req, res, next) => {
+  res.locals.allCategories = dbStore.getCategories();
+  res.locals.currentPath = req.path;
+  next();
+});
 
 // Customer Public Routes
 router.get('/', webCtrl.renderHome);
 router.get('/shop', webCtrl.renderShop);
 router.get('/product/:slug', webCtrl.renderProductDetail);
+router.get('/lookbook', webCtrl.renderLookbook);
+router.get('/blog', webCtrl.renderBlog);
+router.get('/blog/:slug', webCtrl.renderBlogDetail);
+router.get('/about', webCtrl.renderAbout);
+router.get('/contact', webCtrl.renderContact);
 router.get('/cart', webCtrl.renderCart);
 router.get('/checkout', webCtrl.renderCheckout);
 router.get('/order-success', webCtrl.renderOrderSuccess);

@@ -1,120 +1,161 @@
 extends ../layouts/main
 
 block content
-  //- 1. HERO SECTION (High Impact Streetwear Lookbook)
+  //- 1. HERO SECTION (High Impact Cinematic Editorial Lookbook)
   section.hero-section
-    img.hero-bg(src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=80", alt="Atelier Fashion Hero")
-    .hero-overlay
+    .hero-bg-wrapper
+      img.hero-bg(src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=85", alt="Atelier Fashion Accessories Hero")
+      .hero-gradient-overlay
+    
     .container
       .hero-content
-        .hero-tag
-          i(data-lucide="sparkles", style="width: 14px; height: 14px;")
-          | NEW ARRIVALS SS26 • STREETWEAR &amp; LUXURY
-        h1.hero-title Định Hình Phong Cách. Tinh Tế Từng Chi Tiết.
+        .hero-badge-wrap
+          span.hero-pill-badge
+            i(data-lucide="sparkles", style="width: 14px; height: 14px;")
+            | BỘ SƯU TẬP THU ĐÔNG 2026 • CONTEMPORARY LUXURY
+        
+        h1.hero-title Tuyên Ngôn Phong Cách. Sắc Nét Từng Chi Tiết.
+        
         p.hero-desc
-          | Khám phá bộ sưu tập phụ kiện thời trang cao cấp từ da bò Ý nguyên miếng, trang sức titan 316L không gỉ và nón streetwear đương đại. Hoàn thiện gu thời trang của riêng bạn.
-        .hero-cta
-          a.btn.btn-lg.btn-primary(href="/shop")
-            | Khám Phá Cửa Hàng
+          | Khám phá bộ sưu tập phụ kiện thời trang thủ công từ da bò Top-Grain Ý, trang sức titan 316L vĩnh cửu và nón streetwear đương đại. Định hình bản lĩnh và gu thẩm mỹ khác biệt cho thế hệ mới.
+        
+        .hero-cta-group
+          a.btn.btn-lg.btn-primary.btn-glow(href="/shop")
+            span Khám Phá Cửa Hàng
             i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
-          a.btn.btn-lg.btn-outline-white(href="/shop?isSale=true")
-            i(data-lucide="flame", style="width: 18px; height: 18px; color: var(--accent-coral);")
-            | Săn Deal Flash Sale
+          a.btn.btn-lg.btn-outline-white(href="/lookbook")
+            i(data-lucide="camera", style="width: 18px; height: 18px;")
+            span Xem Editorial Lookbook
 
-  //- 2. USP STRIP (Coolmate / ACFC Commitments)
+        // Quick Trust Stat Strip
+        .hero-trust-strip
+          .trust-stat
+            strong 100%
+            span Da Thật &amp; Titan
+          .trust-divider
+          .trust-stat
+            strong 60 Ngày
+            span Đổi Trả Tận Nơi
+          .trust-divider
+          .trust-stat
+            strong 50.000+
+            span Khách Hàng Tin Dùng
+
+  //- 2. USP VALUE STRIP (Coolmate / ACFC Commitments)
   section.usp-strip
     .container
       .usp-grid
-        .usp-item
-          .usp-icon
-            i(data-lucide="shield-check", style="width: 22px; height: 22px;")
-          .usp-text
-            .usp-title 100% Da Thật &amp; Titan 316L
-            .usp-desc Cam kết chất lượng, bảo hành trọn đời
-        .usp-item
-          .usp-icon
-            i(data-lucide="truck", style="width: 22px; height: 22px;")
-          .usp-text
-            .usp-title Miễn Phí Vận Chuyển
-            .usp-desc Đơn từ 299K giao hỏa tốc tận nhà
-        .usp-item
-          .usp-icon
-            i(data-lucide="refresh-cw", style="width: 22px; height: 22px;")
-          .usp-text
-            .usp-title Đổi Trả 30 Ngày Tận Nơi
-            .usp-desc Đổi size, đổi mẫu dễ dàng không tốn phí
-        .usp-item
-          .usp-icon
-            i(data-lucide="headphones", style="width: 22px; height: 22px;")
-          .usp-text
-            .usp-title Hỗ Trợ Tư Vấn 24/7
-            .usp-desc Đội ngũ Stylist định hình phong cách
+        .usp-card
+          .usp-card-icon
+            i(data-lucide="shield-check", style="width: 24px; height: 24px;")
+          .usp-card-info
+            .usp-card-title 100% Da Bò Ý &amp; Titan 316L
+            .usp-card-desc Cam kết chất lượng, bảo hành 24 tháng
+        .usp-card
+          .usp-card-icon
+            i(data-lucide="truck", style="width: 24px; height: 24px;")
+          .usp-card-info
+            .usp-card-title Miễn Phí Vận Chuyển Toàn Quốc
+            .usp-card-desc Đơn từ 299K giao hỏa tốc 2H tại TP.HCM &amp; HN
+        .usp-card
+          .usp-card-icon
+            i(data-lucide="refresh-cw", style="width: 24px; height: 24px;")
+          .usp-card-info
+            .usp-card-title Đổi Trả 60 Ngày Tận Nơi
+            .usp-card-desc Đổi size, đổi mẫu dễ dàng không mất phí
+        .usp-card
+          .usp-card-icon
+            i(data-lucide="gift", style="width: 24px; height: 24px;")
+          .usp-card-info
+            .usp-card-title Đóng Gói Premium Box
+            .usp-card-desc Hộp quà sang trọng, có thiệp viết tay
 
-  //- 3. FEATURED CATEGORIES GRID
+  //- 3. FEATURED CATEGORIES SHOWCASE (YaMe & ACFC Visual Tiles)
   section.section-padding
     .container
       .section-header
         .section-title-wrap
-          span.sub-title DANH MỤC PHỤ KIỆN
-          h2.section-title Phụ Kiện Nổi Bật Dành Cho Bạn
+          span.sub-title DANH MỤC PHỤ KIỆN ĐỘC QUYỀN
+          h2.section-title Khám Phá Thế Giới Phụ Kiện Atelier
         a.section-link(href="/shop")
-          | Xem tất cả danh mục
+          | Xem tất cả 6 danh mục
           i(data-lucide="arrow-up-right", style="width: 16px; height: 16px;")
 
       .category-grid
         each cat in categories
           a.category-card(href=`/shop?category=${cat.slug}`)
-            img(src=cat.image, alt=cat.name, loading="lazy")
-            .category-info
-              h3= cat.name
-              span Khám phá ngay &rarr;
+            .category-card-img-wrap
+              img(src=cat.image, alt=cat.name, loading="lazy")
+            .category-card-overlay
+              .category-card-content
+                span.cat-count= `${cat.itemCount || 4}+ Thiết Kế`
+                h3.cat-name= cat.name
+                p.cat-desc= cat.description
+                span.cat-action
+                  | Mua sắm ngay
+                  i(data-lucide="arrow-right", style="width: 14px; height: 14px;")
 
-  //- 4. FLASH SALE SECTION (Countdown Timer FOMO)
+  //- 4. FLASH SALE SECTION (Countdown Timer & Sales Progress Bar)
   if flashSaleProducts && flashSaleProducts.length
-    section.container
+    section.container.flash-sale-wrapper
       .flash-sale-box
-        .flash-sale-header
-          .flash-title-area
-            .flash-badge
-              i(data-lucide="zap", style="width: 20px; height: 20px;")
-              | FLASH SALE TRONG NGÀY
+        .flash-sale-top
+          .flash-badge-area
+            .flash-flame-icon
+              i(data-lucide="zap", style="width: 22px; height: 22px;")
+            .flash-text-wrap
+              h2.flash-heading FLASH SALE TRONG NGÀY
+              p.flash-sub Giảm đến 50% cho các sản phẩm hot - Số lượng có hạn
+          
+          .flash-timer-area
+            span.timer-label KẾT THÚC SAU:
             .countdown-timer
-              span Kết thúc sau:
               span.timer-box#timer-hours 08
-              span :
+              span.timer-colon :
               span.timer-box#timer-mins 45
-              span :
+              span.timer-colon :
               span.timer-box#timer-secs 20
-          a.section-link(href="/shop?isSale=true")
-            | Xem tất cả deal hot
-            i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
-
+        
         .product-grid
           each product in flashSaleProducts
             include ../partials/product-card
 
-  //- 5. BEST SELLERS & NEW ARRIVALS
-  section.section-padding(style="background: var(--bg-secondary);")
+        .flash-sale-footer
+          a.btn.btn-outline.btn-block(href="/shop?isSale=true")
+            | Xem Toàn Bộ Deal Flash Sale (Giảm Đến 50%)
+            i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+
+  //- 5. BEST SELLERS WITH FILTER TABS (YaMe / Coolmate Tabs)
+  section.section-padding.bg-alt
     .container
       .section-header
         .section-title-wrap
-          span.sub-title XU HƯỚNG BÁN CHẠY
-          h2.section-title Sản Phẩm Được Yêu Thích Nhất
-        a.section-link(href="/shop?sort=popular")
-          | Khám phá thêm
-          i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+          span.sub-title BÁN CHẠY NHẤT
+          h2.section-title Sản Phẩm Được Săn Đón Nhiều Nhất
+        
+        .tab-filter-pills
+          a.filter-pill.active(href="/shop") Tất Cả
+          a.filter-pill(href="/shop?category=that-lung-da") Thắt Lưng
+          a.filter-pill(href="/shop?category=vi-da") Ví Da
+          a.filter-pill(href="/shop?category=trang-suc-titan") Trang Sức
+          a.filter-pill(href="/shop?category=kinh-mat") Kính Mát
 
       .product-grid
         each product in bestSellerProducts
           include ../partials/product-card
 
-  //- 6. SHOPPABLE LOOKBOOK / MIX & MATCH
-  section.container
+      .view-more-center(style="text-align: center; margin-top: 40px;")
+        a.btn.btn-lg.btn-outline(href="/shop?sort=popular")
+          | Xem Thêm Sản Phẩm Bán Chạy
+          i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
+
+  //- 6. SHOPPABLE EDITORIAL LOOKBOOK (Interactive Hotspots)
+  section.container.section-padding-sm
     .lookbook-section
       .lookbook-wrap
-        // Visual with Hotspots
+        // Visual with Interactive Hotspots
         .lookbook-image-holder
-          img(src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80", alt="Style Lookbook")
+          img(src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85", alt="Style Lookbook Fashion")
           
           // Hotspot 1: Sunglasses
           .lookbook-hotspot(style="top: 22%; left: 48%;", data-target="lookbook-item-1", title="Kính Mát Phi Công") 1
@@ -127,10 +168,12 @@ block content
 
         // Side Content
         .lookbook-content
-          span.sub-title(style="color: var(--accent-gold); font-weight: 700; letter-spacing: 2px;") ATELIER LOOKBOOK
-          h2 Hoàn Thiện Set Đồ Chuẩn Gu Cùng Phụ Kiện
+          .lookbook-tag
+            i(data-lucide="sparkles", style="width: 14px; height: 14px;")
+            | ATELIER LOOKBOOK • MIX &amp; MATCH
+          h2 Hoàn Thiện Set Đồ Chuẩn Gu Cùng Phụ Kiện Sắc Sảo
           p
-            | Đừng để trang phục của bạn trở nên đơn điệu. Chỉ cần phối hợp một chiếc thắt lưng da sắc sảo, dây chuyền Cuban titan và kính râm phân cực, bạn sẽ thu hút mọi ánh nhìn ở bất cứ đâu.
+            | Đừng để trang phục của bạn trở nên mờ nhạt. Chỉ cần phối hợp một chiếc thắt lưng da bò Ý khóa tự động, dây chuyền Cuban titan 316L và kính râm Aviator phân cực, bạn sẽ tạo nên một diện mạo đầy quyền lực và cuốn hút.
           
           .lookbook-items-list
             #lookbook-item-1.lookbook-item-card
@@ -154,16 +197,114 @@ block content
                 .lookbook-item-price 349.000đ
               a.btn.btn-sm.btn-primary(href="/product/that-lung-da-bo-y-khoa-tu-dong-black-onyx") Mua ngay
 
-  //- 7. CUSTOMER REVIEWS & SOCIAL PROOF
+  //- 7. CRAFTSMANSHIP & HERITAGE (Chất Liệu & Tay Nghề Thủ Công)
+  section.section-padding.craftsmanship-section
+    .container
+      .craft-grid
+        .craft-content
+          span.sub-title(style="color: var(--accent-gold);") DI SẢN CHẾ TÁC
+          h2 Tỉ Mỉ Trong Từng Đường Kim, Bền Bỉ Cùng Năm Tháng
+          p.craft-lead
+            | Tại Atelier, chúng tôi tin rằng một món phụ kiện hoàn hảo bắt nguồn từ hai yếu tố cốt lõi: Vật liệu nguyên bản hảo hạng và đôi bàn tay của những người thợ thủ công lành nghề.
+          
+          .craft-features
+            .craft-feature-item
+              .craft-feature-icon
+                i(data-lucide="layers", style="width: 22px; height: 22px;")
+              .craft-feature-text
+                h4 100% Da Bò Top-Grain Nhập Khẩu Ý
+                p Tuyển chọn những tấm da bò đanh dẻo, giữ trọn vân da tự nhiên và càng dùng càng bóng đẹp theo thời gian.
+            
+            .craft-feature-item
+              .craft-feature-icon
+                i(data-lucide="anchor", style="width: 22px; height: 22px;")
+              .craft-feature-text
+                h4 Thép Titan 316L Mạ Chân Không PVD
+                p Không gỉ sét, không kích ứng da, chống chịu hoàn hảo trước mồ hôi và nước hoa trong mọi điều kiện thời tiết.
+            
+            .craft-feature-item
+              .craft-feature-icon
+                i(data-lucide="scissors", style="width: 22px; height: 22px;")
+              .craft-feature-text
+                h4 Gia Công Viền Mép Sơn Nhiệt Tỉ Mỉ
+                p Từng góc cạnh của ví và thắt lưng được mài nhẵn và quét sơn nhiệt 4 lớp chống bong tróc đạt chuẩn xuất khẩu.
+
+          a.btn.btn-primary(href="/about", style="margin-top: 10px;")
+            | Tìm Hiểu Quy Trình Chế Tác
+            i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+
+        .craft-visual
+          .craft-image-grid
+            img.craft-img-main(src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80", alt="Leather Crafting")
+            img.craft-img-sub(src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80", alt="Titanium Jewelry Crafting")
+
+  //- 8. FASHION JOURNAL / BLOG (Tạp Chí Phối Đồ)
   section.section-padding
+    .container
+      .section-header
+        .section-title-wrap
+          span.sub-title ATELIER JOURNAL
+          h2.section-title Tạp Chí Thời Trang &amp; Mẹo Phối Đồ
+        a.section-link(href="/blog")
+          | Xem tất cả bài viết
+          i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+
+      .blog-grid
+        article.blog-card
+          .blog-thumb-wrap
+            img(src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80", alt="Blog 1")
+            span.blog-category Phong Cách &amp; Phối Đồ
+          .blog-info
+            .blog-meta
+              span.blog-date 15 Tháng 10, 2026
+              span &bull;
+              span.blog-read 4 phút đọc
+            h3.blog-title
+              a(href="/blog/5-cach-phoi-that-lung-da-bo-voi-au-phuc") 5 Cách Phối Thắt Lưng Da Bò Với Âu Phục Chuẩn Quý Ông Đương Đại
+            p.blog-summary Thắt lưng không chỉ giữ trang phục chỉn chu mà còn là điểm nhấn thể hiện đẳng cấp và gu thẩm mỹ tinh tế của người đàn ông thành đạt.
+            a.blog-read-more(href="/blog/5-cach-phoi-that-lung-da-bo-voi-au-phuc")
+              | Đọc tiếp bài viết &rarr;
+
+        article.blog-card
+          .blog-thumb-wrap
+            img(src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80", alt="Blog 2")
+            span.blog-category Xu Hướng Phụ Kiện
+          .blog-info
+            .blog-meta
+              span.blog-date 20 Tháng 10, 2026
+              span &bull;
+              span.blog-read 5 phút đọc
+            h3.blog-title
+              a(href="/blog/xu-huong-kinh-mat-phi-cong-aviator-2026") Xu Hướng Kính Mát Phi Công Aviator &amp; Khung Kim Loại Phân Cực 2026
+            p.blog-summary Chiếc kính râm Aviator huyền thoại quay trở lại mạnh mẽ trong các sàn diễn thời trang quốc tế với tròng phân cực Polarized UV400.
+            a.blog-read-more(href="/blog/xu-huong-kinh-mat-phi-cong-aviator-2026")
+              | Đọc tiếp bài viết &rarr;
+
+        article.blog-card
+          .blog-thumb-wrap
+            img(src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80", alt="Blog 3")
+            span.blog-category Mẹo Phối Đồ
+          .blog-info
+            .blog-meta
+              span.blog-date 24 Tháng 10, 2026
+              span &bull;
+              span.blog-read 3 phút đọc
+            h3.blog-title
+              a(href="/blog/nghe-thuat-mix-match-trang-suc-titan-streetwear") Nghệ Thuật Mix &amp; Match Trang Sức Titan Streetwear Cho Giới Trẻ
+            p.blog-summary Từ dây chuyền Cuban link to bản đến những chiếc nhẫn họa tiết Aztec, khám phá cách tạo điểm nhấn cá tính mà không phô trương.
+            a.blog-read-more(href="/blog/nghe-thuat-mix-match-trang-suc-titan-streetwear")
+              | Đọc tiếp bài viết &rarr;
+
+  //- 9. CUSTOMER REVIEWS & SOCIAL PROOF
+  section.section-padding.bg-alt
     .container
       .section-header(style="text-align: center; justify-content: center; flex-direction: column; align-items: center; gap: 8px;")
         span.sub-title KHÁCH HÀNG THỰC TẾ
-        h2.section-title Hơn 10.000+ Khách Hàng Đã Tin Dùng
-        p(style="color: var(--text-muted); max-width: 550px;")
-          | Sự hài lòng của khách hàng là bảo chứng vững chắc nhất cho chất lượng da thật và kim loại cao cấp của Atelier.
+        h2.section-title Hơn 50.000+ Khách Hàng Đã Hài Lòng
+        p(style="color: var(--text-muted); max-width: 580px; text-align: center;")
+          | Sự tin yêu của cộng đồng thời trang là minh chứng rõ nhất cho chất lượng bền bỉ và dịch vụ hậu mãi chu đáo của Atelier.
 
-      .reviews-grid(style="margin-top: 30px;")
+      .reviews-grid
         each rev in reviews
           .review-card
             .review-stars
@@ -175,17 +316,52 @@ block content
               .author-info
                 .author-name= rev.userName
                 .author-badge
-                  i(data-lucide="check-circle", style="width: 14px; height: 14px;")
+                  i(data-lucide="check-circle", style="width: 13px; height: 13px;")
                   | Đã mua hàng xác thực
 
-  //- 8. VIP CLUB NEWSLETTER
-  section.container
+  //- 10. INSTAGRAM & LOOKBOOK COMMUNITY FEED (#AtelierStyle)
+  section.section-padding-sm
+    .container
+      .section-header(style="text-align: center; justify-content: center; flex-direction: column; align-items: center; gap: 6px;")
+        span.sub-title CỘNG ĐỒNG THỜI TRANG
+        h2.section-title #AtelierStyle Trên Mạng Xã Hội
+        p(style="color: var(--text-muted);") Gắn thẻ @atelier.accessories để xuất hiện trên trang phục gợi ý hàng tuần của chúng tôi.
+
+      .insta-grid
+        .insta-item
+          img(src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80", alt="Insta 1")
+          .insta-hover
+            i(data-lucide="instagram", style="width: 24px; height: 24px;")
+        .insta-item
+          img(src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=400&q=80", alt="Insta 2")
+          .insta-hover
+            i(data-lucide="instagram", style="width: 24px; height: 24px;")
+        .insta-item
+          img(src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=400&q=80", alt="Insta 3")
+          .insta-hover
+            i(data-lucide="instagram", style="width: 24px; height: 24px;")
+        .insta-item
+          img(src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80", alt="Insta 4")
+          .insta-hover
+            i(data-lucide="instagram", style="width: 24px; height: 24px;")
+        .insta-item
+          img(src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80", alt="Insta 5")
+          .insta-hover
+            i(data-lucide="instagram", style="width: 24px; height: 24px;")
+        .insta-item
+          img(src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=400&q=80", alt="Insta 6")
+          .insta-hover
+            i(data-lucide="instagram", style="width: 24px; height: 24px;")
+
+  //- 11. VIP CLUB NEWSLETTER
+  section.container(style="margin-bottom: 60px;")
     .newsletter-section
       .newsletter-content
+        span.newsletter-badge ĐẶC QUYỀN THÀNH VIÊN
         h2.newsletter-title Gia Nhập Câu Lạc Bộ VIP Atelier
         p.newsletter-desc
-          | Đăng ký nhận thông tin ra mắt bộ sưu tập phụ kiện giới hạn và nhận ngay mã giảm giá 
-          strong(style="color: #FFF;") 100.000Đ
+          | Đăng ký nhận thông tin ra mắt bộ sưu tập giới hạn và nhận ngay mã giảm giá 
+          strong(style="color: #F59E0B;") 100.000Đ
           |  cho đơn hàng đầu tiên của bạn.
         form.newsletter-form(onsubmit="event.preventDefault(); showToast('Cảm ơn bạn! Mã voucher ATELIER100 đã gửi vào email.', 'success');")
           input(type="email", placeholder="Nhập địa chỉ email của bạn...", required)

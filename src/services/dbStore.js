@@ -12,7 +12,9 @@ class DBStore {
       products: [...initialData.products],
       users: [...initialData.users],
       orders: [...initialData.orders],
-      reviews: [...initialData.reviews]
+      reviews: [...initialData.reviews],
+      blogs: [...(initialData.blogs || [])],
+      stores: [...(initialData.stores || [])]
     };
     this.loadFromFile();
   }
@@ -21,7 +23,12 @@ class DBStore {
     try {
       if (fs.existsSync(DATA_FILE)) {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-        this.data = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        this.data = {
+          ...parsed,
+          blogs: parsed.blogs && parsed.blogs.length ? parsed.blogs : [...(initialData.blogs || [])],
+          stores: parsed.stores && parsed.stores.length ? parsed.stores : [...(initialData.stores || [])]
+        };
       } else {
         this.saveToFile();
       }
@@ -327,8 +334,23 @@ class DBStore {
     this.saveToFile();
     return newReview;
   }
+
+  // --- BLOGS ---
+  getBlogPosts() {
+    return this.data.blogs || [];
+  }
+
+  getBlogPostBySlug(slug) {
+    return (this.data.blogs || []).find(b => b.slug === slug || b.id === slug);
+  }
+
+  // --- STORES ---
+  getStores() {
+    return this.data.stores || [];
+  }
 }
 
 // Export singleton instance
 const dbStore = new DBStore();
 module.exports = dbStore;
+

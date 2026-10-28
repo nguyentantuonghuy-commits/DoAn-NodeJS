@@ -3,152 +3,391 @@ html(lang="vi")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title= title || "Atelier Accessories | Phụ Kiện Thời Trang Cao Cấp"
-    meta(name="description", content="Thương hiệu phụ kiện thời trang nam nữ đương đại: Thắt lưng da bò, Ví da thủ công, Mũ nón streetwear, Kính mát thời trang, Trang sức titan chống gỉ.")
+    title= title || "Atelier Accessories | Đẳng Cấp Phụ Kiện Thời Trang Đương Đại"
+    meta(name="description", content="Thương hiệu phụ kiện thời trang đương đại hàng đầu: Thắt lưng da bò Ý, Ví da thủ công, Mũ nón streetwear, Kính mát phân cực UV400, Trang sức titan 316L chống gỉ. Thiết kế tinh tế lấy cảm hứng từ YaMe, Coolmate, Real Clothes & ACFC.")
     
-    // Fonts & Stylesheet
+    // Google Fonts (Plus Jakarta Sans & Syne & Playfair Display)
     link(rel="preconnect", href="https://fonts.googleapis.com")
     link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap", rel="stylesheet")
+    
+    // Stylesheet
     link(rel="stylesheet", href="/css/style.css")
     
     // Lucide Icons
     script(src="https://unpkg.com/lucide@latest")
 
   body
-    // 1. Top Announcement Bar (Coolmate / ACFC Style)
+    // 1. Top Announcement Bar (Coolmate / ACFC / YaMe Ticker)
     .announcement-bar
-      .announcement-ticker
-        span
-          span.badge-pill DEAL HỜI
-          | MIỄN PHÍ VẬN CHUYỂN CHO MỌI ĐƠN HÀNG TỪ 299.000Đ
-        span •
-        span
-          span.badge-pill CAM KẾT
-          | 100% DA THẬT &amp; THÉP TITAN 316L KHÔNG GỈ
-        span •
-        span
-          span.badge-pill YÊN TÂM
-          | ĐỔI TRẢ 30 NGÀY TẬN NƠI MIỄN PHÍ
+      .container
+        .announcement-inner
+          .announcement-ticker
+            span.ticker-item
+              span.badge-pill FREESHIP
+              | MIỄN PHÍ VẬN CHUYỂN TOÀN QUỐC CHO ĐƠN HÀNG TỪ 299.000Đ
+            span.ticker-sep •
+            span.ticker-item
+              span.badge-pill CAM KẾT
+              | 100% DA BÒ Ý THẬT &amp; TITAN 316L BẢO HÀNH 24 THÁNG
+            span.ticker-sep •
+            span.ticker-item
+              span.badge-pill YÊN TÂM
+              | ĐỔI TRẢ 60 NGÀY TẬN NƠI MIỄN PHÍ - KHÔNG CẦN LÝ DO
+            span.ticker-sep •
+            span.ticker-item
+              span.badge-pill HOTLINE
+              | 1900 8888 (08:00 - 22:00)
+          
+          .announcement-right
+            a.ann-link(href="/contact")
+              i(data-lucide="map-pin", style="width: 13px; height: 13px;")
+              | Hệ Thống Cửa Hàng
+            span.divider |
+            a.ann-link(href="/blog")
+              i(data-lucide="book-open", style="width: 13px; height: 13px;")
+              | Tạp Chí Thời Trang
 
     // 2. Master Header & Navigation
-    header.site-header
+    header.site-header#main-header
       .container.header-inner
+        // Mobile Hamburger Trigger
+        button.mobile-menu-toggle#mobile-menu-btn(type="button", aria-label="Mở menu di động")
+          i(data-lucide="menu", style="width: 24px; height: 24px;")
+
         // Brand Logo
         a.brand-logo(href="/")
-          span.logo-main ATELIER
-          span.logo-sub ACCESSORIES
+          .brand-logo-mark
+            span.logo-icon A
+          .brand-logo-text
+            span.logo-main ATELIER
+            span.logo-sub CONTEMPORARY ACCESSORIES
 
-        // Navigation Menu
+        // Desktop Navigation Menu with Mega Dropdown
         nav.main-nav
-          a.nav-link(href="/", class=(currentPath === '/' ? 'active' : '')) Trang Chủ
-          a.nav-link(href="/shop", class=(currentPath === '/shop' ? 'active' : '')) Cửa Hàng
-          a.nav-link(href="/shop?category=that-lung-da") Thắt Lưng
-          a.nav-link(href="/shop?category=vi-da") Ví Da
-          a.nav-link(href="/shop?category=mu-non") Mũ Nón
-          a.nav-link(href="/shop?category=kinh-mat") Kính Mát
-          a.nav-link(href="/shop?category=trang-suc-titan") Trang Sức
-          a.nav-link.sale-tag(href="/shop?isSale=true") Flash Sale -50%
+          a.nav-link(href="/", class=(currentPath === '/' ? 'active' : '')) 
+            | Trang Chủ
 
-        // Header Actions (Search, Wishlist, Cart, User)
+          // Shop with Mega Dropdown
+          .nav-item.has-mega-dropdown
+            a.nav-link.dropdown-trigger(href="/shop", class=(currentPath.startsWith('/shop') ? 'active' : ''))
+              | Cửa Hàng
+              i(data-lucide="chevron-down", style="width: 14px; height: 14px; margin-left: 4px;")
+            
+            // Mega Dropdown Menu Panel
+            .mega-dropdown-menu
+              .container.mega-dropdown-inner
+                .mega-col
+                  .mega-col-title
+                    i(data-lucide="shield", style="width: 16px; height: 16px;")
+                    | ĐỒ DA THỦ CÔNG
+                  ul.mega-links
+                    li: a(href="/shop?category=that-lung-da")
+                      span.link-name Thắt Lưng Da Bò Ý
+                      span.link-badge Hot
+                    li: a(href="/shop?category=vi-da")
+                      span.link-name Ví Da &amp; Cardholder
+                    li: a(href="/shop?category=tui-balo")
+                      span.link-name Túi Đeo Chéo &amp; Balo Da
+                    li: a.view-all-sub(href="/shop?category=that-lung-da") Khám phá toàn bộ đồ da &rarr;
+
+                .mega-col
+                  .mega-col-title
+                    i(data-lucide="sparkles", style="width: 16px; height: 16px;")
+                    | PHỤ KIỆN ĐƯƠNG ĐẠI
+                  ul.mega-links
+                    li: a(href="/shop?category=mu-non")
+                      span.link-name Mũ &amp; Nón Streetwear
+                    li: a(href="/shop?category=kinh-mat")
+                      span.link-name Kính Mát Phi Công UV400
+                      span.link-badge New
+                    li: a(href="/shop?category=trang-suc-titan")
+                      span.link-name Trang Sức Titan 316L
+                    li: a.view-all-sub(href="/shop") Xem tất cả phụ kiện &rarr;
+
+                .mega-col
+                  .mega-col-title
+                    i(data-lucide="flame", style="width: 16px; height: 16px;")
+                    | XU HƯỚNG &amp; BỘ SƯU TẬP
+                  ul.mega-links
+                    li: a(href="/shop?sort=newest")
+                      span.link-name Hàng Mới Về (New Arrivals)
+                    li: a(href="/shop?sort=popular")
+                      span.link-name Bán Chạy Nhất (Best Sellers)
+                    li: a(href="/shop?isSale=true", style="color: var(--accent-coral); font-weight: 600;")
+                      span.link-name Flash Sale Đang Diễn Ra
+                      span.link-badge(style="background: var(--accent-coral); color: #fff;") -50%
+                    li: a(href="/lookbook")
+                      span.link-name Editorial Lookbook 2026
+
+                // Mega Banner Promo Card
+                .mega-promo-col
+                  a.mega-promo-card(href="/shop?isSale=true")
+                    img(src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=600&q=80", alt="Flash Sale Promo")
+                    .mega-promo-overlay
+                      span.promo-badge FLASH DEAL
+                      h4 Giảm Đến 50% Phụ Kiện Da Thật
+                      span.promo-cta Săn Ngay &rarr;
+
+          a.nav-link(href="/lookbook", class=(currentPath === '/lookbook' ? 'active' : ''))
+            | Lookbook
+
+          a.nav-link.sale-tag(href="/shop?isSale=true", class=(query && query.isSale ? 'active' : ''))
+            i(data-lucide="flame", style="width: 15px; height: 15px; margin-right: 4px; display: inline-block; vertical-align: -2px;")
+            | Flash Sale
+
+          a.nav-link(href="/blog", class=(currentPath.startsWith('/blog') ? 'active' : ''))
+            | Tạp Chí
+
+          a.nav-link(href="/about", class=(currentPath === '/about' ? 'active' : ''))
+            | Về Atelier
+
+          a.nav-link(href="/contact", class=(currentPath === '/contact' ? 'active' : ''))
+            | Showroom
+
+        // Header Actions (Smart Search, Wishlist, Cart, User)
         .header-actions
-          form.header-search(action="/shop", method="GET")
-            span.search-icon
-              i(data-lucide="search", style="width: 16px; height: 16px;")
-            input(type="text", name="search", placeholder="Tìm phụ kiện, thắt lưng, ví...", value=(query && query.search ? query.search : ''))
+          // Smart Search Bar
+          .header-search-wrapper
+            form.header-search(action="/shop", method="GET")
+              span.search-icon
+                i(data-lucide="search", style="width: 17px; height: 17px;")
+              input#header-search-input(type="text", name="search", placeholder="Tìm phụ kiện, thắt lưng, kính...", value=(query && query.search ? query.search : ''), autocomplete="off")
+              if query && query.search
+                a.search-clear(href="/shop", title="Xóa tìm kiếm") &times;
+            
+            // Search Quick Tags Suggestion Popup
+            .search-suggestions#search-suggestions
+              .suggestion-group
+                .suggestion-title
+                  i(data-lucide="trending-up", style="width: 13px; height: 13px;")
+                  | Tìm kiếm phổ biến:
+                .suggestion-tags
+                  a.tag-pill(href="/shop?search=thắt lưng") Thắt lưng da Ý
+                  a.tag-pill(href="/shop?search=ví da") Ví da Bifold
+                  a.tag-pill(href="/shop?search=kính mát") Kính phi công
+                  a.tag-pill(href="/shop?search=titan") Dây chuyền titan
+                  a.tag-pill(href="/shop?search=mũ") Nón snapback
 
-          // Cart Button
-          a.action-btn(href="/cart", title="Giỏ hàng")
-            i(data-lucide="shopping-bag", style="width: 20px; height: 20px;")
+          // Cart Button with Drawer Trigger
+          a.action-btn.cart-btn(href="/cart", title="Giỏ hàng của bạn")
+            i(data-lucide="shopping-bag", style="width: 21px; height: 21px;")
             span.badge-count.accent.cart-count-badge(style="display: none;") 0
 
-          // User Menu
+          // User Menu (Customer or Admin)
           if currentUser
             .user-menu-wrapper
-              button.action-btn(type="button", title="Tài khoản")
-                img(src=currentUser.avatar, alt=currentUser.name, style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;")
+              button.action-btn.user-avatar-btn(type="button", title="Tài khoản cá nhân")
+                img(src=currentUser.avatar, alt=currentUser.name)
               .user-dropdown
                 .user-dropdown-header
-                  .user-name= currentUser.name
-                  .user-role= currentUser.role === 'admin' ? 'Quản Trị Viên (Admin)' : 'Khách Hàng Thân Thiết'
-                if currentUser.role === 'admin'
-                  a(href="/admin")
-                    i(data-lucide="layout-dashboard", style="width: 16px; height: 16px;")
-                    | Trang Quản Trị (Admin)
-                  a(href="/admin/products")
-                    i(data-lucide="package", style="width: 16px; height: 16px;")
-                    | Quản Lý Sản Phẩm
-                a(href="/profile")
-                  i(data-lucide="user", style="width: 16px; height: 16px;")
-                  | Hồ Sơ &amp; Đơn Hàng
-                a(href="/logout", style="color: var(--accent-coral);")
-                  i(data-lucide="log-out", style="width: 16px; height: 16px;")
-                  | Đăng Xuất
+                  .user-avatar-mini
+                    img(src=currentUser.avatar, alt=currentUser.name)
+                  .user-meta
+                    .user-name= currentUser.name
+                    .user-role= currentUser.role === 'admin' ? 'Quản Trị Viên (Admin)' : 'Thành Viên VIP'
+                
+                .user-dropdown-body
+                  if currentUser.role === 'admin'
+                    a.dropdown-item.admin-link(href="/admin")
+                      i(data-lucide="layout-dashboard", style="width: 16px; height: 16px;")
+                      | Bảng Điều Khiển Admin
+                    a.dropdown-item(href="/admin/products")
+                      i(data-lucide="package", style="width: 16px; height: 16px;")
+                      | Quản Lý Sản Phẩm
+                    a.dropdown-item(href="/admin/orders")
+                      i(data-lucide="shopping-cart", style="width: 16px; height: 16px;")
+                      | Quản Lý Đơn Hàng
+                  
+                  a.dropdown-item(href="/profile")
+                    i(data-lucide="user", style="width: 16px; height: 16px;")
+                    | Tài Khoản &amp; Đơn Hàng
+                  a.dropdown-item(href="/cart")
+                    i(data-lucide="shopping-bag", style="width: 16px; height: 16px;")
+                    | Xem Giỏ Hàng
+                
+                .user-dropdown-footer
+                  a.dropdown-item.logout-link(href="/logout")
+                    i(data-lucide="log-out", style="width: 16px; height: 16px;")
+                    | Đăng Xuất
           else
-            a.btn.btn-sm.btn-primary(href="/login") Đăng Nhập
+            .auth-btns
+              a.btn.btn-sm.btn-outline(href="/login") Đăng Nhập
+              a.btn.btn-sm.btn-primary.hide-mobile(href="/register") Đăng Ký
+
+    // Mobile Navigation Drawer
+    .mobile-drawer#mobile-drawer
+      .mobile-drawer-overlay#mobile-drawer-overlay
+      .mobile-drawer-content
+        .mobile-drawer-header
+          a.brand-logo(href="/")
+            span.logo-main ATELIER
+            span.logo-sub ACCESSORIES
+          button.close-drawer-btn#close-drawer-btn(type="button")
+            i(data-lucide="x", style="width: 22px; height: 22px;")
+        
+        .mobile-drawer-search
+          form(action="/shop", method="GET")
+            input(type="text", name="search", placeholder="Tìm sản phẩm...")
+            button(type="submit")
+              i(data-lucide="search", style="width: 18px; height: 18px;")
+
+        .mobile-nav-links
+          a.mobile-nav-item(href="/") Trang Chủ
+          
+          .mobile-accordion
+            .mobile-accordion-title#shop-accordion-btn
+              span Cửa Hàng &amp; Danh Mục
+              i(data-lucide="chevron-down", style="width: 16px; height: 16px;")
+            .mobile-accordion-content#shop-accordion-content
+              a(href="/shop") &bull; Tất Cả Sản Phẩm
+              a(href="/shop?category=that-lung-da") &bull; Thắt Lưng Da Bò Ý
+              a(href="/shop?category=vi-da") &bull; Ví Da &amp; Cardholder
+              a(href="/shop?category=mu-non") &bull; Mũ &amp; Nón Streetwear
+              a(href="/shop?category=kinh-mat") &bull; Kính Mát Phi Công UV400
+              a(href="/shop?category=trang-suc-titan") &bull; Trang Sức Titan 316L
+              a(href="/shop?category=tui-balo") &bull; Túi Đeo Chéo &amp; Balo
+          
+          a.mobile-nav-item(href="/lookbook") Bộ Sưu Tập Lookbook
+          a.mobile-nav-item.highlight(href="/shop?isSale=true") Flash Sale -50%
+          a.mobile-nav-item(href="/blog") Tạp Chí Phối Đồ
+          a.mobile-nav-item(href="/about") Về Chúng Tôi
+          a.mobile-nav-item(href="/contact") Hệ Thống Cửa Hàng
+
+        .mobile-drawer-footer
+          if currentUser
+            .mobile-user-card
+              img(src=currentUser.avatar, alt=currentUser.name)
+              .mobile-user-info
+                .name= currentUser.name
+                a(href="/profile") Quản lý tài khoản &rarr;
+            a.btn.btn-outline.btn-block(href="/logout", style="margin-top: 10px;") Đăng Xuất
+          else
+            a.btn.btn-primary.btn-block(href="/login", style="margin-bottom: 8px;") Đăng Nhập
+            a.btn.btn-outline.btn-block(href="/register") Tạo Tài Khoản
 
     // Main Page Content Injection
     main
       block content
 
-    // 3. Mega Footer (Comprehensive 4 Columns)
+    // 3. Mega Footer (5 Columns - ACFC / Coolmate / YaMe Standard)
     footer.site-footer
       .container
+        .footer-top-strip
+          .footer-usp-item
+            i(data-lucide="shield-check", style="width: 24px; height: 24px;")
+            .usp-content
+              strong 100% Da Thật &amp; Titan
+              p Bảo hành chính hãng 24 tháng
+          .footer-usp-item
+            i(data-lucide="truck", style="width: 24px; height: 24px;")
+            .usp-content
+              strong Freeship Đơn Từ 299K
+              p Giao hàng hỏa tốc toàn quốc
+          .footer-usp-item
+            i(data-lucide="refresh-cw", style="width: 24px; height: 24px;")
+            .usp-content
+              strong Đổi Trả 60 Ngày Tận Nơi
+              p Đổi size đổi mẫu không mất phí
+          .footer-usp-item
+            i(data-lucide="gift", style="width: 24px; height: 24px;")
+            .usp-content
+              strong Đóng Gói Premium Box
+              p Hộp quà sang trọng có thiệp
+
         .footer-grid
-          // Col 1: Brand Info
-          .footer-col
+          // Col 1: Brand Info & Philosophy
+          .footer-col.footer-brand-col
             a.brand-logo(href="/", style="margin-bottom: 16px;")
               span.logo-main(style="color: #FFF;") ATELIER
-              span.logo-sub ACCESSORIES
-            p(style="margin-bottom: 20px; line-height: 1.7;")
-              | Thương hiệu phụ kiện thời trang phong cách đương đại hàng đầu Việt Nam. Chúng tôi tỉ mỉ trong từng đường kim mũi chỉ, mang đến trải nghiệm thời trang tinh tế và tự tin cho thế hệ mới.
-            p(style="font-size: 0.8125rem; color: #6B7280;")
-              | Hotline: 
-              strong(style="color: #FFF;") 1900 8888 (8:00 - 22:00)
-              br
-              | Email: support@atelier.vn
+              span.logo-sub CONTEMPORARY ACCESSORIES
+            p.footer-desc
+              | Thương hiệu phụ kiện thời trang đương đại hàng đầu Việt Nam. Tỉ mỉ từ đường kim mũi chỉ da bò Top-Grain đến hợp kim titan PVD siêu bền, mang đến khí chất sắc sảo cho người mặc.
+            .footer-contact-info
+              p
+                i(data-lucide="phone-call", style="width: 15px; height: 15px;")
+                | Hotline: 
+                strong(style="color: #FFF;") 1900 8888 (8:00 - 22:00)
+              p
+                i(data-lucide="mail", style="width: 15px; height: 15px;")
+                | Email: support@atelier.vn
+              p
+                i(data-lucide="clock", style="width: 15px; height: 15px;")
+                | Làm việc: Thứ Hai - Chủ Nhật (Kể cả ngày Lễ)
 
           // Col 2: Categories
           .footer-col
-            h4 DANH MỤC SẢN PHẨM
-            ul
+            h4.footer-heading PHỤ KIỆN CAO CẤP
+            ul.footer-links
               li: a(href="/shop?category=that-lung-da") Thắt Lưng Da Bò Ý
               li: a(href="/shop?category=vi-da") Ví Da Bifold &amp; Cardholder
-              li: a(href="/shop?category=mu-non") Mũ Nón Snapback &amp; Bucket
-              li: a(href="/shop?category=kinh-mat") Kính Mát Phi Công UV400
-              li: a(href="/shop?category=trang-suc-titan") Trang Sức Titan 316L
-              li: a(href="/shop?category=tui-balo") Túi Đeo Chéo Crossbody
+              li: a(href="/shop?category=mu-non") Mũ &amp; Nón Snapback Streetwear
+              li: a(href="/shop?category=kinh-mat") Kính Mát Phi Công Phân Cực UV400
+              li: a(href="/shop?category=trang-suc-titan") Trang Sức Titan 316L Không Gỉ
+              li: a(href="/shop?category=tui-balo") Túi Đeo Chéo Crossbody &amp; Balo
 
-          // Col 3: Customer Care (Coolmate Policies)
+          // Col 3: Customer Care & Policies
           .footer-col
-            h4 CHĂM SÓC KHÁCH HÀNG
-            ul
+            h4.footer-heading CHĂM SÓC KHÁCH HÀNG
+            ul.footer-links
               li: a(href="/profile") Tra cứu tình trạng đơn hàng
-              li: a(href="#") Chính sách đổi trả 30 ngày
-              li: a(href="#") Chính sách bảo hành trọn đời phụ kiện
-              li: a(href="#") Hướng dẫn đo size thắt lưng &amp; nón
-              li: a(href="#") Quy chuẩn bảo quản da &amp; titan
+              li: a(href="/about") Câu chuyện thương hiệu Atelier
+              li: a(href="/blog") Cẩm nang phối đồ &amp; Tạp chí
+              li: a(href="/contact") Chính sách đổi trả 60 ngày tận nơi
+              li: a(href="/contact") Chính sách bảo hành trọn đời
+              li: a(href="/contact") Hướng dẫn chọn size thắt lưng &amp; nón
 
-          // Col 4: Store Locations & Certification
+          // Col 4: Store Locations
           .footer-col
-            h4 HỆ THỐNG CỬA HÀNG
-            ul
+            h4.footer-heading HỆ THỐNG SHOWROOM
+            ul.footer-stores
               li
-                strong(style="color: #FFF;") Flagship Store Q1:
+                strong Flagship Bến Thành (TP.HCM):
                 br
-                | 128 Nguyễn Trãi, P. Bến Thành, Quận 1, TP.HCM
+                | 128 Nguyễn Trãi, P. Bến Thành, Q.1
               li
-                strong(style="color: #FFF;") Store Hoàn Kiếm:
+                strong Vạn Hạnh Mall (TP.HCM):
                 br
-                | 45 Phố Tràng Tiền, Hoàn Kiếm, Hà Nội
-            .payment-badges(style="margin-top: 24px;")
+                | Tầng 3 Vạn Hạnh Mall, Q.10
+              li
+                strong Flagship Tràng Tiền (Hà Nội):
+                br
+                | 45 Phố Tràng Tiền, Hoàn Kiếm
+              li
+                strong Vincom Bà Triệu (Hà Nội):
+                br
+                | Tầng 2 Vincom Center, Hai Bà Trưng
+            a.view-stores-link(href="/contact") Xem bản đồ &amp; chỉ đường &rarr;
+
+          // Col 5: VIP Newsletter & Certifications
+          .footer-col.footer-newsletter-col
+            h4.footer-heading ĐẶC QUYỀN THÀNH VIÊN
+            p(style="font-size: 0.875rem; color: #9CA3AF; margin-bottom: 14px;")
+              | Đăng ký nhận thông báo bộ sưu tập giới hạn và nhận ngay 
+              strong(style="color: #F59E0B;") voucher 100K
+              |  cho đơn hàng đầu tiên:
+            form.footer-subscribe-form(onsubmit="event.preventDefault(); showToast('Đã đăng ký thành công! Mã ATELIER100 đã gửi đến email của bạn.', 'success');")
+              input(type="email", placeholder="Nhập email của bạn...", required)
+              button(type="submit")
+                i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
+
+            .cert-badges(style="margin-top: 24px;")
+              .cert-bocongthuong
+                span.bocongthuong-icon ✓
+                span ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG
+            
+            .payment-badges(style="margin-top: 16px;")
               span.payment-pill COD
               span.payment-pill VNPAY
               span.payment-pill MOMO
-              span.payment-pill VISA/MASTER
+              span.payment-pill VISA
+              span.payment-pill MASTER
+              span.payment-pill APPLE PAY
 
         .footer-bottom
-          p &copy; 2026 ATELIER ACCESSORIES. All rights reserved. Đồ án Web Backend Node.js &amp; Server-side Rendering Pug.
-          p(style="font-size: 0.8125rem; color: #6B7280;") Thiết kế giao diện lấy cảm hứng từ YaMe, Coolmate, Real Clothes &amp; ACFC.
+          .footer-bottom-inner
+            p &copy; 2026 ATELIER ACCESSORIES. All rights reserved. Đồ án Web Backend Node.js &amp; Server-side Rendering Pug.
+            p.footer-inspired Thiết kế chuẩn e-commerce lấy cảm hứng từ YaMe.vn, Coolmate.me, Real Clothes &amp; ACFC.
 
     // Global Toast Container
     .toast-container
@@ -157,3 +396,4 @@ html(lang="vi")
     script(src="/js/main.js")
     script.
       lucide.createIcons();
+

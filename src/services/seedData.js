@@ -599,10 +599,127 @@ const reviews = [
   }
 ];
 
+const blogs = [
+  {
+    id: 'blog_1',
+    title: '5 Cách Phối Thắt Lưng Da Bò Với Âu Phục Chuẩn Quý Ông Đương Đại',
+    slug: '5-cach-phoi-that-lung-da-bo-voi-au-phuc',
+    summary: 'Thắt lưng không chỉ giữ trang phục chỉn chu mà còn là điểm nhấn thể hiện đẳng cấp và gu thẩm mỹ tinh tế của người đàn ông thành đạt.',
+    content: `
+      <h3>1. Quy tắc bất biến: Đồng điệu màu sắc giữa Thắt Lưng và Giày Tây</h3>
+      <p>Một trong những nguyên tắc thời trang kinh điển nhưng thường bị lãng quên nhất: Màu của thắt lưng phải luôn hài hòa với màu của đôi giày bạn đang mang. Nếu bạn diện một đôi giày Oxford đen bóng, chiếc thắt lưng da bò Ý màu Black Onyx là sự lựa chọn duy nhất đúng chuẩn.</p>
+      
+      <h3>2. Độ rộng bản dây lý tưởng cho trang phục Formal</h3>
+      <p>Đối với suit hay quần âu công sở, độ rộng bản thắt lưng hoàn hảo nhất nằm trong khoảng từ 3.2cm đến 3.5cm. Bản dây quá to (trên 3.8cm) sẽ mang cảm giác phong cách bụi bặm, thường chỉ phù hợp với quần jeans hoặc kaki thô.</p>
+
+      <h3>3. Khóa tự động mạ titan vs Khóa xỏ kim truyền thống</h3>
+      <p>Khóa tự động (Automatic Buckle) mang lại sự tiện lợi vượt bậc khi bạn không cần phải bấm lỗ làm hỏng kết cấu da. Thiết kế mặt khóa trơn phủ PVD titan mờ đem lại vẻ đẹp tối giản, sắc sảo và hiện đại cho các quý ông văn phòng thời đại số.</p>
+
+      <h3>4. Bảo quản bề mặt da sau một ngày dài sử dụng</h3>
+      <p>Đừng cuộn tròn thắt lưng quá chặt trong ngăn kéo. Hãy treo thắt lưng thẳng đứng nơi khô ráo, tránh ánh nắng trực tiếp để các thớ da bò tự nhiên được phục hồi độ đàn hồi và không bị nếp gấp.</p>
+    `,
+    category: 'Phong Cách & Phối Đồ',
+    author: 'Tuấn Trần (Fashion Editor)',
+    authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=1200&q=80',
+    readTime: '4 phút đọc',
+    views: 1820,
+    createdAt: new Date('2026-10-15')
+  },
+  {
+    id: 'blog_2',
+    title: 'Xu Hướng Kính Mát Phi Công Aviator & Khung Kim Loại Phân Cực 2026',
+    slug: 'xu-huong-kinh-mat-phi-cong-aviator-2026',
+    summary: 'Chiếc kính râm Aviator huyền thoại quay trở lại mạnh mẽ trong các sàn diễn thời trang quốc tế với tròng phân cực Polarized UV400 và gọng titan siêu nhẹ.',
+    content: `
+      <h3>1. Di sản vượt thời gian của dòng kính phi công</h3>
+      <p>Được phát triển ban đầu dành cho các phi công chiến đấu vào thập niên 1930, kiểu dáng Aviator dáng giọt nước chưa từng lỗi thời trong gần một thế kỷ. Năm 2026, các nhà mốt tái định nghĩa phong cách này bằng khung viền thanh mảnh hơn, tối giản hóa các chi tiết rườm rà.</p>
+
+      <h3>2. Tại sao bạn nhất định phải chọn tròng Polarized UV400?</h3>
+      <p>Tia UV và ánh sáng chói phản xạ từ mặt đường nhựa hay kính xe hơi có thể gây mỏi mắt nghiêm trọng. Tròng kính phân cực cao cấp của Atelier không chỉ ngăn chặn 99.9% tia tử ngoại mà còn tăng cường độ tương phản quang học, giúp tầm nhìn luôn trong trẻo và chân thực.</p>
+
+      <h3>3. Cách chọn gọng kính phù hợp với từng khuôn mặt</h3>
+      <p>Kính Aviator bo tròn mềm mại là vũ khí đắc lực giúp cân bằng những khuôn mặt góc cạnh (mặt vuông, chữ điền). Nếu bạn sở hữu gương mặt tròn, hãy ưu tiên các mẫu gọng phi công có cầu kính kép ngang dứt khoát.</p>
+    `,
+    category: 'Xu Hướng Phụ Kiện',
+    author: 'Minh Thảo (Stylist)',
+    authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1200&q=80',
+    readTime: '5 phút đọc',
+    views: 2450,
+    createdAt: new Date('2026-10-20')
+  },
+  {
+    id: 'blog_3',
+    title: 'Nghệ Thuật Mix & Match Trang Sức Titan Streetwear Cho Giới Trẻ',
+    slug: 'nghe-thuat-mix-match-trang-suc-titan-streetwear',
+    summary: 'Từ dây chuyền Cuban link to bản đến những chiếc nhẫn họa tiết Aztec, khám phá cách tạo điểm nhấn cá tính mà không bị rườm rà hay phô trương.',
+    content: `
+      <h3>1. Trang sức titan 316L - Vật liệu vàng của giới mộ điệu</h3>
+      <p>Khác với trang sức hợp kim thông thường dễ gỉ sét và gây dị ứng, titan phẫu thuật 316L sở hữu độ bền vĩnh cửu, không phai màu khi tiếp xúc với mồ hôi, nước biển và nước hoa. Độ đầm tay và ánh kim sáng bóng làm nên sức hút đặc biệt.</p>
+
+      <h3>2. Công thức Layering dây chuyền chuẩn phong cách Hip-hop</h3>
+      <p>Hãy phối một sợi dây chuyền xích mảnh dài 60cm bên ngoài, kết hợp cùng một sợi Cuban link 7mm ngắn 50cm sát xương quai xanh. Sự chênh lệch về độ dày và chiều dài sẽ tạo nên chiều sâu thị giác cực kỳ lôi cuốn.</p>
+
+      <h3>3. Nguyên tắc “Less is More” khi đeo nhẫn và lắc tay</h3>
+      <p>Đừng đeo kín tất cả các ngón tay. Bạn chỉ nên tạo điểm nhấn tối đa 2 chiếc nhẫn trên một bàn tay: Một chiếc bản to ở ngón trỏ hoặc ngón cái, và một chiếc nhẫn trơn mảnh ở ngón áp út đối xứng.</p>
+    `,
+    category: 'Mẹo Phối Đồ',
+    author: 'Hoàng Long (Creative Director)',
+    authorAvatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80',
+    readTime: '3 phút đọc',
+    views: 3100,
+    createdAt: new Date('2026-10-24')
+  }
+];
+
+const stores = [
+  {
+    id: 'store_1',
+    name: 'Flagship Store Bến Thành (TP.HCM)',
+    address: '128 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh',
+    phone: '028 3822 9999',
+    hours: '08:30 - 22:30 (Mở cửa cả tuần)',
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80',
+    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5177583688537!2d106.6894084!3d10.7716003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f39001b972d%3A0xe6ec00155a0f5e1f!2zMTI4IE5ndXnhu4VuIFRyw6NpLCBQaMaw4budbmcgQuG6v24gVGjDoG5oLCBRdeG6rW4gMSwgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s'
+  },
+  {
+    id: 'store_2',
+    name: 'Showroom Vạn Hạnh Mall (TP.HCM)',
+    address: 'Tầng 3 Vạn Hạnh Mall, 11 Sư Vạn Hạnh, Phường 12, Quận 10, TP. Hồ Chí Minh',
+    phone: '028 3866 8888',
+    hours: '09:30 - 22:00',
+    image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=800&q=80',
+    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.460831627999!2d106.6652417!3d10.7759714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1b7c3aa07d%3A0xc345f061f03f39a0!2zVuG6oW4gSOG6oW5oIE1hbGw!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s'
+  },
+  {
+    id: 'store_3',
+    name: 'Flagship Showroom Tràng Tiền (Hà Nội)',
+    address: '45 Phố Tràng Tiền, Phường Tràng Tiền, Quận Hoàn Kiếm, Hà Nội',
+    phone: '024 3936 8888',
+    hours: '08:30 - 22:00',
+    image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=800&q=80',
+    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1673995804646!2d105.8543781!3d21.0253874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abec2f5c71d9%3A0x2f90117b3531b9d1!2zNDUgVHLDoG5nIFRp4buBbiwgSG_DoG4gS2nhur9tLCBIw6AgTuG7mWk!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s'
+  },
+  {
+    id: 'store_4',
+    name: 'Showroom Vincom Bà Triệu (Hà Nội)',
+    address: 'Tầng 2 Vincom Center, 191 Bà Triệu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội',
+    phone: '024 3974 6666',
+    hours: '09:30 - 22:00',
+    image: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80',
+    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.484557921966!2d105.8475253!3d21.0132801!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab88e6e5a1b3%3A0xb5b7fb764d6c4664!2zMTkxIELDoCBUcmnhu4d1LCBIYWkgQsOgIFRyxrBuZywgSMOgIE7hu5lp!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s'
+  }
+];
+
 module.exports = {
   categories,
   products,
   users,
   orders,
-  reviews
+  reviews,
+  blogs,
+  stores
 };
+

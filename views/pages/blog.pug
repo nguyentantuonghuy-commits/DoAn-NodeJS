@@ -1,0 +1,62 @@
+extends ../layouts/main
+
+block content
+  // Page Header Banner
+  section.page-hero-banner
+    .container
+      .breadcrumb
+        a(href="/") Trang Chủ
+        span.sep /
+        span Tạp Chí Thời Trang
+      h1.page-title Atelier Style Journal
+      p.page-subtitle Cẩm nang phụ kiện, xu hướng thời trang quốc tế và nghệ thuật định hình phong cách cá nhân.
+
+  // Blog Listing Section
+  section.section-padding
+    .container
+      // Filter Category Tags
+      .blog-filter-bar
+        a.filter-pill.active(href="/blog") Tất Cả Bài Viết
+        a.filter-pill(href="/blog") Phong Cách &amp; Phối Đồ
+        a.filter-pill(href="/blog") Xu Hướng Phụ Kiện
+        a.filter-pill(href="/blog") Bảo Quản Đồ Da
+        a.filter-pill(href="/blog") Kiến Thức Titan 316L
+
+      .blog-main-grid
+        each blog, index in blogs
+          article.blog-entry-card(class=(index === 0 ? 'featured-entry' : ''))
+            .blog-entry-img-wrap
+              img(src=blog.coverImage, alt=blog.title, loading="lazy")
+              span.blog-category-tag= blog.category
+            
+            .blog-entry-body
+              .blog-meta-strip
+                span.author
+                  img(src=blog.authorAvatar, alt=blog.author)
+                  span= blog.author
+                span.dot &bull;
+                span.date= new Date(blog.createdAt).toLocaleDateString('vi-VN')
+                span.dot &bull;
+                span.read-time= blog.readTime
+              
+              h2.entry-title
+                a(href=`/blog/${blog.slug}`)= blog.title
+              
+              p.entry-summary= blog.summary
+              
+              .entry-footer
+                a.btn-read-more(href=`/blog/${blog.slug}`)
+                  span Đọc toàn bộ bài viết
+                  i(data-lucide="arrow-right", style="width: 15px; height: 15px;")
+                span.entry-views
+                  i(data-lucide="eye", style="width: 14px; height: 14px;")
+                  = `${blog.views} lượt xem`
+
+      // Newsletter banner inside blog
+      .blog-newsletter-box
+        .box-text
+          h3 Đăng Ký Nhận Bản Tin Thời Trang Mỗi Tuần
+          p Nhận ngay cẩm nang phối đồ nam nữ và ưu đãi 100K vào thứ 6 hàng tuần.
+        form.box-form(onsubmit="event.preventDefault(); showToast('Cảm ơn bạn đã đăng ký nhận bản tin Atelier!', 'success');")
+          input(type="email", placeholder="Email của bạn...", required)
+          button.btn.btn-primary(type="submit") Đăng Ký

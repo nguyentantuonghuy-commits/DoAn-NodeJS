@@ -1,0 +1,121 @@
+extends ../layouts/main
+
+block content
+  // Page Header Banner
+  section.page-hero-banner
+    .container
+      .breadcrumb
+        a(href="/") Trang Chủ
+        span.sep /
+        span Hệ Thống Cửa Hàng &amp; Liên Hệ
+      h1.page-title Hệ Thống Showroom &amp; Trung Tâm Khách Hàng
+      p.page-subtitle Trải nghiệm trực tiếp không gian phụ kiện thời trang Atelier tại các thành phố lớn trên toàn quốc.
+
+  // Store Locator Grid
+  section.section-padding
+    .container
+      .section-header
+        .section-title-wrap
+          span.sub-title ĐỊA CHỈ TRẢI NGHIỆM
+          h2.section-title 4 Showroom Độc Quyền Atelier
+        span(style="color: var(--text-muted); font-size: 0.9375rem;") Mở cửa phục vụ từ 08:30 đến 22:30 hàng ngày
+
+      .stores-grid
+        each store in stores
+          .store-card
+            .store-img-wrap
+              img(src=store.image, alt=store.name)
+              span.store-status Đang mở cửa
+            .store-body
+              h3.store-name= store.name
+              .store-info-line
+                i(data-lucide="map-pin", style="width: 18px; height: 18px;")
+                span= store.address
+              .store-info-line
+                i(data-lucide="phone", style="width: 18px; height: 18px;")
+                span Hotline: 
+                strong= store.phone
+              .store-info-line
+                i(data-lucide="clock", style="width: 18px; height: 18px;")
+                span= store.hours
+              .store-actions
+                a.btn.btn-sm.btn-primary.btn-block(href=`https://maps.google.com/?q=${encodeURIComponent(store.address)}`, target="_blank", rel="noopener")
+                  i(data-lucide="navigation", style="width: 14px; height: 14px;")
+                  | Xem Đường Đi Google Maps
+
+  // Contact Form & Google Map Embed
+  section.section-padding.bg-alt
+    .container
+      .contact-split-grid
+        // Left Column: Interactive Contact Form
+        .contact-form-column
+          span.sub-title LIÊN HỆ TRỰC TUYẾN
+          h2 Gửi Yêu Cầu Tư Vấn Hoặc Khiếu Nại
+          p(style="color: var(--text-muted); margin-bottom: 24px;")
+            | Đội ngũ chuyên viên chăm sóc khách hàng của Atelier sẽ phản hồi bạn qua điện thoại hoặc email trong vòng tối đa 2 giờ làm việc.
+          
+          form.contact-box-form(onsubmit="event.preventDefault(); showToast('Cảm ơn bạn! Thông tin liên hệ đã được gửi đến bộ phận CSKH.', 'success'); this.reset();")
+            .form-row
+              .form-group
+                label(for="contact-name") Họ và tên của bạn *
+                input#contact-name(type="text", placeholder="Ví dụ: Nguyễn Văn An", required)
+              .form-group
+                label(for="contact-phone") Số điện thoại *
+                input#contact-phone(type="tel", placeholder="Ví dụ: 0912 345 678", required)
+            
+            .form-group
+              label(for="contact-email") Địa chỉ Email *
+              input#contact-email(type="email", placeholder="Ví dụ: email@gmail.com", required)
+
+            .form-group
+              label(for="contact-topic") Vấn đề cần hỗ trợ
+              select#contact-topic
+                option(value="order") Tư vấn chọn size thắt lưng / nón
+                option(value="warranty") Yêu cầu bảo hành / Đổi trả tận nơi
+                option(value="cooperation") Hợp tác kinh doanh &amp; Bán sỉ
+                option(value="feedback") Góp ý dịch vụ &amp; Khiếu nại
+
+            .form-group
+              label(for="contact-message") Nội dung chi tiết *
+              textarea#contact-message(rows="4", placeholder="Mô tả chi tiết câu hỏi hoặc yêu cầu của bạn...", required)
+
+            button.btn.btn-lg.btn-primary.btn-block(type="submit")
+              i(data-lucide="send", style="width: 16px; height: 16px;")
+              | Gửi Tin Nhắn Ngay
+
+        // Right Column: Flagship Map Embed & Support Channels
+        .contact-info-column
+          .contact-support-card
+            h3 Kênh Hỗ Trợ Nhanh 24/7
+            .support-items
+              .support-item
+                .support-icon
+                  i(data-lucide="phone-call", style="width: 20px; height: 20px;")
+                .support-text
+                  strong Hotline Đặt Hàng &amp; Khiếu Nại
+                  p 1900 8888 (Miễn phí cước gọi từ 8h00 - 22h00)
+              
+              .support-item
+                .support-icon
+                  i(data-lucide="message-circle", style="width: 20px; height: 20px;")
+                .support-text
+                  strong Zalo Official Account
+                  p Quét mã Zalo Atelier Accessories để chat trực tiếp
+              
+              .support-item
+                .support-icon
+                  i(data-lucide="mail", style="width: 20px; height: 20px;")
+                .support-text
+                  strong Email Phản Hồi Dịch Vụ
+                  p cskh@atelier.vn (Tiếp nhận khiếu nại 24/7)
+
+          // Google Maps Iframe Frame
+          .map-embed-wrapper
+            iframe(
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5177583688537!2d106.6894084!3d10.7716003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f39001b972d%3A0xe6ec00155a0f5e1f!2zMTI4IE5ndXnhu4VuIFRyw6NpLCBQaMaw4budbmcgQuG6v24gVGjDoG5oLCBRdeG6rW4gMSwgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s" 
+              width="100%" 
+              height="280" 
+              style="border:0; border-radius: var(--radius-md);" 
+              allowfullscreen="" 
+              loading="lazy"
+            )

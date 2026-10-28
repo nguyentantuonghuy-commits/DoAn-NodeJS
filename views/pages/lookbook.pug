@@ -1,0 +1,79 @@
+extends ../layouts/main
+
+block content
+  // Lookbook Hero
+  section.page-hero-banner(style="background: linear-gradient(180deg, #111827 0%, #1F2937 100%); color: #FFF;")
+    .container
+      .breadcrumb
+        a(href="/", style="color: #9CA3AF;") Trang Chủ
+        span.sep(style="color: #4B5563;") /
+        span(style="color: #F59E0B;") Lookbook
+      h1.page-title(style="color: #FFF;") Autumn / Winter 2026 Collection
+      p.page-subtitle(style="color: #D1D5DB;") Bản giao hưởng giữa đồ da thủ công truyền thống và phong cách đương đại sắc sảo.
+
+  // Lookbook Sets
+  section.section-padding
+    .container
+      // Look 01: Modern Gentleman
+      .lookbook-row
+        .look-image-col
+          img(src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=85", alt="Look 01 Modern Gentleman")
+          .look-tag LOOK 01 • THE EXECUTIVE GENTLEMAN
+        
+        .look-details-col
+          span.sub-title PHONG CÁCH QUÝ ÔNG CÔNG SỞ
+          h2 Bản Lĩnh &amp; Lịch Lãm Từng Khoảnh Khắc
+          p
+            | Sự tự tin của người đàn ông thành đạt không đến từ những bộ âu phục hào nhoáng, mà toát ra từ sự chỉn chu của những chi tiết phụ kiện nhỏ nhất. Thắt lưng da bò Ý khóa tự động trơn kết hợp cùng ví da gập đôi mỏng nhẹ tạo nên diện mạo hoàn hảo.
+          
+          .look-product-cards
+            .look-prod-card
+              img(src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=200&q=80", alt="Thắt lưng")
+              .look-prod-info
+                h4 Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx
+                .price 349.000đ
+                a.btn.btn-sm.btn-primary(href="/product/that-lung-da-bo-y-khoa-tu-dong-black-onyx") Mua Ngay
+
+            .look-prod-card
+              img(src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=200&q=80", alt="Ví da")
+              .look-prod-info
+                h4 Ví Da Gập Đôi Minimalist Slim Bifold
+                .price 279.000đ
+                a.btn.btn-sm.btn-primary(href="/product/vi-da-gap-doi-minimalist-slim-bifold") Mua Ngay
+
+      // Look 02: Streetwear Rebel
+      .lookbook-row.reverse(style="margin-top: 80px;")
+        .look-image-col
+          img(src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=85", alt="Look 02 Streetwear Rebel")
+          .look-tag LOOK 02 • URBAN STREETWEAR REBEL
+        
+        .look-details-col
+          span.sub-title PHONG CÁCH ĐƯỜNG PHỐ PHÁ CÁCH
+          h2 Nổi Bật Giữa Đám Đông Với Titan 316L
+          p
+            | Không rập khuôn, không thỏa hiệp. Phối hợp chiếc mũ snapback canvas dập nổi cùng chuỗi dây Cuban link titan 7mm và mắt kính râm phi công đem lại nguồn năng lượng bùng nổ cho những buổi dạo phố cuối tuần.
+          
+          .look-product-cards
+            .look-prod-card
+              img(src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=200&q=80", alt="Dây chuyền")
+              .look-prod-info
+                h4 Dây Chuyền Cuban Link Titan Không Gỉ 7mm
+                .price 199.000đ
+                a.btn.btn-sm.btn-primary(href="/product/day-chuyen-cuban-link-titan-khong-gi-7mm-bac-sang") Mua Ngay
+
+            .look-prod-card
+              img(src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=200&q=80", alt="Kính mát")
+              .look-prod-info
+                h4 Kính Mát Phi Công Aviator Gọng Mạ Vàng UV400
+                .price 299.000đ
+                a.btn.btn-sm.btn-primary(href="/product/kinh-mat-phi-cong-aviator-gong-kim-loai-ma-vang-uv400") Mua Ngay
+
+  // Bottom CTA
+  section.container(style="margin-bottom: 60px;")
+    .about-cta-banner
+      .about-cta-content
+        h2 Bạn Đã Tìm Thấy Mảnh Ghép Phong Cách Của Mình?
+        p Khám phá trọn bộ hơn 50+ sản phẩm phụ kiện cao cấp đang có mặt tại cửa hàng.
+        .about-cta-buttons
+          a.btn.btn-lg.btn-primary(href="/shop") Mua Sắm Ngay
+          a.btn.btn-lg.btn-outline-white(href="/shop?isSale=true") Săn Flash Sale -50%

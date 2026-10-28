@@ -1,0 +1,100 @@
+extends ../layouts/main
+
+block content
+  // Page Header Banner
+  section.page-hero-banner
+    .container
+      .breadcrumb
+        a(href="/") Trang Chủ
+        span.sep /
+        span Về Chúng Tôi
+      h1.page-title Câu Chuyện Atelier Accessories
+      p.page-subtitle Tỉ mỉ chế tác. Định hình phong cách phụ kiện thời trang đương đại từ năm 2026.
+
+  // Brand Story Split Section
+  section.section-padding
+    .container
+      .about-split-grid
+        .about-image-column
+          .about-img-frame
+            img(src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=85", alt="Atelier Showroom Interior")
+            .about-badge-floating
+              span.badge-year EST. 2026
+              span.badge-txt VIETNAM HERITAGE
+        
+        .about-text-column
+          span.sub-title KHỞI NGUỒN THƯƠNG HIỆU
+          h2 Phụ Kiện Không Chỉ Là Món Đồ Phụ - Đó Là Điểm Tựa Bản Lĩnh
+          p.lead-text
+            | Được sáng lập vào năm 2026 tại TP. Hồ Chí Minh, Atelier Accessories ra đời từ một quan niệm giản đơn: Một bộ trang phục dù đắt tiền đến đâu cũng sẽ trở nên thiếu hồn nếu thiếu đi những món phụ kiện sắc sảo làm điểm nhấn.
+          p
+            | Chúng tôi nhận thấy thị trường thời trang Việt Nam thường chỉ xem thắt lưng, ví da hay trang sức là những món hàng đi kèm thứ cấp. Atelier chọn lối đi khác: Đưa phụ kiện trở thành nhân vật chính. Mỗi chiếc thắt lưng, mỗi chiếc ví hay từng chiếc nhẫn titan đều mang trong mình một câu chuyện thiết kế riêng biệt, tỉ mỉ và bền bỉ vượt thời gian.
+
+  // Values Grid 3 Columns
+  section.section-padding.bg-alt
+    .container
+      .section-header(style="text-align: center; justify-content: center; flex-direction: column; align-items: center;")
+        span.sub-title GIÁ TRỊ CỐT LÕI
+        h2.section-title 3 Nguyên Tắc Vàng Tạo Nên Atelier
+        p(style="color: var(--text-muted); max-width: 600px; text-align: center;")
+          | Chúng tôi không chạy theo xu hướng nhất thời (Fast Fashion), mà kiên định với những giá trị bền vững và trường tồn.
+
+      .values-grid
+        .value-card
+          .value-icon
+            i(data-lucide="gem", style="width: 28px; height: 28px;")
+          h3 Nguyên Vật Liệu Thuần Khiết
+          p
+            | 100% da bò tự nhiên nhập khẩu từ các xưởng thuộc da danh tiếng vùng Tuscany (Ý). Titan y tế 316L không pha tạp chất, không gây kích ứng da và trường tồn trước mọi thử thách thời tiết.
+
+        .value-card
+          .value-icon
+            i(data-lucide="compass", style="width: 28px; height: 28px;")
+          h3 Tối Giản Nhưng Đậm Khí Chất
+          p
+            | Ngôn ngữ thiết kế đương đại (Contemporary Minimalism): Lược bỏ những chi tiết rườm rà, tập trung vào công năng thực dụng, tỷ lệ hình học chuẩn mực và bề mặt hoàn thiện tinh xảo.
+
+        .value-card
+          .value-icon
+            i(data-lucide="heart-handshake", style="width: 28px; height: 28px;")
+          h3 Trách Nhiệm Với Khách Hàng
+          p
+            | Chính sách đổi trả tận nơi 60 ngày miễn phí, bảo hành bong tróc da 24 tháng và hỗ trợ làm mới, đánh bóng phụ kiện trọn đời tại hệ thống tất cả showroom trên toàn quốc.
+
+  // Craft Process Steps
+  section.section-padding
+    .container
+      .section-header(style="text-align: center; justify-content: center; flex-direction: column; align-items: center;")
+        span.sub-title QUY TRÌNH CHẾ TÁC
+        h2.section-title 4 Bước Tạo Nên Tuyệt Tác Phụ Kiện
+      
+      .process-timeline
+        .process-step
+          .step-num 01
+          h4 Tuyển Chọn Phôi Vật Liệu
+          p Từng tấm da bò và thanh titan phôi được soi kỹ lưỡng dưới ánh sáng quang học để loại bỏ mọi khuyết tật bề mặt.
+        
+        .process-step
+          .step-num 02
+          h4 Cắt Laser &amp; Gia Công CNC
+          p Ứng dụng công nghệ cắt laser chính xác tới 0.01mm giúp mép da chuẩn xác tuyệt đối theo khuôn mẫu thiết kế.
+        
+        .process-step
+          .step-num 03
+          h4 Ráp &amp; May Chỉ Sáp Đôi
+          p Đôi bàn tay khéo léo của nghệ nhân ghép nối từng chi tiết, may chỉ dù tẩm sáp chống mục rữa đạt độ chịu lực 25kg.
+        
+        .process-step
+          .step-num 04
+          h4 Sơn Nhiệt &amp; Kiểm Định KCS
+          p Quét 4 lớp sơn nhiệt tại các mép cạnh ví, sấy hồng ngoại và thử nghiệm độ uốn gập 10.000 lần trước khi đóng hộp.
+
+  // CTA Section
+  section.container(style="margin-bottom: 60px;")
+    .about-cta-banner
+      .about-cta-content
+        h2 Sẵn Sàng Nâng Tầm Gu Thời Trang Của Bạn?
+        p Ghé thăm showroom gần nhất để chạm tay vào chất da bò thật hoặc đặt hàng online với chính sách dùng thử 60 ngày.
+        .about-cta-buttons
+          a.btn.btn-lg.btn-primary(href="/shop") Khám Phá Cửa Hàng
+          a.btn.btn-lg.btn-outline-white(href="/contact") Tìm Showroom Gần Bạn
