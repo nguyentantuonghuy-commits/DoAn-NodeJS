@@ -9,11 +9,11 @@
   //- Thumbnail with dual-image hover effect
   .product-thumb
     a(href=`/product/${product.slug}`)
-      img.primary-img(src=product.images[0], alt=product.name, loading="lazy")
+      img.primary-img(src=product.images[0], alt=product.name)
       if product.images[1]
-        img.hover-img(src=product.images[1], alt=product.name, loading="lazy")
+        img.hover-img(src=product.images[1], alt=product.name)
       else
-        img.hover-img(src=product.images[0], alt=product.name, loading="lazy")
+        img.hover-img(src=product.images[0], alt=product.name)
 
     //- Status Badges
     .product-badges
@@ -27,14 +27,22 @@
     //- Quick Action Buttons on Hover
     .product-actions
       a.quick-view-btn(href=`/product/${product.slug}`, title="Xem chi tiết")
-        i(data-lucide="eye", style="width: 14px; height: 14px;")
-        | Xem
+        i(data-lucide="eye")
+        span Xem chi tiết
       button.quick-add-btn(type="button", title="Thêm nhanh vào giỏ")
-        i(data-lucide="plus", style="width: 14px; height: 14px;")
-        | Thêm giỏ
+        i(data-lucide="plus")
+        span Thêm giỏ
 
-  //- Color Swatches
-  if product.colors && product.colors.length > 1
+  //- Color Swatches (Biến thể có giá riêng hoặc màu thông thường)
+  if product.hasVariants && product.variants && product.variants.length > 1
+    .color-swatches
+      each v, idx in product.variants
+        span.swatch-dot(
+          class=(idx === 0 ? 'active' : ''),
+          style=`background-color: ${v.color || '#000000'};`,
+          title=`${v.name}: ${new Intl.NumberFormat('vi-VN').format(v.price)} đ`
+        )
+  else if product.colors && product.colors.length > 1
     .color-swatches
       each color, idx in product.colors
         span.swatch-dot(
@@ -44,16 +52,30 @@
           data-img=color.image
         )
 
-  //- Category & Title
-  .product-category= product.categoryName || 'Phụ kiện'
+  //- ACFC-style Promo Ribbon
+  .card-promo-ribbon
+    if product.isSale
+      span Freeship + Giảm thêm đến 199K
+    else if product.price >= 400000
+      span Mua 2 Giảm 10% • Tặng Hộp Quà
+    else
+      span Đổi trả 60 ngày • Bảo hành 24 tháng
+
+  //- Brand & Title
+  .product-brand-line
+    span.product-brand-name ATELIER COUTURE
+    span.product-category-tag= product.categoryName || 'Phụ kiện'
   a(href=`/product/${product.slug}`)
     h3.product-title= product.name
 
   //- Price Row
   .product-price-row
-    span.current-price= new Intl.NumberFormat('vi-VN').format(product.price) + 'đ'
+    if product.hasVariants && product.variants && product.variants.length > 1
+      span.current-price= 'Từ ' + new Intl.NumberFormat('vi-VN').format(product.price) + ' đ'
+    else
+      span.current-price= new Intl.NumberFormat('vi-VN').format(product.price) + ' đ'
     if product.originalPrice > product.price
-      span.original-price= new Intl.NumberFormat('vi-VN').format(product.originalPrice) + 'đ'
+      span.original-price= new Intl.NumberFormat('vi-VN').format(product.originalPrice) + ' đ'
       span.discount-rate= `-${product.discount}%`
 
   //- Sold Count Progress for Flash Sale items

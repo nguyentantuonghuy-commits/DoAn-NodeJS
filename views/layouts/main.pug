@@ -8,25 +8,34 @@ html(lang="vi")
     
     // Google Fonts (Plus Jakarta Sans & Playfair Display)
     link(rel="preconnect", href="https://fonts.googleapis.com")
-    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
-    link(href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap", rel="stylesheet")
+    link(href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap", rel="stylesheet")
     
     // Stylesheet
     link(rel="stylesheet", href="/css/style.css")
     
     // Lucide Icons
     script(src="https://unpkg.com/lucide@latest")
+    
+    // Anti-flash Admin Sidebar state
+    script.
+      try {
+        if (localStorage.getItem('admin_sidebar_collapsed') === 'true') {
+          document.documentElement.classList.add('admin-sidebar-collapsed');
+        }
+      } catch (e) {}
 
   body
     if currentPath && currentPath.startsWith('/admin')
       // Top Admin Bar
       header.admin-header-bar
-        .admin-header-left(style="display: flex; align-items: center; gap: 14px;")
+        .admin-header-left(style="display: flex; align-items: center; gap: 12px;")
+          button#adminSidebarToggle.admin-sidebar-toggle-btn(type="button", title="Thu gọn / Mở rộng menu (Ctrl+B)", aria-label="Toggle Sidebar")
+            i(data-lucide="panel-left-close", style="width: 18px; height: 18px;")
           a.brand-logo(href="/admin")
-            .brand-logo-mark(style="width: 38px; height: 38px; font-size: 1.15rem; background: #1E293B; border: 1px solid rgba(255,255,255,0.1);")
+            .brand-logo-mark(style="width: 36px; height: 36px; font-size: 1.1rem; background: #1E293B; border: 1px solid rgba(255,255,255,0.1);")
               span.logo-icon A
             .brand-logo-text
-              span.logo-main(style="font-size: 1.15rem; color: #FFF;") ATELIER
+              span.logo-main(style="font-size: 1.1rem; color: #FFF;") ATELIER
               span.logo-sub(style="font-size: 0.55rem; color: var(--accent-gold);") ADMIN SYSTEM
           span.admin-badge-pill HỆ THỐNG QUẢN TRỊ
         
@@ -36,7 +45,13 @@ html(lang="vi")
             | Xem Website
           if currentUser
             .admin-user-pill(style="display: flex; align-items: center; gap: 10px; color: #FFF;")
-              img(src=currentUser.avatar, alt=currentUser.name, style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--accent-gold);")
+              img(
+                src=currentUser.avatar,
+                alt=currentUser.name,
+                referrerpolicy="no-referrer",
+                onerror="this.onerror=null; this.src='/images/default-avatar.svg';",
+                style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--accent-gold);"
+              )
               div(style="line-height: 1.2;")
                 strong(style="display: block; font-size: 0.8125rem; color: #FFF;")= currentUser.name
                 span(style="font-size: 0.7rem; color: #94A3B8;") Quản Trị Viên

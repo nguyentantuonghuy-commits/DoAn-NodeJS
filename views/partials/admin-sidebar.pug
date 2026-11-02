@@ -1,0 +1,72 @@
+//- Reusable Admin Sidebar with Collapsible Toggle & Tooltips
+aside.admin-sidebar
+  .admin-nav
+    a(
+      href="/admin",
+      class=(currentPath === '/admin' ? 'active' : ''),
+      data-tooltip="Bảng Điều Khiển",
+      title="Bảng Điều Khiển"
+    )
+      i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
+      span.nav-text Bảng Điều Khiển
+
+    a(
+      href="/admin/products",
+      class=(currentPath && currentPath.startsWith('/admin/products') ? 'active' : ''),
+      data-tooltip="Quản Lý Sản Phẩm",
+      title="Quản Lý Sản Phẩm"
+    )
+      i(data-lucide="package", style="width: 18px; height: 18px;")
+      span.nav-text Quản Lý Sản Phẩm
+
+    a(
+      href="/admin/categories",
+      class=(currentPath && currentPath.startsWith('/admin/categories') ? 'active' : ''),
+      data-tooltip="Quản Lý Danh Mục",
+      title="Quản Lý Danh Mục"
+    )
+      i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
+      span.nav-text Quản Lý Danh Mục
+
+    a(
+      href="/admin/orders",
+      class=(currentPath && currentPath.startsWith('/admin/orders') ? 'active' : ''),
+      data-tooltip="Quản Lý Đơn Hàng",
+      title="Quản Lý Đơn Hàng"
+    )
+      i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
+      span.nav-text Quản Lý Đơn Hàng
+
+    a(
+      href="/admin/users",
+      class=(currentPath && currentPath.startsWith('/admin/users') ? 'active' : ''),
+      data-tooltip="Quản Lý Người Dùng",
+      title="Quản Lý Người Dùng"
+    )
+      i(data-lucide="users", style="width: 18px; height: 18px;")
+      span.nav-text Quản Lý Người Dùng
+
+    hr(style="border-color: #1F242C; margin: 14px 0;")
+
+    a(
+      href="/",
+      target="_blank",
+      data-tooltip="Xem Website",
+      title="Xem Website"
+    )
+      i(data-lucide="external-link", style="width: 18px; height: 18px;")
+      span.nav-text Xem Website
+
+    a(
+      href="/logout",
+      style="color: var(--accent-coral);",
+      data-tooltip="Đăng Xuất",
+      title="Đăng Xuất"
+    )
+      i(data-lucide="log-out", style="width: 18px; height: 18px;")
+      span.nav-text Đăng Xuất
+
+  .admin-sidebar-footer
+    button.admin-collapse-toggle-btn#sidebarCollapseBtn(type="button", title="Thu gọn / Mở rộng menu")
+      i.collapse-chevron-icon(data-lucide="chevron-left", style="width: 16px; height: 16px;")
+      span.nav-text Thu gọn menu

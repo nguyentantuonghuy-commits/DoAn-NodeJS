@@ -49,30 +49,84 @@ block content
           span(style="color: var(--accent-emerald); font-weight: 600;") Còn hàng trong kho
 
         //- Price Box
-        .product-detail-price
-          span.detail-price-main= new Intl.NumberFormat('vi-VN').format(product.price) + 'đ'
-          if product.originalPrice > product.price
-            span.detail-price-old= new Intl.NumberFormat('vi-VN').format(product.originalPrice) + 'đ'
-            span.badge.badge-sale= `Tiết kiệm ${product.discount}%`
+        .product-detail-price(style="margin-bottom: 20px;")
+          span.detail-price-main#detail-price-main(style="font-size: 1.875rem; font-weight: 800; color: #DC2626;")
+            = new Intl.NumberFormat('vi-VN').format(product.hasVariants && product.variants && product.variants.length ? product.variants[0].price : product.price) + 'đ'
+          
+          - const firstOrig = (product.hasVariants && product.variants && product.variants.length ? product.variants[0].originalPrice : product.originalPrice)
+          - const firstPrice = (product.hasVariants && product.variants && product.variants.length ? product.variants[0].price : product.price)
+          
+          span.detail-price-old#detail-price-old(style=(firstOrig > firstPrice ? "font-size: 1.1rem; color: #94A3B8; text-decoration: line-through; margin-left: 10px;" : "display: none; font-size: 1.1rem; color: #94A3B8; text-decoration: line-through; margin-left: 10px;"))
+            = new Intl.NumberFormat('vi-VN').format(firstOrig) + 'đ'
+          
+          span.badge.badge-sale#detail-discount-badge(style=(firstOrig > firstPrice ? "margin-left: 10px; background: #FEE2E2; color: #DC2626; font-weight: 800; padding: 3px 8px; border-radius: 4px; font-size: 0.78rem;" : "display: none; margin-left: 10px; background: #FEE2E2; color: #DC2626; font-weight: 800; padding: 3px 8px; border-radius: 4px; font-size: 0.78rem;"))
+            = `Tiết kiệm ${Math.round(((firstOrig - firstPrice) / firstOrig) * 100)}%`
 
-        //- Color Picker
-        if product.colors && product.colors.length
-          .variant-picker
-            .variant-title
-              | Chọn Màu Sắc: 
-              span#selected-color-label(style="font-weight: 400; color: var(--text-muted);")= product.colors[0].name
-            .variant-swatches
+        //- Variant / Color Picker
+        if product.hasVariants && product.variants && product.variants.length
+          .variant-picker(style="margin-bottom: 24px; padding: 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;")
+            .variant-title(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;")
+              div(style="font-size: 0.875rem; font-weight: 700; color: #1E293B;")
+                | Chọn Màu Sắc / Biến Thể: 
+                span#selected-color-label(style="color: #2563EB; font-weight: 800;")= product.variants[0].name
+              span#variant-stock-status(style="font-size: 0.8125rem; font-weight: 700; color: #059669;")
+                = `Còn ${product.variants[0].stock} chiếc`
+            
+            .variant-swatches(style="display: flex; gap: 10px; flex-wrap: wrap;")
+              each v, idx in product.variants
+                button.variant-btn(
+                  type="button",
+                  class=(idx === 0 ? 'active' : ''),
+                  data-name=v.name,
+                  data-price=v.price,
+                  data-original-price=(v.originalPrice || v.price),
+                  data-stock=v.stock,
+                  data-image=(v.image || product.images[0]),
+                  onclick="selectProductVariant(this)",
+                  onmouseenter="previewProductVariant(this)",
+                  onmouseleave="restoreProductVariant()",
+                  style=(idx === 0 ? "cursor: pointer; padding: 8px 16px; border-radius: 6px; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 8px; border: 2px solid #0F172A; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s;" : "cursor: pointer; padding: 8px 16px; border-radius: 6px; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid #CBD5E1; background: #FFFFFF; transition: all 0.2s;")
+                )
+                  if v.image
+                    img(src=v.image, alt=v.name, style="width: 22px; height: 22px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.12); flex-shrink: 0;")
+                  else if v.color
+                    span(style=`display: inline-block; width: 14px; height: 14px; border-radius: 50%; background-color: ${v.color}; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;`)
+                  strong= v.name
+                  span(style="font-size: 0.8rem; color: #047857; font-weight: 700;")= `${new Intl.NumberFormat('vi-VN').format(v.price)}đ`
+        else if product.colors && product.colors.length
+          .variant-picker(style="margin-bottom: 24px; padding: 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;")
+            .variant-title(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;")
+              div(style="font-size: 0.875rem; font-weight: 700; color: #1E293B;")
+                | Chọn Màu Sắc: 
+                span#selected-color-label(style="color: #2563EB; font-weight: 800;")= product.colors[0].name
+              span#variant-stock-status(style="font-size: 0.8125rem; font-weight: 700; color: #059669;")
+                = `Còn ${product.stock} chiếc`
+            .variant-swatches(style="display: flex; gap: 10px; flex-wrap: wrap;")
               each col, idx in product.colors
-                button.variant-btn(type="button", class=(idx === 0 ? 'active' : ''))
-                  span(style=`display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: ${col.hex}; margin-right: 6px; vertical-align: middle;`)
-                  = col.name
+                button.variant-btn(
+                  type="button",
+                  class=(idx === 0 ? 'active' : ''),
+                  data-name=col.name,
+                  data-price=product.price,
+                  data-original-price=(product.originalPrice || product.price),
+                  data-stock=product.stock,
+                  data-image=(col.image || product.images[0]),
+                  onclick="selectProductColor(this)",
+                  style=(idx === 0 ? "cursor: pointer; padding: 8px 16px; border-radius: 6px; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 8px; border: 2px solid #0F172A; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s;" : "cursor: pointer; padding: 8px 16px; border-radius: 6px; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid #CBD5E1; background: #FFFFFF; transition: all 0.2s;")
+                )
+                  if col.image
+                    img(src=col.image, alt=col.name, style="width: 22px; height: 22px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.12); flex-shrink: 0;")
+                  else if col.hex
+                    span(style=`display: inline-block; width: 14px; height: 14px; border-radius: 50%; background-color: ${col.hex}; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;`)
+                  strong= col.name
+                  span(style="font-size: 0.8rem; color: #047857; font-weight: 700;")= `${new Intl.NumberFormat('vi-VN').format(product.price)}đ`
 
         //- Quantity Selector & Actions
-        .quantity-row
+        .quantity-row(style="margin-bottom: 20px;")
           span(style="font-size: 0.9375rem; font-weight: 700;") Số Lượng:
           .qty-spinner
             button.qty-btn.qty-minus(type="button") -
-            input.qty-input(type="number", value="1", min="1", max=product.stock, readonly)
+            input.qty-input(type="number", value="1", min="1", max=(product.hasVariants && product.variants && product.variants.length ? product.variants[0].stock : product.stock), readonly)
             button.qty-btn.qty-plus(type="button") +
 
         .buy-actions(style="display: flex; gap: 14px; margin-bottom: 30px;")
@@ -81,8 +135,9 @@ block content
             style="flex: 1;",
             data-id=product.id,
             data-name=product.name,
-            data-price=product.price,
-            data-image=product.images[0]
+            data-price=(product.hasVariants && product.variants && product.variants.length ? product.variants[0].price : product.price),
+            data-image=(product.hasVariants && product.variants && product.variants.length && product.variants[0].image ? product.variants[0].image : (product.colors && product.colors[0] && product.colors[0].image ? product.colors[0].image : product.images[0])),
+            data-color=(product.hasVariants && product.variants && product.variants.length ? product.variants[0].name : (product.colors && product.colors.length ? product.colors[0].name : 'Tiêu chuẩn'))
           )
             i(data-lucide="shopping-bag", style="width: 18px; height: 18px;")
             | Thêm Vào Giỏ Hàng
@@ -90,13 +145,7 @@ block content
           button#buy-now-btn.btn.btn-lg.btn-primary(
             type="button",
             style="flex: 1.2;",
-            onclick=`
-              const detailBtn = document.getElementById('detail-add-to-cart');
-              if (detailBtn) {
-                detailBtn.click();
-                setTimeout(() => { window.location.href = '/checkout'; }, 400);
-              }
-            `
+            onclick="handleBuyNow()"
           )
             i(data-lucide="zap", style="width: 18px; height: 18px; color: var(--accent-gold);")
             | Mua Ngay
@@ -220,6 +269,276 @@ block content
             include ../partials/product-card
 
   script.
+    // Helper to compare image paths (handles relative and absolute URLs)
+    function isSameImage(srcA, srcB) {
+      if (!srcA || !srcB) return false;
+      if (srcA === srcB) return true;
+      const cleanA = srcA.split('?')[0].replace(/^https?:\/\/[^\/]+/, '');
+      const cleanB = srcB.split('?')[0].replace(/^https?:\/\/[^\/]+/, '');
+      return cleanA === cleanB;
+    }
+
+    // Synchronize active border on left gallery thumbnails
+    function syncActiveThumbnail(imgUrl) {
+      if (!imgUrl) return;
+      const thumbs = document.querySelectorAll('.gallery-thumb');
+      thumbs.forEach(thumb => {
+        const rawSrc = thumb.getAttribute('src') || thumb.src;
+        const largeSrc = thumb.dataset.large || rawSrc;
+        if (isSameImage(rawSrc, imgUrl) || isSameImage(largeSrc, imgUrl)) {
+          thumb.classList.add('active');
+          thumb.style.borderColor = '#0F172A';
+        } else {
+          thumb.classList.remove('active');
+          thumb.style.borderColor = 'transparent';
+        }
+      });
+    }
+
+    // Select variant permanently (on click)
+    function selectProductVariant(btn, shouldPulse = true) {
+      if (!btn) return;
+
+      document.querySelectorAll('.variant-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.border = '1.5px solid #CBD5E1';
+        b.style.boxShadow = 'none';
+      });
+      btn.classList.add('active');
+      btn.style.border = '2px solid #0F172A';
+      btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+
+      const name = btn.dataset.name;
+      const price = Number(btn.dataset.price);
+      const orig = Number(btn.dataset.originalPrice);
+      const stock = Number(btn.dataset.stock);
+      const imgUrl = btn.dataset.image;
+
+      // 1. Update Label
+      const labelEl = document.getElementById('selected-color-label');
+      if (labelEl) labelEl.textContent = name;
+
+      // 2. Update Main Price with smooth visual pulse
+      const priceEl = document.getElementById('detail-price-main');
+      if (priceEl && price > 0) {
+        priceEl.textContent = new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+        if (shouldPulse) {
+          priceEl.style.transform = 'scale(1.08)';
+          priceEl.style.transition = 'transform 0.15s ease';
+          setTimeout(() => { priceEl.style.transform = 'scale(1)'; }, 150);
+        }
+      }
+
+      // 3. Update Strikethrough Price & Discount Badge
+      const oldPriceEl = document.getElementById('detail-price-old');
+      const badgeEl = document.getElementById('detail-discount-badge');
+      if (orig > price && orig > 0) {
+        if (oldPriceEl) {
+          oldPriceEl.textContent = new Intl.NumberFormat('vi-VN').format(orig) + 'đ';
+          oldPriceEl.style.display = 'inline-block';
+        }
+        if (badgeEl) {
+          const disc = Math.round(((orig - price) / orig) * 100);
+          badgeEl.textContent = `Tiết kiệm ${disc}%`;
+          badgeEl.style.display = 'inline-block';
+        }
+      } else {
+        if (oldPriceEl) oldPriceEl.style.display = 'none';
+        if (badgeEl) badgeEl.style.display = 'none';
+      }
+
+      // 4. Update Stock Status & Quantity Spinner
+      const stockEl = document.getElementById('variant-stock-status');
+      const addBtn = document.getElementById('detail-add-to-cart');
+      const buyBtn = document.getElementById('buy-now-btn');
+      const qtyInput = document.querySelector('.qty-input');
+
+      if (stock <= 0) {
+        if (stockEl) {
+          stockEl.textContent = 'Hết hàng (Tạm ngưng nhận đơn)';
+          stockEl.style.color = '#DC2626';
+        }
+        if (addBtn) addBtn.disabled = true;
+        if (buyBtn) buyBtn.disabled = true;
+      } else {
+        if (stockEl) {
+          stockEl.textContent = `Còn ${stock} cái`;
+          stockEl.style.color = '#059669';
+        }
+        if (addBtn) addBtn.disabled = false;
+        if (buyBtn) buyBtn.disabled = false;
+        if (qtyInput) {
+          qtyInput.max = stock;
+          if (Number(qtyInput.value) > stock) qtyInput.value = stock;
+        }
+      }
+
+      // 5. Update Add To Cart dataset so cart stores exact price and variant!
+      if (addBtn) {
+        if (price && price > 0) {
+          addBtn.dataset.price = price;
+        }
+        if (name) addBtn.dataset.color = name;
+        if (imgUrl) addBtn.dataset.image = imgUrl;
+      }
+
+      // 6. Swap Main Image AND SYNC THE THUMBNAIL BORDER ON THE LEFT!
+      if (imgUrl) {
+        const mainImg = document.getElementById('main-product-img');
+        if (mainImg) mainImg.src = imgUrl;
+        syncActiveThumbnail(imgUrl);
+      }
+    }
+
+    // Select color swatch (for non-variant products with colors)
+    function selectProductColor(btn) {
+      if (!btn) return;
+      document.querySelectorAll('.variant-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.border = '1.5px solid #CBD5E1';
+        b.style.boxShadow = 'none';
+      });
+      btn.classList.add('active');
+      btn.style.border = '2px solid #0F172A';
+      btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+
+      const name = btn.dataset.name;
+      const price = Number(btn.dataset.price);
+      const imgUrl = btn.dataset.image;
+
+      const labelEl = document.getElementById('selected-color-label');
+      if (labelEl && name) labelEl.textContent = name;
+
+      const addBtn = document.getElementById('detail-add-to-cart');
+      if (addBtn) {
+        if (price && price > 0) addBtn.dataset.price = price;
+        if (name) addBtn.dataset.color = name;
+        if (imgUrl) addBtn.dataset.image = imgUrl;
+      }
+
+      if (imgUrl) {
+        const mainImg = document.getElementById('main-product-img');
+        if (mainImg) mainImg.src = imgUrl;
+        syncActiveThumbnail(imgUrl);
+      }
+    }
+
+    // Preview variant on hover (trỏ chuột)
+    function previewProductVariant(btn) {
+      if (!btn) return;
+      if (btn.classList.contains('active')) return;
+
+      // Highlight this button border on hover
+      btn.style.border = '2px solid #0F172A';
+
+      const name = btn.dataset.name;
+      const price = Number(btn.dataset.price);
+      const orig = Number(btn.dataset.originalPrice);
+      const stock = Number(btn.dataset.stock);
+      const imgUrl = btn.dataset.image;
+
+      // Preview Label
+      const labelEl = document.getElementById('selected-color-label');
+      if (labelEl) labelEl.textContent = name;
+
+      // Preview Price
+      const priceEl = document.getElementById('detail-price-main');
+      if (priceEl && price > 0) {
+        priceEl.textContent = new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+      }
+
+      // Preview Stock
+      const stockEl = document.getElementById('variant-stock-status');
+      if (stockEl) {
+        stockEl.textContent = stock <= 0 ? 'Hết hàng (Tạm ngưng)' : `Còn ${stock} cái`;
+        stockEl.style.color = stock <= 0 ? '#DC2626' : '#059669';
+      }
+
+      // Preview Main Image & Move the black border to matching thumbnail!
+      if (imgUrl) {
+        const mainImg = document.getElementById('main-product-img');
+        if (mainImg) mainImg.src = imgUrl;
+        syncActiveThumbnail(imgUrl);
+      }
+    }
+
+    // Restore truly active variant when mouse leaves
+    function restoreProductVariant() {
+      const activeBtn = document.querySelector('.variant-btn.active');
+      if (activeBtn) {
+        document.querySelectorAll('.variant-btn:not(.active)').forEach(b => {
+          b.style.border = '1.5px solid #CBD5E1';
+          b.style.boxShadow = 'none';
+        });
+        selectProductVariant(activeBtn, false);
+      }
+    }
+
+    // Global sync: when thumbnail is clicked or hovered from main.js
+    window.syncVariantFromImage = function(imgUrl) {
+      if (!imgUrl) return;
+      const matchingVariant = Array.from(document.querySelectorAll('.variant-btn')).find(b => isSameImage(b.dataset.image, imgUrl));
+      if (matchingVariant) {
+        selectProductVariant(matchingVariant);
+      } else {
+        syncActiveThumbnail(imgUrl);
+      }
+    };
+
+    // Initialize listeners on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Initial sync of thumbnail border with initial active variant
+      const initialActive = document.querySelector('.variant-btn.active');
+      if (initialActive && initialActive.dataset.image) {
+        syncActiveThumbnail(initialActive.dataset.image);
+      }
+
+      // 2. Add hover & click listeners to all left thumbnails
+      const thumbs = document.querySelectorAll('.gallery-thumb');
+      const mainImg = document.getElementById('main-product-img');
+
+      thumbs.forEach(thumb => {
+        thumb.addEventListener('mouseenter', () => {
+          const thumbSrc = thumb.dataset.large || thumb.getAttribute('src') || thumb.src;
+          syncActiveThumbnail(thumbSrc);
+          if (mainImg) mainImg.src = thumbSrc;
+
+          const matchingVariant = Array.from(document.querySelectorAll('.variant-btn')).find(b => isSameImage(b.dataset.image, thumbSrc));
+          if (matchingVariant && !matchingVariant.classList.contains('active')) {
+            matchingVariant.style.border = '2px solid #0F172A';
+          }
+        });
+
+        thumb.addEventListener('mouseleave', () => {
+          restoreProductVariant();
+        });
+
+        thumb.addEventListener('click', () => {
+          const thumbSrc = thumb.dataset.large || thumb.getAttribute('src') || thumb.src;
+          const matchingVariant = Array.from(document.querySelectorAll('.variant-btn')).find(b => isSameImage(b.dataset.image, thumbSrc));
+          if (matchingVariant) {
+            selectProductVariant(matchingVariant);
+          } else {
+            thumbs.forEach(t => {
+              t.classList.remove('active');
+              t.style.borderColor = 'transparent';
+            });
+            thumb.classList.add('active');
+            thumb.style.borderColor = '#0F172A';
+            if (mainImg) mainImg.src = thumbSrc;
+          }
+        });
+      });
+    });
+
+    function handleBuyNow() {
+      const detailBtn = document.getElementById('detail-add-to-cart');
+      if (detailBtn) {
+        detailBtn.click();
+        setTimeout(() => { window.location.href = '/checkout'; }, 400);
+      }
+    }
+
     async function submitReview(e) {
       e.preventDefault();
       const productId = document.getElementById('review-product-id').value;

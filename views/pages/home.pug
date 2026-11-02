@@ -1,47 +1,100 @@
 extends ../layouts/main
 
 block content
-  //- 1. HERO SECTION (High Impact Cinematic Editorial Lookbook)
-  section.hero-section
-    .hero-bg-wrapper
-      img.hero-bg(src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=85", alt="Atelier Fashion Accessories Hero")
-      .hero-gradient-overlay
+  //- 1. FULL-WIDTH IMMERSIVE VIDEO HERO SECTION (FULL 2 BÊN)
+  section.sceneai-hero-section
+    // Background Looping Video (Majestic Alpine Drone Footage 4K 60fps)
+    video.portal-bg-video(autoplay, loop, muted, playsinline, poster="/images/hero-poster.jpg")
+      source(src="/videos/hero-campaign.mp4", type="video/mp4")
     
+    // Gradient Overlay (Ensures transparent white header & center typography are razor-sharp)
+    .portal-video-overlay
+
+    // Center Hero Content (Clean, Breathable Luxury Aesthetics)
+    .portal-content-center
+      h1.portal-headline
+        | Đẳng Cấp Phụ Kiện Nam
+        br
+        | Định Hình Phong Thái
+      p.portal-subtext
+        | Chế tác thủ công từ Da Bò Tuscany &amp; Thép Titan 316L Vĩnh Cửu.
+      .portal-cta-wrap
+        a.portal-btn-primary(href="/shop?sort=newest") Khám Phá Bộ Sưu Tập
+
+  //- 2. COOLMATE-STYLE CIRCULAR CATEGORY HIGHLIGHTS BAR (STORY BUBBLES)
+  section.category-stories-bar
     .container
-      .hero-content
-        .hero-badge-wrap
-          span.hero-pill-badge
-            i(data-lucide="sparkles", style="width: 14px; height: 14px;")
-            | BỘ SƯU TẬP THU ĐÔNG 2026 • CONTEMPORARY LUXURY
-        
-        h1.hero-title Tuyên Ngôn Phong Cách. Sắc Nét Từng Chi Tiết.
-        
-        p.hero-desc
-          | Khám phá bộ sưu tập phụ kiện thời trang thủ công từ da bò Top-Grain Ý, trang sức titan 316L vĩnh cửu và nón streetwear đương đại. Định hình bản lĩnh và gu thẩm mỹ khác biệt cho thế hệ mới.
-        
-        .hero-cta-group
-          a.btn.btn-lg.btn-primary.btn-glow(href="/shop")
-            span Khám Phá Cửa Hàng
-            i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
-          a.btn.btn-lg.btn-outline-white(href="/lookbook")
-            i(data-lucide="camera", style="width: 18px; height: 18px;")
-            span Xem Editorial Lookbook
+      .stories-scroller
+        a.story-circle-item(href="/shop?category=that-lung-da")
+          .story-ring
+            img(src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=160&q=80", alt="Thắt Lưng")
+          span.story-label Thắt Lưng Ý
 
-        // Quick Trust Stat Strip
-        .hero-trust-strip
-          .trust-stat
-            strong 100%
-            span Da Thật &amp; Titan
-          .trust-divider
-          .trust-stat
-            strong 60 Ngày
-            span Đổi Trả Tận Nơi
-          .trust-divider
-          .trust-stat
-            strong 50.000+
-            span Khách Hàng Tin Dùng
+        a.story-circle-item(href="/shop?category=vi-da")
+          .story-ring
+            img(src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=160&q=80", alt="Ví Da")
+          span.story-label Ví &amp; Cardholder
 
-  //- 2. USP VALUE STRIP (Coolmate / ACFC Commitments)
+        a.story-circle-item(href="/shop?category=mu-non")
+          .story-ring
+            img(src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=160&q=80", alt="Mũ Nón")
+          span.story-label Mũ &amp; Nón Kết
+
+        a.story-circle-item(href="/shop?category=kinh-mat")
+          .story-ring
+            img(src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=160&q=80", alt="Kính Mát")
+          span.story-label Kính UV400
+
+        a.story-circle-item(href="/shop?category=trang-suc-titan")
+          .story-ring
+            img(src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=160&q=80", alt="Trang Sức")
+          span.story-label Vòng &amp; Dây Titan
+
+        a.story-circle-item.sale-highlight(href="/shop?isSale=true")
+          .story-ring.ring-sale
+            .story-icon-sale
+              i(data-lucide="flame", style="width: 28px; height: 28px; color: #FFF;")
+          span.story-label.label-sale Flash Sale 50%
+
+  //- 3. YAME-STYLE DUAL EDITORIAL CAMPAIGN POSTERS
+  section.hero-campaign-section
+    .container
+      .hero-dual-grid
+        // Card 1: MỚI MỞ BÁN
+        a.hero-dual-card(href="/shop?sort=newest")
+          img(src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format&fit=crop&w=1200&q=85", alt="Mới Mở Bán Collection 2026", loading="eager")
+          .hero-dual-overlay
+            span.hero-dual-badge
+              i(data-lucide="star", style="width: 13px; height: 13px;")
+              | NEW ARRIVALS 2026
+            h2.hero-dual-title MỚI MỞ BÁN
+            p.hero-dual-desc Bộ sưu tập phụ kiện Thu Đông 2026: Tuyên ngôn phong thái tối giản Quiet Luxury với đường nét dứt khoát.
+            .hero-dual-price-strip
+              span.price-pill-tag Thắt lưng Da Ý Cao Cấp
+              span.price-pill-tag Ví da từ 249K
+              span.price-pill-tag Kính UV400 từ 199K
+            span.hero-dual-btn
+              | Khám Phá BST Mới
+              i(data-lucide="arrow-right", style="width: 15px; height: 15px;")
+
+        // Card 2: SALE TỪ 89.000Đ
+        a.hero-dual-card(href="/shop?isSale=true")
+          img(src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=85", alt="Flash Sale Phụ Kiện Từ 89K", loading="eager")
+          .hero-dual-overlay
+            span.hero-dual-badge(style="color: var(--accent-coral);")
+              i(data-lucide="zap", style="width: 13px; height: 13px;")
+              | FLASH DEAL ĐỘC QUYỀN
+            h2.hero-dual-title SALE Từ 89.000đ
+            p.hero-dual-desc Ưu đãi lên tới 50% cho các thiết kế phụ kiện da thật, kính mát phân cực và trang sức titan hot nhất.
+            .hero-dual-price-strip
+              span.price-pill-tag(style="background: rgba(225, 29, 72, 0.3);") Đồng giá 89K
+              span.price-pill-tag Phụ kiện dưới 199K
+              span.price-pill-tag Combo Giảm Thêm 10%
+            span.hero-dual-btn
+              | Săn Deal Ngay
+              i(data-lucide="arrow-right", style="width: 15px; height: 15px;")
+
+  //- 4. VALUE PROPOSITION STRIP (Commitments & Guarantees)
   section.usp-strip
     .container
       .usp-grid
@@ -50,28 +103,136 @@ block content
             i(data-lucide="shield-check", style="width: 24px; height: 24px;")
           .usp-card-info
             .usp-card-title 100% Da Bò Ý &amp; Titan 316L
-            .usp-card-desc Cam kết chất lượng, bảo hành 24 tháng
+            .usp-card-desc Cam kết chất lượng chuẩn xuất khẩu, bảo hành 24 tháng 1 đổi 1
         .usp-card
           .usp-card-icon
             i(data-lucide="truck", style="width: 24px; height: 24px;")
           .usp-card-info
-            .usp-card-title Miễn Phí Vận Chuyển Toàn Quốc
-            .usp-card-desc Đơn từ 299K giao hỏa tốc 2H tại TP.HCM &amp; HN
+            .usp-card-title Giao Hàng Hỏa Tốc Toàn Quốc
+            .usp-card-desc Giao hàng hỏa tốc trong 2H tại TP.HCM &amp; Hà Nội
         .usp-card
           .usp-card-icon
             i(data-lucide="refresh-cw", style="width: 24px; height: 24px;")
           .usp-card-info
             .usp-card-title Đổi Trả 60 Ngày Tận Nơi
-            .usp-card-desc Đổi size, đổi mẫu dễ dàng không mất phí
+            .usp-card-desc Đổi size, đổi mẫu dễ dàng không mất phí, shipper đến tận nhà
         .usp-card
           .usp-card-icon
             i(data-lucide="gift", style="width: 24px; height: 24px;")
           .usp-card-info
-            .usp-card-title Đóng Gói Premium Box
-            .usp-card-desc Hộp quà sang trọng, có thiệp viết tay
+            .usp-card-title Hộp Quà Signature Sang Trọng
+            .usp-card-desc Đóng gói chỉn chu có túi vải canvas &amp; thiệp viết tay
 
-  //- 3. FEATURED CATEGORIES SHOWCASE (YaMe & ACFC Visual Tiles)
+  //- 3. ACFC-STYLE CATEGORY FILTER NAVIGATION STRIP
+  section.container(style="margin-top: 36px; margin-bottom: 20px;")
+    .tab-filter-pills(style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none;")
+      a.filter-pill.active(href="/shop") 
+        i(data-lucide="grid", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Tất Cả Phụ Kiện
+      a.filter-pill(href="/shop?category=that-lung-da")
+        i(data-lucide="shield", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Thắt Lưng Da Bò Ý
+      a.filter-pill(href="/shop?category=vi-da")
+        i(data-lucide="credit-card", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Ví &amp; Cardholder RFID
+      a.filter-pill(href="/shop?category=mu-non")
+        i(data-lucide="disc", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Mũ &amp; Nón Streetwear
+      a.filter-pill(href="/shop?category=kinh-mat")
+        i(data-lucide="glasses", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Kính Mát UV400
+      a.filter-pill(href="/shop?category=trang-suc-titan")
+        i(data-lucide="link", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Trang Sức Titan 316L
+      a.filter-pill(href="/shop?category=tui-balo")
+        i(data-lucide="briefcase", style="width: 14px; height: 14px; margin-right: 5px;")
+        | Túi Đeo Chéo &amp; Balo
+
+  //- 4. FLASH SALE SECTION (Countdown Timer & Sales Progress Bar)
+  if flashSaleProducts && flashSaleProducts.length
+    section.container.flash-sale-wrapper
+      .flash-sale-box
+        .flash-sale-top
+          .flash-badge-area
+            .flash-flame-icon
+              i(data-lucide="zap", style="width: 22px; height: 22px;")
+            .flash-text-wrap
+              h2.flash-heading FLASH SALE TRONG NGÀY
+              p.flash-sub Giảm đến 50% cho các sản phẩm hot nhất - Số lượng giới hạn
+          
+          .flash-timer-area
+            span.timer-label KẾT THÚC SAU:
+            .countdown-timer
+              span.timer-box#timer-hours 08
+              span.timer-colon :
+              span.timer-box#timer-mins 45
+              span.timer-colon :
+              span.timer-box#timer-secs 20
+        
+        .product-grid
+          each product in flashSaleProducts
+            include ../partials/product-card
+
+        .flash-sale-footer
+          a.btn.btn-outline.btn-block(href="/shop?isSale=true")
+            | Xem Toàn Bộ Deal Flash Sale (Giảm Đến 50%)
+            i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+
+  //- 5. PUCINI-STYLE 3-PORTRAIT SHOWCASE SECTION ("EXPERIENCE A WHOLE NEW ERA")
+  section.pucini-showcase-section
+    .container
+      .pucini-header
+        .pucini-eyebrow EXPERIENCE A WHOLE NEW ACCESSORIES ERA
+        h2.pucini-title New design. New ATELIER.
+        p.pucini-desc
+          | Mỗi đường nét được tinh giản đến mức tối đa để tôn vinh chất liệu nguyên bản và phong thái đĩnh đạc của quý ông đương đại.
+
+      .pucini-grid
+        // Portrait Card 1: Tuscan Leather Texture
+        a.pucini-card(href="/shop?category=that-lung-da")
+          img(src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=85", alt="Tuscany Leather Texture", loading="lazy")
+          .pucini-card-overlay
+            span.pucini-card-badge TUSCANY LEATHER
+            h3.pucini-card-title Da Bò Thảo Mộc Nguyên Bản
+            p.pucini-card-sub Tuyển chọn từ những tấm da đanh dẻo nhất vùng Tuscany, càng dùng càng bóng đẹp theo năm tháng.
+
+        // Portrait Card 2: Modern Gentleman Lifestyle
+        a.pucini-card(href="/lookbook")
+          img(src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=85", alt="Modern Gentleman Style", loading="lazy")
+          .pucini-card-overlay
+            span.pucini-card-badge SIGNATURE LIFESTYLE
+            h3.pucini-card-title Phong Thái Quiet Luxury
+            p.pucini-card-sub Tự tin và đĩnh đạc trong mọi khoảnh khắc với phụ kiện chuẩn mực được gia công tinh xảo.
+
+        // Portrait Card 3: Titanium & Coastal Outdoors
+        a.pucini-card(href="/shop?category=trang-suc-titan")
+          img(src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=85", alt="Titanium Cuban Jewelry", loading="lazy")
+          .pucini-card-overlay
+            span.pucini-card-badge TIMELESS TITANIUM
+            h3.pucini-card-title Thép Titan 316L Bất Diệt
+            p.pucini-card-sub Chống ăn mòn tuyệt đối, không gỉ sét trước mồ hôi và nước biển trong mọi chuyến phiêu lưu.
+
+  //- 6. "MỚI MỞ BÁN" SHOWCASE (NEW ARRIVALS - YaMe & ACFC Style)
   section.section-padding
+    .container
+      .section-header
+        .section-title-wrap
+          span.sub-title MỚI MỞ BÁN • NEW ARRIVALS 2026
+          h2.section-title Bộ Sưu Tập Phụ Kiện Vừa Ra Mắt
+        a.section-link(href="/shop?sort=newest")
+          | Xem tất cả hàng mới
+          i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+
+      .product-grid
+        if newArrivalProducts && newArrivalProducts.length
+          each product in newArrivalProducts
+            include ../partials/product-card
+        else if featuredProducts && featuredProducts.length
+          each product in featuredProducts
+            include ../partials/product-card
+
+  //- 7. FEATURED CATEGORIES SHOWCASE (YaMe & ACFC Visual Tiles)
+  section.section-padding.bg-alt
     .container
       .section-header
         .section-title-wrap
@@ -95,38 +256,8 @@ block content
                   | Mua sắm ngay
                   i(data-lucide="arrow-right", style="width: 14px; height: 14px;")
 
-  //- 4. FLASH SALE SECTION (Countdown Timer & Sales Progress Bar)
-  if flashSaleProducts && flashSaleProducts.length
-    section.container.flash-sale-wrapper
-      .flash-sale-box
-        .flash-sale-top
-          .flash-badge-area
-            .flash-flame-icon
-              i(data-lucide="zap", style="width: 22px; height: 22px;")
-            .flash-text-wrap
-              h2.flash-heading FLASH SALE TRONG NGÀY
-              p.flash-sub Giảm đến 50% cho các sản phẩm hot - Số lượng có hạn
-          
-          .flash-timer-area
-            span.timer-label KẾT THÚC SAU:
-            .countdown-timer
-              span.timer-box#timer-hours 08
-              span.timer-colon :
-              span.timer-box#timer-mins 45
-              span.timer-colon :
-              span.timer-box#timer-secs 20
-        
-        .product-grid
-          each product in flashSaleProducts
-            include ../partials/product-card
-
-        .flash-sale-footer
-          a.btn.btn-outline.btn-block(href="/shop?isSale=true")
-            | Xem Toàn Bộ Deal Flash Sale (Giảm Đến 50%)
-            i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
-
-  //- 5. BEST SELLERS WITH FILTER TABS (YaMe / Coolmate Tabs)
-  section.section-padding.bg-alt
+  //- 8. BEST SELLERS WITH FILTER TABS (YaMe / Coolmate Tabs)
+  section.section-padding
     .container
       .section-header
         .section-title-wrap
@@ -149,7 +280,7 @@ block content
           | Xem Thêm Sản Phẩm Bán Chạy
           i(data-lucide="arrow-right", style="width: 18px; height: 18px;")
 
-  //- 6. SHOPPABLE EDITORIAL LOOKBOOK (Interactive Hotspots)
+  //- 9. SHOPPABLE EDITORIAL LOOKBOOK (Interactive Hotspots)
   section.container.section-padding-sm
     .lookbook-section
       .lookbook-wrap
@@ -191,13 +322,13 @@ block content
               a.btn.btn-sm.btn-primary(href="/product/day-chuyen-cuban-link-titan-khong-gi-7mm-bac-sang") Mua ngay
 
             #lookbook-item-3.lookbook-item-card
-              img.lookbook-item-thumb(src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=200&q=80", alt="Thắt Lưng")
+              img.lookbook-item-thumb(src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=200&q=80", alt="Thắt Lưng")
               .lookbook-item-info
                 .lookbook-item-title Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx
                 .lookbook-item-price 349.000đ
               a.btn.btn-sm.btn-primary(href="/product/that-lung-da-bo-y-khoa-tu-dong-black-onyx") Mua ngay
 
-  //- 7. CRAFTSMANSHIP & HERITAGE (Chất Liệu & Tay Nghề Thủ Công)
+  //- 10. CRAFTSMANSHIP & HERITAGE (Chất Liệu & Tay Nghề Thủ Công)
   section.section-padding.craftsmanship-section
     .container
       .craft-grid
@@ -238,8 +369,8 @@ block content
             img.craft-img-main(src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80", alt="Leather Crafting")
             img.craft-img-sub(src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80", alt="Titanium Jewelry Crafting")
 
-  //- 8. FASHION JOURNAL / BLOG (Tạp Chí Phối Đồ)
-  section.section-padding
+  //- 11. FASHION JOURNAL / BLOG (Tạp Chí Phối Đồ)
+  section.section-padding.bg-alt
     .container
       .section-header
         .section-title-wrap
@@ -252,7 +383,7 @@ block content
       .blog-grid
         article.blog-card
           .blog-thumb-wrap
-            img(src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80", alt="Blog 1")
+            img(src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80", alt="Blog 1")
             span.blog-category Phong Cách &amp; Phối Đồ
           .blog-info
             .blog-meta
@@ -295,8 +426,8 @@ block content
             a.blog-read-more(href="/blog/nghe-thuat-mix-match-trang-suc-titan-streetwear")
               | Đọc tiếp bài viết &rarr;
 
-  //- 9. CUSTOMER REVIEWS & SOCIAL PROOF
-  section.section-padding.bg-alt
+  //- 12. CUSTOMER REVIEWS & SOCIAL PROOF
+  section.section-padding
     .container
       .section-header(style="text-align: center; justify-content: center; flex-direction: column; align-items: center; gap: 8px;")
         span.sub-title KHÁCH HÀNG THỰC TẾ
@@ -319,8 +450,8 @@ block content
                   i(data-lucide="check-circle", style="width: 13px; height: 13px;")
                   | Đã mua hàng xác thực
 
-  //- 10. INSTAGRAM & LOOKBOOK COMMUNITY FEED (#AtelierStyle)
-  section.section-padding-sm
+  //- 13. INSTAGRAM & LOOKBOOK COMMUNITY FEED (#AtelierStyle)
+  section.section-padding-sm.bg-alt
     .container
       .section-header(style="text-align: center; justify-content: center; flex-direction: column; align-items: center; gap: 6px;")
         span.sub-title CỘNG ĐỒNG THỜI TRANG
@@ -353,8 +484,60 @@ block content
           .insta-hover
             i(data-lucide="instagram", style="width: 24px; height: 24px;")
 
-  //- 11. VIP CLUB NEWSLETTER
-  section.container(style="margin-bottom: 60px;")
+  //- 14. SHOWROOM NETWORK LOCATOR STRIP
+  section.showroom-section
+    .container
+      .section-header
+        .section-title-wrap
+          span.sub-title TRẢI NGHIỆM TRỰC TIẾP
+          h2.section-title Hệ Thống Showroom Atelier Toàn Quốc
+        a.section-link(href="/contact")
+          | Xem tất cả cửa hàng &amp; chỉ đường
+          i(data-lucide="arrow-right", style="width: 16px; height: 16px;")
+
+      .showroom-grid
+        .showroom-card
+          .showroom-top
+            span.showroom-city TP. HỒ CHÍ MINH
+            h3.showroom-name Flagship Store Quận 1
+            p.showroom-address 188 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM
+          .showroom-bottom
+            span.showroom-hotline
+              i(data-lucide="phone", style="width: 14px; height: 14px; color: var(--accent-gold);")
+              | 028 3822 8888 (08:30 - 22:00)
+
+        .showroom-card
+          .showroom-top
+            span.showroom-city HÀ NỘI
+            h3.showroom-name Boutique Hoàn Kiếm
+            p.showroom-address 68 Tràng Tiền, Phường Tràng Tiền, Quận Hoàn Kiếm, Hà Nội
+          .showroom-bottom
+            span.showroom-hotline
+              i(data-lucide="phone", style="width: 14px; height: 14px; color: var(--accent-gold);")
+              | 024 3936 8888 (09:00 - 21:30)
+
+        .showroom-card
+          .showroom-top
+            span.showroom-city ĐÀ NẴNG
+            h3.showroom-name Store Hải Châu
+            p.showroom-address 125 Lê Duẩn, Phường Thạch Thang, Quận Hải Châu, Đà Nẵng
+          .showroom-bottom
+            span.showroom-hotline
+              i(data-lucide="phone", style="width: 14px; height: 14px; color: var(--accent-gold);")
+              | 0236 3888 999 (08:30 - 22:00)
+
+        .showroom-card
+          .showroom-top
+            span.showroom-city CẦN THƠ
+            h3.showroom-name Store Ninh Kiều
+            p.showroom-address 45 Đường 30 Tháng 4, Phường An Lạc, Quận Ninh Kiều, Cần Thơ
+          .showroom-bottom
+            span.showroom-hotline
+              i(data-lucide="phone", style="width: 14px; height: 14px; color: var(--accent-gold);")
+              | 0292 3777 888 (08:30 - 21:30)
+
+  //- 15. VIP CLUB NEWSLETTER
+  section.container(style="margin-top: 60px; margin-bottom: 70px;")
     .newsletter-section
       .newsletter-content
         span.newsletter-badge ĐẶC QUYỀN THÀNH VIÊN

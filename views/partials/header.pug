@@ -1,35 +1,5 @@
-//- 1. Top Announcement Bar (Ticker)
-.announcement-bar
-  .container
-    .announcement-inner
-      .announcement-ticker
-        span.ticker-item
-          span.badge-pill FREESHIP
-          | MIỄN PHÍ VẬN CHUYỂN TOÀN QUỐC CHO ĐƠN HÀNG TỪ 299.000Đ
-        span.ticker-sep •
-        span.ticker-item
-          span.badge-pill CAM KẾT
-          | 100% DA BÒ Ý THẬT &amp; TITAN 316L BẢO HÀNH 24 THÁNG
-        span.ticker-sep •
-        span.ticker-item
-          span.badge-pill YÊN TÂM
-          | ĐỔI TRẢ 60 NGÀY TẬN NƠI MIỄN PHÍ - KHÔNG CẦN LÝ DO
-        span.ticker-sep •
-        span.ticker-item
-          span.badge-pill HOTLINE
-          | 1900 8888 (08:00 - 22:00)
-      
-      .announcement-right
-        a.ann-link(href="/contact")
-          i(data-lucide="map-pin", style="width: 13px; height: 13px;")
-          | Hệ Thống Cửa Hàng
-        span.divider |
-        a.ann-link(href="/blog")
-          i(data-lucide="book-open", style="width: 13px; height: 13px;")
-          | Tạp Chí Thời Trang
-
-//- 2. Master Header & Navigation
-header.site-header#main-header
+//- Master Header & Navigation (Clean Luxury Top Bar)
+header.site-header#main-header(class=(currentPath === '/' ? 'home-header' : ''))
   .container.header-inner
     // Mobile Hamburger Trigger
     button.mobile-menu-toggle#mobile-menu-btn(type="button", aria-label="Mở menu di động")
@@ -43,87 +13,327 @@ header.site-header#main-header
         span.logo-main ATELIER
         span.logo-sub CONTEMPORARY ACCESSORIES
 
-    // Desktop Navigation Menu with Mega Dropdown
+    // Desktop Navigation Menu with Multi-Category Dropdowns (YaMe & ACFC Style)
     nav.main-nav
       a.nav-link(href="/", class=(currentPath === '/' ? 'active' : '')) 
         | Trang Chủ
 
-      // Shop with Mega Dropdown
-      .nav-item.has-mega-dropdown
-        a.nav-link.dropdown-trigger(href="/shop", class=(currentPath.startsWith('/shop') ? 'active' : ''))
-          | Cửa Hàng
-          i(data-lucide="chevron-down", style="width: 14px; height: 14px; margin-left: 2px;")
+      // 1. SALE with Mega Dropdown
+      .nav-item.has-mega-dropdown(class=(query && query.openDropdown === 'sale' ? 'is-active' : ''))
+        a.nav-link.sale-tag.dropdown-trigger(href="/shop?isSale=true", class=(query && query.isSale ? 'active' : ''))
+          i(data-lucide="flame", style="width: 14px; height: 14px; margin-right: 4px; vertical-align: -1px;")
+          | SALE
+          i(data-lucide="chevron-down", style="width: 13px; height: 13px; margin-left: 2px;")
         
-        // Mega Dropdown Menu Panel
         .mega-dropdown-menu
           .container.mega-dropdown-inner
             .mega-col
               .mega-col-title
-                i(data-lucide="shield", style="width: 16px; height: 16px;")
-                | ĐỒ DA THỦ CÔNG
+                i(data-lucide="zap", style="width: 15px; height: 15px; color: var(--accent-coral);")
+                | CHƯƠNG TRÌNH HOT
               ul.mega-links
-                li: a(href="/shop?category=that-lung-da")
-                  span.link-name Thắt Lưng Da Bò Ý
-                  span.link-badge Hot
-                li: a(href="/shop?category=vi-da")
-                  span.link-name Ví Da &amp; Cardholder
-                li: a(href="/shop?category=tui-balo")
-                  span.link-name Túi Đeo Chéo &amp; Balo Da
-                li: a.view-all-sub(href="/shop?category=that-lung-da") Khám phá toàn bộ đồ da &rarr;
-
-            .mega-col
-              .mega-col-title
-                i(data-lucide="sparkles", style="width: 16px; height: 16px;")
-                | PHỤ KIỆN ĐƯƠNG ĐẠI
-              ul.mega-links
-                li: a(href="/shop?category=mu-non")
-                  span.link-name Mũ &amp; Nón Streetwear
-                li: a(href="/shop?category=kinh-mat")
-                  span.link-name Kính Mát Phi Công UV400
-                  span.link-badge New
-                li: a(href="/shop?category=trang-suc-titan")
-                  span.link-name Trang Sức Titan 316L
-                li: a.view-all-sub(href="/shop") Xem tất cả phụ kiện &rarr;
-
-            .mega-col
-              .mega-col-title
-                i(data-lucide="flame", style="width: 16px; height: 16px;")
-                | XU HƯỚNG &amp; BỘ SƯU TẬP
-              ul.mega-links
-                li: a(href="/shop?sort=newest")
-                  span.link-name Hàng Mới Về (New Arrivals)
-                li: a(href="/shop?sort=popular")
-                  span.link-name Bán Chạy Nhất (Best Sellers)
-                li: a(href="/shop?isSale=true", style="color: var(--accent-coral); font-weight: 600;")
+                li: a(href="/shop?isSale=true")
                   span.link-name Flash Sale Đang Diễn Ra
-                  span.link-badge(style="background: var(--accent-coral); color: #fff;") -50%
-                li: a(href="/lookbook")
-                  span.link-name Editorial Lookbook 2026
+                  span.link-badge(style="background: var(--accent-coral); color: #FFF;") -50%
+                li: a(href="/shop?isSale=true")
+                  span.link-name Mua 2 Giảm Thêm 10%
+                li: a(href="/shop?isSale=true")
+                  span.link-name Combo Phụ Kiện Tiết Kiệm
+                li: a(href="/shop?isSale=true")
+                  span.link-name Xả Kho Đón Bộ Sưu Tập Mới
+                li: a.view-all-sub(href="/shop?isSale=true") Xem toàn bộ deal sốc &rarr;
 
-            // Mega Banner Promo Card
+            .mega-col
+              .mega-col-title
+                i(data-lucide="tag", style="width: 15px; height: 15px; color: var(--accent-coral);")
+                | THEO MỨC GIÁ
+              ul.mega-links
+                li: a(href="/shop?priceMax=99000")
+                  span.link-name Đồng Giá Từ 89.000đ
+                  span.link-badge Hot
+                li: a(href="/shop?priceMax=199000")
+                  span.link-name Phụ Kiện Dưới 199.000đ
+                li: a(href="/shop?priceMax=349000")
+                  span.link-name Đồ Da Thật Dưới 349.000đ
+                li: a(href="/shop?isSale=true")
+                  span.link-name Hàng Cao Cấp Giảm Đến 40%
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="gift", style="width: 15px; height: 15px; color: var(--accent-coral);")
+                | ĐẶC QUYỀN MUA SẮM
+              ul.mega-links
+                li: a(href="/shop")
+                  span.link-name Giao Hàng Hỏa Tốc Toàn Quốc
+                li: a(href="/shop")
+                  span.link-name Tặng Khăn Bandana Khi Mua Kính
+                li: a(href="/shop")
+                  span.link-name Hộp Quà Cao Cấp Kèm Thiệp
+                li: a(href="/shop")
+                  span.link-name Bảo Hành 24 Tháng 1 Đổi 1
+
             .mega-promo-col
               a.mega-promo-card(href="/shop?isSale=true")
-                img(src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=600&q=80", alt="Flash Sale Promo")
+                img(src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80", alt="Sale Banner")
                 .mega-promo-overlay
-                  span.promo-badge FLASH DEAL
-                  h4 Giảm Đến 50% Phụ Kiện Da Thật
-                  span.promo-cta Săn Ngay &rarr;
+                  span.promo-badge FLASH SALE TỪ 89K
+                  h4 Ưu Đãi Độc Quyền Phụ Kiện Nam Đến 50%
+                  span.promo-cta Săn Deal Ngay &rarr;
 
-      a.nav-link(href="/lookbook", class=(currentPath === '/lookbook' ? 'active' : ''))
-        | Lookbook
+      // 2. ĐỒ DA Ý with Mega Dropdown
+      .nav-item.has-mega-dropdown(class=(query && query.openDropdown === 'doday' ? 'is-active' : ''))
+        a.nav-link.dropdown-trigger(href="/shop?category=that-lung-da", class=(query && (query.category === 'that-lung-da' || query.category === 'vi-da' || query.category === 'tui-balo') ? 'active' : ''))
+          | ĐỒ DA Ý
+          i(data-lucide="chevron-down", style="width: 13px; height: 13px; margin-left: 2px;")
+        
+        .mega-dropdown-menu
+          .container.mega-dropdown-inner
+            .mega-col
+              .mega-col-title
+                i(data-lucide="shield", style="width: 15px; height: 15px;")
+                | THẮT LƯNG DA BÒ Ý
+              ul.mega-links
+                li: a(href="/shop?category=that-lung-da")
+                  span.link-name Thắt Lưng Khóa Tự Động
+                  span.link-badge Best
+                li: a(href="/shop?category=that-lung-da")
+                  span.link-name Thắt Lưng Khóa Kim Cổ Điển
+                li: a(href="/shop?category=that-lung-da")
+                  span.link-name Thắt Lưng Da Sáp Ý Vintage
+                li: a(href="/shop?category=that-lung-da")
+                  span.link-name Dây Lưng Bản Nhỏ Smart Casual
+                li: a.view-all-sub(href="/shop?category=that-lung-da") Xem tất cả thắt lưng &rarr;
 
-      a.nav-link.sale-tag(href="/shop?isSale=true", class=(query && query.isSale ? 'active' : ''))
-        i(data-lucide="flame", style="width: 14px; height: 14px; margin-right: 3px; vertical-align: -1px;")
-        | Flash Sale
+            .mega-col
+              .mega-col-title
+                i(data-lucide="credit-card", style="width: 15px; height: 15px;")
+                | VÍ &amp; CARDHOLDER
+              ul.mega-links
+                li: a(href="/shop?category=vi-da")
+                  span.link-name Ví Ngang Bifold Da Bò
+                li: a(href="/shop?category=vi-da")
+                  span.link-name Ví Đứng Da Bò Top-Grain
+                li: a(href="/shop?category=vi-da")
+                  span.link-name Ví Đựng Thẻ RFID Chống Trộm
+                  span.link-badge New
+                li: a(href="/shop?category=vi-da")
+                  span.link-name Clutch Cầm Tay Quý Ông
+                li: a.view-all-sub(href="/shop?category=vi-da") Xem tất cả ví da &rarr;
 
-      a.nav-link(href="/blog", class=(currentPath.startsWith('/blog') ? 'active' : ''))
+            .mega-col
+              .mega-col-title
+                i(data-lucide="briefcase", style="width: 15px; height: 15px;")
+                | TÚI &amp; BALO DA
+              ul.mega-links
+                li: a(href="/shop?category=tui-balo")
+                  span.link-name Túi Đeo Chéo Da Thật
+                  span.link-badge Hot
+                li: a(href="/shop?category=tui-balo")
+                  span.link-name Balo Laptop Da Sáp Tuscany
+                li: a(href="/shop?category=tui-balo")
+                  span.link-name Túi Bao Tử Fanny Pack
+                li: a(href="/shop?category=tui-balo")
+                  span.link-name Túi Tote Canvas Phối Da
+                li: a.view-all-sub(href="/shop?category=tui-balo") Xem túi &amp; balo &rarr;
+
+            .mega-promo-col
+              a.mega-promo-card(href="/shop?category=that-lung-da")
+                img(src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80", alt="Leather Heritage")
+                .mega-promo-overlay
+                  span.promo-badge TUSCANY LEATHER
+                  h4 100% Da Bò Ý Nhập Khẩu Thảo Mộc
+                  span.promo-cta Khám Phá Chế Tác &rarr;
+
+      // 3. PHỤ KIỆN with Mega Dropdown
+      .nav-item.has-mega-dropdown
+        a.nav-link.dropdown-trigger(href="/shop?category=mu-non", class=(query && (query.category === 'mu-non' || query.category === 'kinh-mat') ? 'active' : ''))
+          | PHỤ KIỆN
+          i(data-lucide="chevron-down", style="width: 13px; height: 13px; margin-left: 2px;")
+        
+        .mega-dropdown-menu
+          .container.mega-dropdown-inner
+            .mega-col
+              .mega-col-title
+                i(data-lucide="disc", style="width: 15px; height: 15px;")
+                | MŨ &amp; NÓN THỜI TRANG
+              ul.mega-links
+                li: a(href="/shop?category=mu-non")
+                  span.link-name Nón Kết Baseball Cap
+                  span.link-badge Hot
+                li: a(href="/shop?category=mu-non")
+                  span.link-name Mũ Bucket Canvas Kháng Nước
+                li: a(href="/shop?category=mu-non")
+                  span.link-name Nón Snapback Thêu Nổi 3D
+                li: a(href="/shop?category=mu-non")
+                  span.link-name Mũ Beanie Len Dệt Kim
+                li: a.view-all-sub(href="/shop?category=mu-non") Xem tất cả nón &rarr;
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="glasses", style="width: 15px; height: 15px;")
+                | KÍNH MÁT UV400
+              ul.mega-links
+                li: a(href="/shop?category=kinh-mat")
+                  span.link-name Kính Phi Công Aviator Mạ Vàng
+                  span.link-badge New
+                li: a(href="/shop?category=kinh-mat")
+                  span.link-name Kính Wayfarer Bản Vuông
+                li: a(href="/shop?category=kinh-mat")
+                  span.link-name Kính Phân Cực Polarized Lái Xe
+                li: a(href="/shop?category=kinh-mat")
+                  span.link-name Kính Râm Gọng Đồi Mồi Vintage
+                li: a.view-all-sub(href="/shop?category=kinh-mat") Xem tất cả kính mát &rarr;
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="sparkles", style="width: 15px; height: 15px;")
+                | PHỤ KIỆN QUÝ ÔNG
+              ul.mega-links
+                li: a(href="/shop")
+                  span.link-name Khăn Lụa Bandana Satin
+                li: a(href="/shop")
+                  span.link-name Kẹp Cà Vạt &amp; Khuy Măng Sét
+                li: a(href="/shop")
+                  span.link-name Dây Treo Thẻ Da Cao Cấp
+                li: a(href="/shop")
+                  span.link-name Vớ Cotton Kháng Khuẩn Thoáng Khí
+                li: a.view-all-sub(href="/shop") Xem toàn bộ phụ kiện &rarr;
+
+            .mega-promo-col
+              a.mega-promo-card(href="/shop?category=kinh-mat")
+                img(src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80", alt="Sunglasses Promo")
+                .mega-promo-overlay
+                  span.promo-badge POLARIZED UV400
+                  h4 Tròng Phân Cực Bảo Vệ Mắt Tối Đa
+                  span.promo-cta Khám Phá Ngay &rarr;
+
+      // 4. TRANG SỨC TITAN with Mega Dropdown
+      .nav-item.has-mega-dropdown
+        a.nav-link.dropdown-trigger(href="/shop?category=trang-suc-titan", class=(query && query.category === 'trang-suc-titan' ? 'active' : ''))
+          | TRANG SỨC
+          i(data-lucide="chevron-down", style="width: 13px; height: 13px; margin-left: 2px;")
+        
+        .mega-dropdown-menu
+          .container.mega-dropdown-inner
+            .mega-col
+              .mega-col-title
+                i(data-lucide="link", style="width: 15px; height: 15px;")
+                | DÂY CHUYỀN TITAN
+              ul.mega-links
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Dây Chuyền Cuban Link 7mm
+                  span.link-badge Hot
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Dây Xích Mảnh Tối Giản
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Mặt Dây Chuyền Thánh Giá
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Dây Chuyền Titan Mạ Đen Nhám
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="watch", style="width: 15px; height: 15px;")
+                | VÒNG TAY &amp; LẮC
+              ul.mega-links
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Lắc Tay Mắt Xích Cuban
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Vòng Cuff Titan Phay Xước
+                  span.link-badge New
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Lắc Tay Da Bò Phối Thép
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Vòng Tay Chuỗi Đá Obsidian
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="circle-dot", style="width: 15px; height: 15px;")
+                | NHẪN &amp; KHUYÊN TAI
+              ul.mega-links
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Nhẫn Titan Phong Cách Tối Giản
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Nhẫn Khắc Họa Tiết La Mã
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Khuyên Tai Tròn Unisex Bạc Sáng
+                li: a(href="/shop?category=trang-suc-titan")
+                  span.link-name Khuyên Tai Kẹp Titan Không Cần Bấm
+
+            .mega-promo-col
+              a.mega-promo-card(href="/shop?category=trang-suc-titan")
+                img(src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80", alt="Titanium Jewelry")
+                .mega-promo-overlay
+                  span.promo-badge THÉP TITAN 316L
+                  h4 Không Gỉ Sét • Không Dị Ứng Da • Vĩnh Cửu
+                  span.promo-cta Xem Bộ Sưu Tập &rarr;
+
+      // 5. BỘ SƯU TẬP with Mega Dropdown
+      .nav-item.has-mega-dropdown
+        a.nav-link.dropdown-trigger(href="/lookbook", class=(currentPath === '/lookbook' ? 'active' : ''))
+          | BỘ SƯU TẬP
+          i(data-lucide="chevron-down", style="width: 13px; height: 13px; margin-left: 2px;")
+        
+        .mega-dropdown-menu
+          .container.mega-dropdown-inner
+            .mega-col
+              .mega-col-title
+                i(data-lucide="camera", style="width: 15px; height: 15px;")
+                | EDITORIAL LOOKBOOK
+              ul.mega-links
+                li: a(href="/lookbook")
+                  span.link-name Lookbook Thu Đông 2026
+                  span.link-badge New
+                li: a(href="/shop?sort=newest")
+                  span.link-name Hàng Mới Mở Bán (New Arrivals)
+                li: a(href="/shop?sort=popular")
+                  span.link-name Bán Chạy Nhất (Best Sellers)
+                li: a(href="/lookbook")
+                  span.link-name Limited Signature Edition
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="layers", style="width: 15px; height: 15px;")
+                | PHONG CÁCH ĐỊNH HÌNH
+              ul.mega-links
+                li: a(href="/shop")
+                  span.link-name Quiet Luxury - Đẳng Cấp Thầm Lặng
+                li: a(href="/shop")
+                  span.link-name Streetwear - Năng Động &amp; Bứt Phá
+                li: a(href="/shop")
+                  span.link-name Smart Casual - Quý Ông Hiện Đại
+                li: a(href="/shop")
+                  span.link-name Minimalist - Tối Giản Cơ Bản
+
+            .mega-col
+              .mega-col-title
+                i(data-lucide="sparkles", style="width: 15px; height: 15px;")
+                | DI SẢN THƯƠNG HIỆU
+              ul.mega-links
+                li: a(href="/about")
+                  span.link-name Câu Chuyện Atelier
+                li: a(href="/about")
+                  span.link-name Quy Trình Chế Tác Thủ Công
+                li: a(href="/contact")
+                  span.link-name Không Gian Trải Nghiệm Showroom
+
+            .mega-promo-col
+              a.mega-promo-card(href="/lookbook")
+                img(src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80", alt="Lookbook Promo")
+                .mega-promo-overlay
+                  span.promo-badge BST 2026
+                  h4 Tuyên Ngôn Phong Cách Phụ Kiện Đương Đại
+                  span.promo-cta Xem Lookbook &rarr;
+
+      // 6. Direct links
+      a.nav-link.nav-link-secondary(href="/blog", class=(currentPath.startsWith('/blog') ? 'active' : ''))
         | Tạp Chí
 
-      a.nav-link(href="/about", class=(currentPath === '/about' ? 'active' : ''))
-        | Về Atelier
-
-      a.nav-link(href="/contact", class=(currentPath === '/contact' ? 'active' : ''))
+      a.nav-link.nav-link-secondary(href="/contact", class=(currentPath === '/contact' ? 'active' : ''))
         | Showroom
+
+      a.nav-link.nav-track-link(href="/track-order", class=(currentPath === '/track-order' ? 'active' : ''), style="font-weight: 600;")
+        i(data-lucide="truck", style="width: 14px; height: 14px; margin-right: 4px; vertical-align: -1px; color: var(--accent-gold);")
+        | Tra Cứu Đơn
 
     // Header Actions (Smart Search, Wishlist, Cart, User)
     .header-actions
@@ -165,7 +375,20 @@ header.site-header#main-header
                 img(src=currentUser.avatar, alt=currentUser.name)
               .user-meta
                 .user-name= currentUser.name
-                .user-role= currentUser.role === 'admin' ? 'Quản Trị Viên (Admin)' : 'Thành Viên VIP'
+                .user-role(style=(membershipTier && membershipTier.level !== 'vip' && currentUser.role !== 'admin' ? `color: ${membershipTier.color};` : ''))
+                  if currentUser.role === 'admin'
+                    | 🛡️ Quản Trị Viên (Admin)
+                  else if membershipTier
+                    if membershipTier.level === 'vip'
+                      | 👑 #{membershipTier.name}
+                    else if membershipTier.level === 'gold'
+                      | 🌟 #{membershipTier.name}
+                    else if membershipTier.level === 'silver'
+                      | 🥈 #{membershipTier.name}
+                    else
+                      | 🌱 #{membershipTier.name}
+                  else
+                    | 🌱 Thành Viên Mới
             
             .user-dropdown-body
               if currentUser.role === 'admin'
@@ -193,7 +416,7 @@ header.site-header#main-header
       else
         .auth-btns
           a.btn.btn-sm.btn-outline(href="/login") Đăng Nhập
-          a.btn.btn-sm.btn-primary.hide-mobile(href="/register") Đăng Ký
+          a.btn.btn-sm.btn-primary(href="/register") Đăng Ký
 
 // Mobile Navigation Drawer
 .mobile-drawer#mobile-drawer
@@ -233,6 +456,9 @@ header.site-header#main-header
       a.mobile-nav-item(href="/blog") Tạp Chí Phối Đồ
       a.mobile-nav-item(href="/about") Về Chúng Tôi
       a.mobile-nav-item(href="/contact") Hệ Thống Cửa Hàng
+      a.mobile-nav-item(href="/track-order", style="color: var(--accent-gold); font-weight: 700;")
+        i(data-lucide="package-search", style="width: 16px; height: 16px; margin-right: 8px; vertical-align: -2px;")
+        | Tra Cứu Đơn Hàng
 
     .mobile-drawer-footer
       if currentUser

@@ -17,13 +17,27 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Mật khẩu không được để trống'],
+    required: function() { return this.authProvider === 'local'; },
     minlength: [6, 'Mật khẩu phải từ 6 ký tự trở lên']
   },
   role: {
     type: String,
     enum: ['admin', 'user'],
     default: 'user'
+  },
+  status: {
+    type: String,
+    enum: ['active', 'locked'],
+    default: 'active'
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
+  },
+  googleId: {
+    type: String,
+    default: ''
   },
   phone: {
     type: String,
@@ -35,7 +49,10 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
+    default: ''
+  },
+  lastLogin: {
+    type: Date
   },
   createdAt: {
     type: Date,
@@ -43,8 +60,12 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving
+// Hash password trước khi lưu nếu password được sửa 
 userSchema.pre('save', async function (next) {
+  if (!this.avatar || this.avatar.includes('unsplash.com')) {
+    const { generateInitialsAvatar } = require('../utils/avatarHelper');
+    this.avatar = generateInitialsAvatar(this.name || 'User');
+  }
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);

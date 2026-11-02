@@ -1,0 +1,464 @@
+extends ../layouts/main
+
+mixin renderTracker(status)
+  - const steps = ['pending', 'confirmed', 'shipping', 'completed']
+  - const stepLabels = ['Đặt Hàng', 'Đã Xác Nhận', 'Đang Vận Chuyển', 'Thành Công']
+  - const currentIdx = status === 'cancelled' ? -1 : (steps.indexOf(status) !== -1 ? steps.indexOf(status) : 1)
+  
+  if status === 'cancelled'
+    .cancelled-alert(style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; padding: 14px 20px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px;")
+      i(data-lucide="alert-octagon", style="width: 20px; height: 20px;")
+      strong Đơn hàng này đã bị hủy. Vui lòng liên hệ hotline 1900 8888 nếu bạn cần hỗ trợ đặt lại.
+  else
+    .timeline-track(style="display: flex; justify-content: space-between; position: relative;")
+      .timeline-line-bg(style="position: absolute; top: 16px; left: 30px; right: 30px; height: 3px; background: #E5E7EB; z-index: 1;")
+      .timeline-line-fill(style=`position: absolute; top: 16px; left: 30px; width: ${Math.min(100, (currentIdx / 3) * 100)}%; height: 3px; background: var(--accent-emerald); z-index: 2; transition: width 0.4s ease;`)
+      
+      each step, idx in steps
+        - const isDone = idx <= currentIdx
+        - const isCurrent = idx === currentIdx
+        .timeline-node(style="position: relative; z-index: 3; text-align: center; width: 100px;")
+          .node-circle(style=`width: 34px; height: 34px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8125rem; background: ${isDone ? 'var(--accent-emerald)' : '#FFF'}; color: ${isDone ? '#FFF' : 'var(--text-muted)'}; border: 2px solid ${isDone ? 'var(--accent-emerald)' : '#CBD5E1'}; box-shadow: 0 2px 4px rgba(0,0,0,0.06);`)
+            if isDone
+              i(data-lucide="check", style="width: 16px; height: 16px;")
+            else
+              span= idx + 1
+          .node-label(style=`font-size: 0.8125rem; font-weight: ${isCurrent ? '700' : '500'}; color: ${isCurrent ? 'var(--text-main)' : 'var(--text-muted)'};`)
+            = stepLabels[idx]
+
+block content
+  - 
+    function getStatusLabel(st) {
+      switch(st) {
+        case 'pending': return 'Chờ Xác Nhận';
+        case 'confirmed': case 'processing': return 'Đã Xác Nhận & Đang Đóng Gói';
+        case 'shipping': return 'Đang Giao Hàng';
+        case 'completed': return 'Giao Hàng Thành Công';
+        case 'cancelled': return 'Đã Hủy Đơn';
+        default: return 'Đang Xử Lý';
+      }
+    }
+    function getPaymentMethodLabel(pm) {
+      switch(pm) {
+        case 'cod': return 'Thanh toán khi nhận hàng (COD)';
+        case 'bank_transfer': return 'Chuyển khoản VietQR';
+        case 'momo': return 'Ví điện tử MoMo';
+        default: return 'Tiền mặt (COD)';
+      }
+    }
+
+  .container(style="padding: 40px 20px 80px; max-width: 960px;")
+    //- Page Header
+    .tracking-header(style="text-align: center; margin-bottom: 36px;")
+      .tracking-badge(style="display: inline-flex; align-items: center; gap: 6px; background: rgba(197, 160, 89, 0.12); color: var(--accent-gold); font-size: 0.8125rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;")
+        i(data-lucide="package-search", style="width: 15px; height: 15px;")
+        | ATELIER TRACKING
+      h1(style="font-size: 2.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; letter-spacing: -0.5px;") Tra Cứu Đơn Hàng
+      p(style="color: var(--text-muted); font-size: 1rem; max-width: 580px; margin: 0 auto; line-height: 1.6;")
+        | Kiểm tra trạng thái vận chuyển và thông tin đơn hàng nhanh chóng mà không cần đăng nhập tài khoản.
+
+    //- Search Box Form
+    .tracking-search-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 28px 32px; box-shadow: var(--shadow-sm); margin-bottom: 36px;")
+      form#track-form(onsubmit="handleTrackSearch(event)")
+        label.form-label(style="font-weight: 700; font-size: 0.9375rem; margin-bottom: 10px; display: block;")
+          | Nhập Mã Đơn Hàng hoặc Số Điện Thoại Đặt Hàng:
+        .search-input-group(style="display: flex; gap: 12px; flex-wrap: wrap;")
+          .input-with-icon(style="flex: 1; min-width: 260px; position: relative;")
+            i(data-lucide="search", style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-muted);")
+            input#track-input.form-control(
+              type="text",
+              placeholder="Ví dụ: ORD-69261 hoặc 0987654321...",
+              value=(initialQuery || ''),
+              style="padding-left: 44px; height: 48px; font-size: 1rem;",
+              required
+            )
+          button#track-submit-btn.btn.btn-primary(type="submit", style="height: 48px; padding: 0 28px; font-weight: 700;")
+            i(data-lucide="compass", style="width: 18px; height: 18px;")
+            | Tra Cứu Ngay
+
+      .quick-hints(style="display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 0.8125rem; color: var(--text-muted); flex-wrap: wrap;")
+        span(style="font-weight: 600; color: var(--text-main);") Mẹo:
+        span Bạn có thể tra cứu bằng mã đơn gửi trong email / SMS hoặc số điện thoại đã điền khi đặt mua.
+
+    //- Loading State
+    #track-loading(style="display: none; text-align: center; padding: 40px 0;")
+      .spinner(style="display: inline-block; width: 36px; height: 36px; border: 3px solid rgba(0,0,0,0.1); border-radius: 50%; border-top-color: var(--accent-gold); animation: spin 0.8s linear infinite;")
+      p(style="margin-top: 14px; color: var(--text-muted); font-size: 0.9375rem;") Đang tìm kiếm thông tin đơn hàng...
+
+    //- Multiple Orders Selection Area
+    #track-multiple-area(style="display: none; margin-bottom: 32px;")
+      h3(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px;") Danh Sách Đơn Hàng Của Bạn
+      #multiple-orders-list(style="display: flex; flex-direction: column; gap: 12px;")
+
+    //- Tracking Details Container
+    #track-result-container
+      if initialOrder
+        //- Render SSR initial order
+        .order-result-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);")
+          // Top Header Bar
+          .result-header(style="background: #FAF8F5; border-bottom: 1px solid var(--border-subtle); padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;")
+            div
+              .order-badge-row(style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;")
+                span(style="font-weight: 800; font-size: 1.25rem; color: var(--text-main);")= initialOrder.orderCode
+                span.badge-status(class=`status-${initialOrder.orderStatus}`)= getStatusLabel(initialOrder.orderStatus)
+              div(style="font-size: 0.8125rem; color: var(--text-muted);")
+                | Thời gian đặt: #{new Date(initialOrder.createdAt).toLocaleString('vi-VN')}
+            
+            .header-actions-right(style="display: flex; gap: 10px;")
+              button.btn.btn-sm.btn-outline(type="button", onclick="window.print()")
+                i(data-lucide="printer", style="width: 14px; height: 14px;")
+                | In Biên Lai
+
+          // Step Progress Tracker
+          .progress-tracker-wrap(style="padding: 32px 28px; border-bottom: 1px solid var(--border-subtle);")
+            +renderTracker(initialOrder.orderStatus)
+
+          // Order Details & Products
+          .result-body(style="padding: 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px;")
+            // Left: Customer Info
+            .info-block
+              h4(style="font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 14px;")
+                | Thông Tin Giao Nhận
+              .info-list(style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9375rem;")
+                .info-item
+                  span(style="color: var(--text-muted); width: 120px; display: inline-block;") Người nhận:
+                  strong= initialOrder.customerName
+                .info-item
+                  span(style="color: var(--text-muted); width: 120px; display: inline-block;") Số điện thoại:
+                  strong= initialOrder.customerPhone
+                if initialOrder.customerEmail
+                  .info-item
+                    span(style="color: var(--text-muted); width: 120px; display: inline-block;") Email:
+                    span= initialOrder.customerEmail
+                .info-item
+                  span(style="color: var(--text-muted); width: 120px; display: inline-block;") Địa chỉ giao:
+                  span= initialOrder.shippingAddress
+                if initialOrder.note
+                  .info-item
+                    span(style="color: var(--text-muted); width: 120px; display: inline-block;") Ghi chú:
+                    span(style="font-style: italic;")= initialOrder.note
+
+            // Right: Payment Info
+            .info-block
+              h4(style="font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 14px;")
+                | Thanh Toán &amp; Hóa Đơn
+              .info-list(style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9375rem;")
+                .info-item
+                  span(style="color: var(--text-muted); width: 140px; display: inline-block;") Phương thức:
+                  strong= getPaymentMethodLabel(initialOrder.paymentMethod)
+                .info-item
+                  span(style="color: var(--text-muted); width: 140px; display: inline-block;") Tình trạng:
+                  if initialOrder.paymentStatus === 'paid'
+                    span.badge(style="background: #D1FAE5; color: var(--accent-emerald); font-weight: 700; padding: 2px 8px; border-radius: 4px;") Đã thanh toán
+                  else
+                    span.badge(style="background: #FEF3C7; color: #B45309; font-weight: 700; padding: 2px 8px; border-radius: 4px;") Thanh toán khi nhận (COD)
+                .info-item
+                  span(style="color: var(--text-muted); width: 140px; display: inline-block;") Tạm tính:
+                  span= new Intl.NumberFormat('vi-VN').format(initialOrder.items.reduce((s, it) => s + (it.price * it.quantity), 0)) + 'đ'
+                .info-item
+                  span(style="color: var(--text-muted); width: 140px; display: inline-block;") Phí vận chuyển:
+                  span(style="color: var(--accent-emerald); font-weight: 600;")= (initialOrder.shippingFee === 0 || !initialOrder.shippingFee) ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(initialOrder.shippingFee) + 'đ'
+                .info-item(style="border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-top: 4px;")
+                  span(style="color: var(--text-muted); width: 140px; display: inline-block; font-weight: 700;") Tổng thanh toán:
+                  strong(style="color: var(--accent-coral); font-size: 1.125rem;")= new Intl.NumberFormat('vi-VN').format(initialOrder.totalAmount) + 'đ'
+
+          // Items Table
+          .items-table-section(style="padding: 0 28px 28px;")
+            h4(style="font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 14px;")
+              | Sản Phẩm Đã Mua (#{initialOrder.items.length})
+            .items-list(style="display: flex; flex-direction: column; gap: 12px;")
+              each item in initialOrder.items
+                .item-row(style="display: flex; align-items: center; gap: 14px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-sm); font-size: 0.9375rem;")
+                  img(src=(item.image || 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=150&q=80'), alt=item.productName, style="width: 54px; height: 64px; object-fit: cover; border-radius: 4px;")
+                  div(style="flex: 1;")
+                    div(style="font-weight: 700;")= item.productName
+                    div(style="color: var(--text-muted); font-size: 0.8125rem; margin-top: 2px;")
+                      | Phân loại: #{item.color || 'Tiêu chuẩn'} | Số lượng: #{item.quantity}
+                  div(style="text-align: right;")
+                    div(style="font-weight: 700;")= new Intl.NumberFormat('vi-VN').format(item.price * item.quantity) + 'đ'
+                    div(style="color: var(--text-muted); font-size: 0.75rem;")
+                      | #{new Intl.NumberFormat('vi-VN').format(item.price)}đ / chiếc
+      else
+        //- Default Informational Cards
+        .tracking-features-grid(style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;")
+          .feature-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px; text-align: center;")
+            .feature-icon(style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;")
+              i(data-lucide="truck", style="width: 24px; height: 24px;")
+            h3(style="font-size: 1.0625rem; font-weight: 700; margin-bottom: 8px;") Giao Hàng Toàn Quốc 24-48H
+            p(style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;")
+              | Đơn hàng phụ kiện được chuyển phát nhanh bởi các đối tác hàng đầu (GHN, Viettel Post, GHTK).
+          
+          .feature-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px; text-align: center;")
+            .feature-icon(style="width: 48px; height: 48px; border-radius: 50%; background: #ECFDF5; color: var(--accent-emerald); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;")
+              i(data-lucide="shield-check", style="width: 24px; height: 24px;")
+            h3(style="font-size: 1.0625rem; font-weight: 700; margin-bottom: 8px;") Đồng Kiểm Khi Nhận Hàng
+            p(style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;")
+              | Khách hàng được quyền kiểm tra sản phẩm trước khi thanh toán tiền mặt (COD) cho bưu tá.
+
+          .feature-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px; text-align: center;")
+            .feature-icon(style="width: 48px; height: 48px; border-radius: 50%; background: #FFF7ED; color: #EA580C; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;")
+              i(data-lucide="headset", style="width: 24px; height: 24px;")
+            h3(style="font-size: 1.0625rem; font-weight: 700; margin-bottom: 8px;") Hotline Hỗ Trợ 1900 8888
+            p(style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;")
+              | Cần thay đổi địa chỉ nhận hoặc giờ giao? Đội ngũ CSKH Atelier luôn sẵn sàng hỗ trợ 8h - 22h hàng ngày.
+
+  style.
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .status-pending { background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .status-confirmed, .status-processing { background: #DBEAFE; color: #1E40AF; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .status-shipping { background: #E0E7FF; color: #3730A3; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .status-completed { background: #D1FAE5; color: #065F46; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .status-cancelled { background: #FEE2E2; color: #991B1B; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+
+  script.
+    function formatCurrency(val) {
+      return new Intl.NumberFormat('vi-VN').format(val) + 'đ';
+    }
+
+    function getStatusInfo(st) {
+      switch(st) {
+        case 'pending': return { label: 'Chờ Xác Nhận', cls: 'status-pending', idx: 0 };
+        case 'confirmed': case 'processing': return { label: 'Đã Xác Nhận & Đang Đóng Gói', cls: 'status-confirmed', idx: 1 };
+        case 'shipping': return { label: 'Đang Giao Hàng', cls: 'status-shipping', idx: 2 };
+        case 'completed': return { label: 'Giao Hàng Thành Công', cls: 'status-completed', idx: 3 };
+        case 'cancelled': return { label: 'Đã Hủy Đơn', cls: 'status-cancelled', idx: -1 };
+        default: return { label: 'Đang Xử Lý', cls: 'status-pending', idx: 1 };
+      }
+    }
+
+    function getPaymentText(pm) {
+      switch(pm) {
+        case 'cod': return 'Thanh toán khi nhận hàng (COD)';
+        case 'bank_transfer': return 'Chuyển khoản VietQR';
+        case 'momo': return 'Ví điện tử MoMo';
+        default: return 'Thanh toán tiền mặt (COD)';
+      }
+    }
+
+    function renderOrderDOM(order) {
+      const statusInfo = getStatusInfo(order.orderStatus);
+      const isCancelled = order.orderStatus === 'cancelled';
+      const steps = ['Đặt Hàng', 'Đã Xác Nhận', 'Đang Giao', 'Thành Công'];
+      const fillPct = isCancelled ? 0 : Math.min(100, (statusInfo.idx / 3) * 100);
+
+      const itemsHtml = (order.items || []).map(it => `
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-sm); font-size: 0.9375rem;">
+          <img src="${it.image || 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=150&q=80'}" alt="${it.productName}" style="width: 54px; height: 64px; object-fit: cover; border-radius: 4px;">
+          <div style="flex: 1;">
+            <div style="font-weight: 700;">${it.productName}</div>
+            <div style="color: var(--text-muted); font-size: 0.8125rem; margin-top: 2px;">
+              Phân loại: ${it.color || 'Tiêu chuẩn'} | Số lượng: ${it.quantity}
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-weight: 700;">${formatCurrency(it.price * it.quantity)}</div>
+            <div style="color: var(--text-muted); font-size: 0.75rem;">${formatCurrency(it.price)} / chiếc</div>
+          </div>
+        </div>
+      `).join('');
+
+      let timelineHtml = '';
+      if (isCancelled) {
+        timelineHtml = `
+          <div style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; padding: 14px 20px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="alert-octagon" style="width: 20px; height: 20px;"></i>
+            <strong>Đơn hàng này đã bị hủy. Vui lòng liên hệ hotline 1900 8888 nếu bạn cần hỗ trợ.</strong>
+          </div>
+        `;
+      } else {
+        const nodes = steps.map((lbl, idx) => {
+          const isDone = idx <= statusInfo.idx;
+          const isCurrent = idx === statusInfo.idx;
+          return `
+            <div style="position: relative; z-index: 3; text-align: center; width: 100px;">
+              <div style="width: 34px; height: 34px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8125rem; background: ${isDone ? 'var(--accent-emerald)' : '#FFF'}; color: ${isDone ? '#FFF' : 'var(--text-muted)'}; border: 2px solid ${isDone ? 'var(--accent-emerald)' : '#CBD5E1'}; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
+                ${isDone ? '<i data-lucide="check" style="width: 16px; height: 16px;"></i>' : `<span>${idx + 1}</span>`}
+              </div>
+              <div style="font-size: 0.8125rem; font-weight: ${isCurrent ? '700' : '500'}; color: ${isCurrent ? 'var(--text-main)' : 'var(--text-muted)'};">
+                ${lbl}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        timelineHtml = `
+          <div style="display: flex; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: 16px; left: 30px; right: 30px; height: 3px; background: #E5E7EB; z-index: 1;"></div>
+            <div style="position: absolute; top: 16px; left: 30px; width: ${fillPct}%; height: 3px; background: var(--accent-emerald); z-index: 2; transition: width 0.4s ease;"></div>
+            ${nodes}
+          </div>
+        `;
+      }
+
+      const subtotal = (order.items || []).reduce((s, it) => s + (it.price * it.quantity), 0);
+      const shippingText = (order.shippingFee === 0 || !order.shippingFee) ? 'Miễn phí' : formatCurrency(order.shippingFee);
+
+      return `
+        <div class="order-result-card" style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
+          <div style="background: #FAF8F5; border-bottom: 1px solid var(--border-subtle); padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--text-main);">${order.orderCode}</span>
+                <span class="${statusInfo.cls}">${statusInfo.label}</span>
+              </div>
+              <div style="font-size: 0.8125rem; color: var(--text-muted);">
+                Thời gian đặt: ${new Date(order.createdAt).toLocaleString('vi-VN')}
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-sm btn-outline" type="button" onclick="window.print()" style="font-size: 0.8125rem; padding: 6px 14px;">
+                <i data-lucide="printer" style="width: 14px; height: 14px; margin-right: 4px; vertical-align: -2px;"></i> In Biên Lai
+              </button>
+            </div>
+          </div>
+
+          <div style="padding: 32px 28px; border-bottom: 1px solid var(--border-subtle);">
+            ${timelineHtml}
+          </div>
+
+          <div style="padding: 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px;">
+            <div>
+              <h4 style="font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 14px;">
+                Thông Tin Giao Nhận
+              </h4>
+              <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9375rem;">
+                <div><span style="color: var(--text-muted); width: 120px; display: inline-block;">Người nhận:</span> <strong>${order.customerName}</strong></div>
+                <div><span style="color: var(--text-muted); width: 120px; display: inline-block;">Số điện thoại:</span> <strong>${order.customerPhone}</strong></div>
+                ${order.customerEmail ? `<div><span style="color: var(--text-muted); width: 120px; display: inline-block;">Email:</span> <span>${order.customerEmail}</span></div>` : ''}
+                <div><span style="color: var(--text-muted); width: 120px; display: inline-block;">Địa chỉ giao:</span> <span>${order.shippingAddress}</span></div>
+                ${order.note ? `<div><span style="color: var(--text-muted); width: 120px; display: inline-block;">Ghi chú:</span> <em>${order.note}</em></div>` : ''}
+              </div>
+            </div>
+
+            <div>
+              <h4 style="font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 14px;">
+                Thanh Toán &amp; Hóa Đơn
+              </h4>
+              <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9375rem;">
+                <div><span style="color: var(--text-muted); width: 140px; display: inline-block;">Phương thức:</span> <strong>${getPaymentText(order.paymentMethod)}</strong></div>
+                <div>
+                  <span style="color: var(--text-muted); width: 140px; display: inline-block;">Tình trạng:</span>
+                  ${order.paymentStatus === 'paid' 
+                    ? '<span style="background: #D1FAE5; color: var(--accent-emerald); font-weight: 700; padding: 2px 8px; border-radius: 4px;">Đã thanh toán</span>' 
+                    : '<span style="background: #FEF3C7; color: #B45309; font-weight: 700; padding: 2px 8px; border-radius: 4px;">Thanh toán khi nhận (COD)</span>'}
+                </div>
+                <div><span style="color: var(--text-muted); width: 140px; display: inline-block;">Tạm tính:</span> <span>${formatCurrency(subtotal)}</span></div>
+                <div><span style="color: var(--text-muted); width: 140px; display: inline-block;">Phí vận chuyển:</span> <span style="color: var(--accent-emerald); font-weight: 600;">${shippingText}</span></div>
+                <div style="border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-top: 4px;">
+                  <span style="color: var(--text-muted); width: 140px; display: inline-block; font-weight: 700;">Tổng thanh toán:</span>
+                  <strong style="color: var(--accent-coral); font-size: 1.125rem;">${formatCurrency(order.totalAmount)}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 0 28px 28px;">
+            <h4 style="font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 14px;">
+              Sản Phẩm Đã Mua (${(order.items || []).length})
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              ${itemsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function handleTrackSearch(e) {
+      if (e) e.preventDefault();
+      const q = document.getElementById('track-input').value.trim();
+      if (!q) {
+        showToast('Vui lòng nhập mã đơn hoặc số điện thoại', 'error');
+        return;
+      }
+
+      const loadingEl = document.getElementById('track-loading');
+      const resultEl = document.getElementById('track-result-container');
+      const multipleArea = document.getElementById('track-multiple-area');
+      const multipleList = document.getElementById('multiple-orders-list');
+      const btn = document.getElementById('track-submit-btn');
+
+      loadingEl.style.display = 'block';
+      multipleArea.style.display = 'none';
+      resultEl.innerHTML = '';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/orders/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: q })
+        });
+        const data = await res.json();
+        loadingEl.style.display = 'none';
+        btn.disabled = false;
+
+        if (data.success) {
+          if (data.type === 'multiple') {
+            multipleArea.style.display = 'block';
+            multipleList.innerHTML = data.data.map((ord, idx) => `
+              <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease;" onclick='selectMultipleOrder(${JSON.stringify(ord).replace(/'/g, "&apos;")})' onmouseover="this.style.borderColor='var(--accent-gold)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <strong style="color: var(--text-main); font-size: 1rem;">${ord.orderCode}</strong>
+                    <span class="${getStatusInfo(ord.orderStatus).cls}">${getStatusInfo(ord.orderStatus).label}</span>
+                  </div>
+                  <div style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">
+                    Ngày đặt: ${new Date(ord.createdAt).toLocaleDateString('vi-VN')} | ${ord.items.length} món phụ kiện
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <strong style="color: var(--accent-coral); font-size: 1rem;">${formatCurrency(ord.totalAmount)}</strong>
+                  <div style="font-size: 0.75rem; color: var(--accent-gold); font-weight: 600; margin-top: 2px;">Xem chi tiết &rarr;</div>
+                </div>
+              </div>
+            `).join('');
+
+            resultEl.innerHTML = renderOrderDOM(data.data[0]);
+          } else {
+            resultEl.innerHTML = renderOrderDOM(data.data);
+          }
+          if (window.lucide) lucide.createIcons();
+        } else {
+          resultEl.innerHTML = `
+            <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 50px 30px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                <i data-lucide="search-x" style="width: 28px; height: 28px;"></i>
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">Không Tìm Thấy Đơn Hàng</h3>
+              <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 20px; line-height: 1.5;">
+                ${data.message || 'Hệ thống không tìm thấy đơn hàng nào khớp với thông tin bạn cung cấp. Vui lòng kiểm tra lại mã đơn hoặc số điện thoại.'}
+              </p>
+              <div style="display: flex; gap: 10px; justify-content: center;">
+                <a href="/shop" class="btn btn-sm btn-primary">Khám Phá Cửa Hàng</a>
+                <a href="/contact" class="btn btn-sm btn-outline">Liên Hệ Hỗ Trợ</a>
+              </div>
+            </div>
+          `;
+          if (window.lucide) lucide.createIcons();
+        }
+      } catch (err) {
+        loadingEl.style.display = 'none';
+        btn.disabled = false;
+        showToast('Có lỗi kết nối máy chủ khi tra cứu', 'error');
+      }
+    }
+
+    function selectMultipleOrder(order) {
+      const resultEl = document.getElementById('track-result-container');
+      resultEl.innerHTML = renderOrderDOM(order);
+      if (window.lucide) lucide.createIcons();
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons();
+      const urlParams = new URLSearchParams(window.location.search);
+      const autoQuery = urlParams.get('code') || urlParams.get('phone') || urlParams.get('query');
+      if (autoQuery && !document.querySelector('.order-result-card')) {
+        document.getElementById('track-input').value = autoQuery;
+        handleTrackSearch();
+      }
+    });

@@ -88,7 +88,17 @@ const createProduct = (req, res) => {
 const updateProduct = (req, res) => {
   try {
     const { id } = req.params;
-    const updated = dbStore.updateProduct(id, req.body);
+    let updatePayload = { ...req.body };
+    if (req.body.category) {
+      const category = dbStore.getCategoryById(req.body.category) || dbStore.getCategoryBySlug(req.body.category);
+      if (category) {
+        updatePayload.category = category.id;
+        updatePayload.categoryName = category.name;
+        updatePayload.categorySlug = category.slug;
+      }
+    }
+
+    const updated = dbStore.updateProduct(id, updatePayload);
 
     if (!updated) {
       return res.status(404).json({
@@ -130,10 +140,61 @@ const deleteProduct = (req, res) => {
   }
 };
 
+// @desc    Upload product image (Admin only)
+// @route   POST /api/products/upload-image
+const uploadProductImage = (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vui lòng chọn tệp hình ảnh hợp lệ (.jpg, .png, .webp).'
+      });
+    }
+
+    const imageUrl = `/uploads/products/${req.file.filename}`;
+    return res.status(200).json({
+      success: true,
+      message: 'Tải ảnh lên thành công!',
+      imageUrl
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'Lỗi trong quá trình lưu ảnh',
+      error: err.message
+    });
+  }
+};
+
+// @desc    Toggle product visibility (Admin only)
+// @route   PATCH /api/products/:id/toggle-visibility
+const toggleProductVisibility = (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = dbStore.toggleProductVisibility(id);
+    if (!updated) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sản phẩm.'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: updated.isHidden ? 'Đã ẩn sản phẩm thành công!' : 'Đã hiện sản phẩm trên website!',
+      data: updated
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Lỗi khi thay đổi trạng thái ẩn/hiện sản phẩm', error: error.message });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  uploadProductImage,
+  toggleProductVisibility
 };

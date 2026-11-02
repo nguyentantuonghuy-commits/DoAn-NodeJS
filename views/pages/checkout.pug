@@ -4,6 +4,22 @@ block content
   .container(style="padding-top: 30px;")
     h1(style="font-size: 2rem; font-weight: 800; margin-bottom: 24px;") Thanh Toán Đơn Hàng
 
+    if !currentUser
+      .checkout-guest-notice(style="background: linear-gradient(135deg, #FAF8F5 0%, #F5EFEB 100%); border: 1px solid #E8DFD8; border-left: 4px solid var(--accent-gold); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 2px 6px rgba(0,0,0,0.03);")
+        .notice-left(style="display: flex; align-items: center; gap: 14px;")
+          .notice-icon-box(style="width: 38px; height: 38px; border-radius: 50%; background: #FFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex-shrink: 0;")
+            i(data-lucide="sparkles", style="width: 18px; height: 18px; color: var(--accent-gold);")
+          div
+            div(style="font-size: 0.9375rem; color: var(--text-main); font-weight: 500;")
+              | Bạn đã có tài khoản? 
+              a(href="/login?redirect=/checkout", style="font-weight: 700; color: var(--accent-gold); text-decoration: underline;") Đăng nhập ngay
+              |  để tự động điền địa chỉ và nhận ưu đãi thành viên.
+            div(style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;")
+              | Hoặc bạn chỉ cần điền thông tin bên dưới để mua nhanh không cần tài khoản.
+        a.btn.btn-sm.btn-outline(href="/login?redirect=/checkout", style="white-space: nowrap; font-size: 0.8125rem; font-weight: 600;")
+          i(data-lucide="log-in", style="width: 14px; height: 14px;")
+          | Đăng Nhập
+
     .cart-layout
       //- Left: Checkout Shipping & Payment Form
       .checkout-form-section(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 32px;")
@@ -28,6 +44,10 @@ block content
                 name="customerPhone",
                 placeholder="Ví dụ: 0987654321",
                 value=(currentUser ? currentUser.phone : ''),
+                maxlength="10",
+                pattern="^0[3|5|7|8|9][0-9]{8}$",
+                title="Vui lòng nhập đúng 10 chữ số điện thoại di động Việt Nam (Ví dụ: 0987654321)",
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);",
                 required
               )
             .form-group
@@ -112,7 +132,9 @@ block content
       list.innerHTML = '';
 
       cart.forEach(item => {
-        const itemTotal = item.price * (item.quantity || 1);
+        const itemPrice = Math.max(0, Number(item.price) || 0);
+        const itemQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+        const itemTotal = itemPrice * itemQty;
         subtotal += itemTotal;
 
         const row = document.createElement('div');
@@ -121,7 +143,7 @@ block content
           <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 60px; object-fit: cover; border-radius: 4px;">
           <div style="flex: 1;">
             <div style="font-weight: 600; line-height: 1.3;">${item.name}</div>
-            <div style="color: var(--text-muted); font-size: 0.75rem;">Phân loại: ${item.color} x ${item.quantity}</div>
+            <div style="color: var(--text-muted); font-size: 0.75rem;">Phân loại: ${item.color || 'Tiêu chuẩn'} x ${itemQty}</div>
           </div>
           <div style="font-weight: 700;">${new Intl.NumberFormat('vi-VN').format(itemTotal)}đ</div>
         `;
@@ -147,6 +169,17 @@ block content
 
       const form = document.getElementById('checkout-form');
       const formData = new FormData(form);
+
+      const rawPhone = (formData.get('customerPhone') || '').trim();
+      const phoneRegex = /^0(3|5|7|8|9)[0-9]{8}$/;
+      if (!phoneRegex.test(rawPhone)) {
+        showToast('Số điện thoại không hợp lệ! Vui lòng chỉ nhập đúng 10 chữ số di động (Ví dụ: 0987654321), không chứa chữ hoặc ký tự khác.', 'error');
+        const phoneInput = document.getElementById('customerPhone');
+        phoneInput.focus();
+        phoneInput.style.borderColor = 'var(--accent-coral)';
+        return;
+      }
+
       const submitBtn = document.getElementById('place-order-btn');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Đang xử lý đơn hàng...';

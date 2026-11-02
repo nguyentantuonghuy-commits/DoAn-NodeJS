@@ -6,6 +6,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initHeaderScroll();
+  initMegaDropdowns();
   initCountdownTimer();
   initGallerySwitcher();
   initCartInteractions();
@@ -13,17 +14,63 @@ document.addEventListener('DOMContentLoaded', () => {
   initColorSwatches();
   initQuantitySpinners();
   initToasts();
+  initHeroVideo();
+  initAdminSidebar();
 });
+
+// Hero Video Autoplay Assurance
+function initHeroVideo() {
+  const heroVideo = document.querySelector('.portal-bg-video');
+  if (!heroVideo) return;
+  heroVideo.muted = true;
+  heroVideo.play().catch(() => {});
+}
 
 // Sticky Header transition
 function initHeaderScroll() {
   const header = document.querySelector('.site-header');
   if (!header) return;
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 30) {
+  const isHome = header.classList.contains('home-header');
+  const onScroll = () => {
+    const threshold = isHome ? 80 : 30;
+    if (window.scrollY > threshold) {
       header.classList.add('scrolled');
     } else {
       header.classList.remove('scrolled');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+// Mega Dropdowns hover and click handling
+function initMegaDropdowns() {
+  const dropdownItems = document.querySelectorAll('.nav-item.has-mega-dropdown');
+  if (!dropdownItems.length) return;
+
+  dropdownItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      item.classList.add('hover-active');
+    });
+    item.addEventListener('mouseleave', () => {
+      item.classList.remove('hover-active');
+    });
+
+    const trigger = item.querySelector('.dropdown-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', (e) => {
+        const isActive = item.classList.contains('is-active');
+        dropdownItems.forEach(other => other.classList.remove('is-active'));
+        if (!isActive) {
+          item.classList.add('is-active');
+        }
+      });
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item.has-mega-dropdown')) {
+      dropdownItems.forEach(item => item.classList.remove('is-active'));
     }
   });
 }
@@ -60,9 +107,18 @@ function initGallerySwitcher() {
 
   thumbs.forEach(thumb => {
     thumb.addEventListener('click', () => {
-      thumbs.forEach(t => t.classList.remove('active'));
+      thumbs.forEach(t => {
+        t.classList.remove('active');
+        t.style.borderColor = 'transparent';
+      });
       thumb.classList.add('active');
-      mainImg.src = thumb.dataset.large || thumb.src;
+      thumb.style.borderColor = '#0F172A';
+      const targetSrc = thumb.dataset.large || thumb.src;
+      mainImg.src = targetSrc;
+
+      if (typeof window.syncVariantFromImage === 'function') {
+        window.syncVariantFromImage(targetSrc);
+      }
     });
   });
 }
@@ -92,15 +148,32 @@ function updateCartBadge() {
 }
 
 function addToCart(product) {
+  if (!product || !product.id) return;
+
+  // Strict price validation: NEVER allow 0 VND or NaN
+  let price = Number(product.price);
+  if (isNaN(price) || price <= 0) {
+    showToast('Lỗi: Giá sản phẩm không hợp lệ, không thể thêm vào giỏ hàng!', 'error');
+    console.error('addToCart blocked invalid price:', product);
+    return;
+  }
+  product.price = price;
+
+  // Strict integer quantity validation
+  product.quantity = Math.max(1, parseInt(product.quantity, 10) || 1);
+
   const cart = getCart();
   const existing = cart.find(item => item.id === product.id && item.color === product.color);
   if (existing) {
-    existing.quantity = (existing.quantity || 1) + (product.quantity || 1);
+    const prevQty = parseInt(existing.quantity, 10) || 0;
+    existing.quantity = prevQty + product.quantity;
+    // Always preserve or repair valid price
+    existing.price = price;
   } else {
     cart.push(product);
   }
   saveCart(cart);
-  showToast(`Đã thêm "${product.name}" vào giỏ hàng!`, 'success');
+  showToast(`Đã thêm ${product.quantity}x "${product.name}" vào giỏ hàng!`, 'success');
 }
 
 function initCartInteractions() {
@@ -112,10 +185,16 @@ function initCartInteractions() {
       e.preventDefault();
       const card = btn.closest('.product-card');
       if (!card) return;
+      const rawPrice = card.dataset.price;
+      const cleanPrice = Number(rawPrice) || 0;
+      if (cleanPrice <= 0) {
+        showToast('Lỗi: Giá sản phẩm không hợp lệ!', 'error');
+        return;
+      }
       const product = {
         id: card.dataset.id,
         name: card.dataset.name,
-        price: parseInt(card.dataset.price, 10),
+        price: cleanPrice,
         image: card.dataset.image,
         color: card.dataset.color || 'Tiêu chuẩn',
         quantity: 1
@@ -130,13 +209,41 @@ function initCartInteractions() {
     detailAddBtn.addEventListener('click', () => {
       const activeColor = document.querySelector('.variant-btn.active');
       const qtyInput = document.querySelector('.qty-input');
+      const cleanColor = detailAddBtn.dataset.color || (activeColor ? (activeColor.dataset.name || activeColor.textContent.trim()) : 'Tiêu chuẩn');
+      
+      // Multi-layer price resolution:
+      // 1. From button dataset.price
+      let resolvedPrice = Number(detailAddBtn.dataset.price);
+
+      // 2. If invalid, try active variant dataset.price
+      if (!resolvedPrice || isNaN(resolvedPrice) || resolvedPrice <= 0) {
+        if (activeColor && activeColor.dataset.price && Number(activeColor.dataset.price) > 0) {
+          resolvedPrice = Number(activeColor.dataset.price);
+        }
+      }
+
+      // 3. If still invalid, parse text directly from #detail-price-main
+      if (!resolvedPrice || isNaN(resolvedPrice) || resolvedPrice <= 0) {
+        const priceText = document.getElementById('detail-price-main')?.textContent || '';
+        const digits = priceText.replace(/[^\d]/g, '');
+        if (digits) resolvedPrice = Number(digits);
+      }
+
+      // Security check: Must never be 0 or negative
+      if (!resolvedPrice || isNaN(resolvedPrice) || resolvedPrice <= 0) {
+        showToast('Lỗi: Không tìm thấy giá sản phẩm hợp lệ. Vui lòng tải lại trang!', 'error');
+        return;
+      }
+
+      const cleanQty = Math.max(1, parseInt(qtyInput ? qtyInput.value : 1, 10) || 1);
+
       const product = {
         id: detailAddBtn.dataset.id,
         name: detailAddBtn.dataset.name,
-        price: parseInt(detailAddBtn.dataset.price, 10),
+        price: resolvedPrice,
         image: detailAddBtn.dataset.image,
-        color: activeColor ? activeColor.textContent.trim() : 'Mặc định',
-        quantity: qtyInput ? parseInt(qtyInput.value, 10) : 1
+        color: cleanColor,
+        quantity: cleanQty
       };
       addToCart(product);
     });
@@ -309,35 +416,176 @@ function initSearchSuggestions() {
   });
 }
 
-// Mega Dropdown hover enhancer
+// Mega Dropdown (Click Toggle + Smooth Hover + Outside Dismiss)
 function initMegaDropdown() {
-  const megaItem = document.querySelector('.nav-item.has-mega-dropdown');
-  if (!megaItem) return;
-  const menu = megaItem.querySelector('.mega-dropdown-menu');
-  if (!menu) return;
+  const megaItems = document.querySelectorAll('.nav-item.has-mega-dropdown');
+  if (!megaItems.length) return;
 
-  let timeout;
-  megaItem.addEventListener('mouseenter', () => {
-    clearTimeout(timeout);
-    menu.style.opacity = '1';
-    menu.style.visibility = 'visible';
-    menu.style.transform = 'translateY(0)';
+  megaItems.forEach(item => {
+    const trigger = item.querySelector('.dropdown-trigger');
+
+    // Desktop hover
+    item.addEventListener('mouseenter', () => {
+      megaItems.forEach(other => {
+        if (other !== item) other.classList.remove('is-active');
+      });
+      item.classList.add('is-active');
+    });
+
+    item.addEventListener('mouseleave', () => {
+      item.classList.remove('is-active');
+    });
+
+    // Click / Touch toggle
+    if (trigger) {
+      trigger.addEventListener('click', (e) => {
+        if (window.innerWidth < 1200) {
+          e.preventDefault();
+          const wasActive = item.classList.contains('is-active');
+          megaItems.forEach(other => other.classList.remove('is-active'));
+          if (!wasActive) item.classList.add('is-active');
+        }
+      });
+    }
   });
 
-  megaItem.addEventListener('mouseleave', () => {
-    timeout = setTimeout(() => {
-      menu.style.opacity = '';
-      menu.style.visibility = '';
-      menu.style.transform = '';
-    }, 150);
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item.has-mega-dropdown')) {
+      megaItems.forEach(item => item.classList.remove('is-active'));
+    }
   });
 }
 
-// Call new initializers on DOM load
+// Call initializers on DOM load
 document.addEventListener('DOMContentLoaded', () => {
   initMobileDrawer();
   initSearchSuggestions();
   initMegaDropdown();
+  initHeroSlider();
 });
 
+// Hero Portal Slider (SceneAI Inset Card)
+function initHeroSlider() {
+  const portal = document.querySelector('.sceneai-portal-card, .hero-slider-section');
+  if (!portal) return;
 
+  const slides = portal.querySelectorAll('.portal-slide, .hero-slide');
+  const dots = portal.querySelectorAll('.portal-dot, .hero-dot');
+  const prevBtn = portal.querySelector('.portal-nav-arrow.prev, .hero-slider-nav.prev');
+  const nextBtn = portal.querySelector('.portal-nav-arrow.next, .hero-slider-nav.next');
+
+  if (!slides.length) return;
+
+  let currentIndex = 0;
+  let timer = null;
+
+  function goToSlide(index) {
+    slides[currentIndex].classList.remove('active');
+    if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
+
+    currentIndex = (index + slides.length) % slides.length;
+
+    slides[currentIndex].classList.add('active');
+    if (dots[currentIndex]) dots[currentIndex].classList.add('active');
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    timer = setInterval(() => {
+      goToSlide(currentIndex + 1);
+    }, 5500);
+  }
+
+  function stopAutoplay() {
+    if (timer) clearInterval(timer);
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      goToSlide(currentIndex - 1);
+      startAutoplay();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      goToSlide(currentIndex + 1);
+      startAutoplay();
+    });
+  }
+
+  dots.forEach((dot, idx) => {
+    dot.addEventListener('click', () => {
+      goToSlide(idx);
+      startAutoplay();
+    });
+  });
+
+  portal.addEventListener('mouseenter', stopAutoplay);
+  portal.addEventListener('mouseleave', startAutoplay);
+
+  startAutoplay();
+}
+
+// Admin Sidebar Collapsible Toggle & LocalStorage State
+function initAdminSidebar() {
+  const toggleBtn = document.getElementById('adminSidebarToggle');
+  const collapseBtn = document.getElementById('sidebarCollapseBtn');
+  const adminLayout = document.querySelector('.admin-layout');
+
+  if (!adminLayout && !toggleBtn && !collapseBtn) return;
+
+  function setSidebarState(isCollapsed) {
+    if (isCollapsed) {
+      document.documentElement.classList.add('admin-sidebar-collapsed');
+      if (adminLayout) adminLayout.classList.add('collapsed');
+      try { localStorage.setItem('admin_sidebar_collapsed', 'true'); } catch (e) {}
+    } else {
+      document.documentElement.classList.remove('admin-sidebar-collapsed');
+      if (adminLayout) adminLayout.classList.remove('collapsed');
+      try { localStorage.setItem('admin_sidebar_collapsed', 'false'); } catch (e) {}
+    }
+
+    // Trigger window resize so Chart.js charts and layout recalculate width smoothly
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 240);
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
+  }
+
+  function toggleSidebar() {
+    const isCurrentlyCollapsed = document.documentElement.classList.contains('admin-sidebar-collapsed') ||
+      (adminLayout && adminLayout.classList.contains('collapsed'));
+    setSidebarState(!isCurrentlyCollapsed);
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleSidebar();
+    });
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleSidebar();
+    });
+  }
+
+  // Keyboard shortcut Ctrl+B or Cmd+B to toggle sidebar (familiar standard)
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+      if (document.querySelector('.admin-layout')) {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    }
+  });
+}

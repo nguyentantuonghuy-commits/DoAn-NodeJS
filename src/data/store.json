@@ -5,10 +5,12 @@
       "name": "Thắt Lưng Da",
       "slug": "that-lung-da",
       "description": "Thắt lưng da bò thật 100%, khóa kim loại titan chống gỉ cao cấp.",
-      "image": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
       "icon": "shield",
       "itemCount": 4,
-      "order": 1
+      "order": 1,
+      "isHidden": false,
+      "updatedAt": "2026-10-30T06:32:58.792Z"
     },
     {
       "id": "cat_wallets",
@@ -70,9 +72,9 @@
       "categorySlug": "that-lung-da",
       "categoryName": "Thắt Lưng Da",
       "price": 349000,
-      "originalPrice": 499000,
-      "discount": 30,
-      "stock": 45,
+      "originalPrice": 529000,
+      "discount": 34,
+      "stock": 50,
       "colors": [
         {
           "name": "Đen Onyx",
@@ -81,13 +83,13 @@
         },
         {
           "name": "Nâu Espresso",
-          "hex": "#4A2C2A",
-          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+          "hex": "#4a2c2a",
+          "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
         }
       ],
       "images": [
         "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80"
+        "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
       ],
       "description": "Thắt lưng da bò nhập khẩu nguyên miếng, gia công xử lý cạnh viền mịn màng. Hệ thống khóa răng trượt tự động cao cấp làm từ hợp kim kẽm mạ titan không phai màu.",
       "highlights": [
@@ -99,14 +101,37 @@
         "material": "100% Da bò Top-Grain Ý",
         "dimensions": "Bản rộng 3.5cm - Chiều dài 120cm",
         "lockType": "Khóa tự động mạ PVD chống xước",
-        "origin": "Gia công thủ công tại Việt Nam",
         "warranty": "24 tháng đổi mới lỗi nhà sản xuất"
       },
       "rating": 4.9,
       "reviewsCount": 38,
       "soldCount": 240,
       "isFeatured": true,
-      "isSale": true
+      "isSale": true,
+      "isHidden": false,
+      "hasVariants": true,
+      "variants": [
+        {
+          "id": "var_prod_1_1",
+          "name": "Đen Onyx",
+          "color": "#111827",
+          "price": 349000,
+          "originalPrice": 499000,
+          "stock": 30,
+          "sku": "prod_1-1",
+          "image": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "id": "var_prod_1_2",
+          "name": "Nâu Espresso",
+          "color": "#4a2c2a",
+          "price": 379000,
+          "originalPrice": 529000,
+          "stock": 20,
+          "sku": "prod_1-2",
+          "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
+        }
+      ]
     },
     {
       "id": "prod_2",
@@ -123,11 +148,11 @@
         {
           "name": "Nâu Da Bò",
           "hex": "#8B4513",
-          "image": "https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80"
+          "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
         }
       ],
       "images": [
-        "https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80"
       ],
       "description": "Chất liệu da sáp ngựa điên (Crazy Horse Leather) tạo nên vẻ đẹp phong trần bụi bặm, càng dùng lâu da càng bóng đẹp và đậm chất cá tính.",
@@ -435,7 +460,7 @@
       ],
       "images": [
         "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1611591475870-ef0218730b2d?auto=format&fit=crop&w=800&q=80"
+        "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80"
       ],
       "description": "Dây chuyền mắt xích Cuban mắt vát 7mm thời thượng. Chất liệu thép Titan sinh học 316L y tế hoàn toàn không gỉ sét, không đen, không gây dị ứng ngứa ngáy kể cả khi đeo đi tắm biển.",
       "highlights": [
@@ -471,11 +496,11 @@
         {
           "name": "Bạc Titan",
           "hex": "#E5E7EB",
-          "image": "https://images.unsplash.com/photo-1611591475870-ef0218730b2d?auto=format&fit=crop&w=800&q=80"
+          "image": "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80"
         }
       ],
       "images": [
-        "https://images.unsplash.com/photo-1611591475870-ef0218730b2d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
       ],
       "description": "Điểm nhấn quyền lực trên cổ tay của phái mạnh. Thiết kế xích đan cài tinh xảo kết hợp khóa hộp double-lock tiện lợi, tôn vẻ nam tính mạnh mẽ.",
@@ -587,6 +612,10 @@
   ],
   "users": [
     {
+      "status": "active",
+      "authProvider": "local",
+      "googleId": "",
+      "createdAt": "2026-11-02T02:07:49.565Z",
       "id": "user_admin",
       "name": "Quản Trị Viên (Admin)",
       "email": "admin@atelier.vn",
@@ -594,38 +623,195 @@
       "role": "admin",
       "phone": "0901234567",
       "address": "Trụ sở chính Atelier Accessories, Quận 1, TP. Hồ Chí Minh",
-      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+      "avatar": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22avatarGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E293B%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22url(%23avatarGrad)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2292%22%20fill%3D%22none%22%20stroke%3D%22%23D97706%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20font-family%3D%22-apple-system%2C%20BlinkMacSystemFont%2C%20'Segoe%20UI'%2C%20Roboto%2C%20sans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%20fill%3D%22%23F59E0B%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20letter-spacing%3D%223%22%3EQT%3C%2Ftext%3E%0A%3C%2Fsvg%3E",
+      "lastLogin": "2026-11-02T03:52:15.651Z",
+      "updatedAt": "2026-11-02T03:52:15.651Z"
     },
     {
+      "status": "active",
+      "authProvider": "local",
+      "googleId": "",
+      "createdAt": "2026-11-02T02:07:49.565Z",
       "id": "user_customer",
       "name": "Nguyễn Văn Minh (Khách hàng)",
       "email": "user@atelier.vn",
-      "password": "$2b$10$91DBu5HiFTrrrasXrBg1.OkcLIOtw5SEcxOqOkOMf5requ0xLVak6",
+      "password": "$2b$10$4snURygkLh3pjegTBL9PlOvI.D3QPTAH4.459T7duvNVsHpLk8ZGi",
       "role": "user",
       "phone": "0987654321",
       "address": "Số 88 Đường Nguyễn Trãi, Phường 3, Quận 5, TP. Hồ Chí Minh",
-      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
+      "avatar": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22avatarGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E293B%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22url(%23avatarGrad)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2292%22%20fill%3D%22none%22%20stroke%3D%22%23D97706%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20font-family%3D%22-apple-system%2C%20BlinkMacSystemFont%2C%20'Segoe%20UI'%2C%20Roboto%2C%20sans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%20fill%3D%22%23F59E0B%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20letter-spacing%3D%223%22%3ENV%3C%2Ftext%3E%0A%3C%2Fsvg%3E",
+      "updatedAt": "2026-11-02T03:52:15.657Z"
+    },
+    {
+      "status": "active",
+      "authProvider": "google",
+      "googleId": "115411565339766336140",
+      "createdAt": "2026-10-29T02:58:02.449Z",
+      "id": "user_1793242682449",
+      "role": "user",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocKuaYtfr6OEgNxaH__CA65upHg2Lm8Us3j_MvIL0jWPPbb9OdBX=s96-c",
+      "name": "Nguyễn Tấn Tường Huy",
+      "email": "nguyentantuonghuy@gmail.com",
+      "password": "$2b$10$zWZjnASF26i1B0lDIGyL0OJ59gw2wDbm9lirpwtkdVua6dHPoabs6",
+      "phone": "0333794941",
+      "address": "39 số 2",
+      "lastLogin": "2026-11-02T02:41:31.544Z",
+      "emailVerified": true,
+      "updatedAt": "2026-11-02T02:41:31.544Z"
+    },
+    {
+      "status": "active",
+      "authProvider": "local",
+      "googleId": "",
+      "createdAt": "2026-10-30T15:23:43.249Z",
+      "id": "user_1793373823249",
+      "role": "user",
+      "avatar": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22avatarGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E293B%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22url(%23avatarGrad)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2292%22%20fill%3D%22none%22%20stroke%3D%22%23D97706%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20font-family%3D%22-apple-system%2C%20BlinkMacSystemFont%2C%20'Segoe%20UI'%2C%20Roboto%2C%20sans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%20fill%3D%22%23F59E0B%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20letter-spacing%3D%223%22%3ENT%3C%2Ftext%3E%0A%3C%2Fsvg%3E",
+      "name": "Nguyễn Tấn Tường Huy",
+      "email": "nguyentantunghdsadjz@gmail.com",
+      "password": "$2b$10$DdWI.4QrlF8AUjc7iuXpBu9GJVzsSGpClhTxXoHJ5XpWi9dQdoree",
+      "phone": "0333333333",
+      "address": "dấdsds1222"
+    },
+    {
+      "status": "active",
+      "authProvider": "local",
+      "googleId": "",
+      "createdAt": "2026-10-30T15:25:16.757Z",
+      "id": "user_1793373916757",
+      "role": "user",
+      "avatar": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22avatarGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E293B%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22url(%23avatarGrad)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2292%22%20fill%3D%22none%22%20stroke%3D%22%23D97706%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20font-family%3D%22-apple-system%2C%20BlinkMacSystemFont%2C%20'Segoe%20UI'%2C%20Roboto%2C%20sans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%20fill%3D%22%23F59E0B%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20letter-spacing%3D%223%22%3ENT%3C%2Ftext%3E%0A%3C%2Fsvg%3E",
+      "name": "Nguyễn Tấn Tường Huy",
+      "email": "nguyentantunghdsadj123@gmail.com",
+      "password": "$2b$10$3LqtuFh8GlDeNEzqvTAu3.vSGiljVl7Bam.OkqIkRsH6V/Wnyfw6u",
+      "phone": "0333333333",
+      "address": "dsdsdsdssdsds"
+    },
+    {
+      "status": "active",
+      "authProvider": "local",
+      "googleId": "",
+      "createdAt": "2026-10-30T15:26:00.885Z",
+      "id": "user_1793373960885",
+      "role": "user",
+      "avatar": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22avatarGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E293B%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22url(%23avatarGrad)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2292%22%20fill%3D%22none%22%20stroke%3D%22%23D97706%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20font-family%3D%22-apple-system%2C%20BlinkMacSystemFont%2C%20'Segoe%20UI'%2C%20Roboto%2C%20sans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%20fill%3D%22%23F59E0B%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20letter-spacing%3D%223%22%3ENT%3C%2Ftext%3E%0A%3C%2Fsvg%3E",
+      "name": "Nguyễn Tấn Tường Huy",
+      "email": "nguyentantunghdsadj1234@gmail.com",
+      "password": "$2b$10$mfvzxD4bQv5pkxUuMPaWlOHGKwfPm.41.2CptlcAVsaFjQpzmdzf6",
+      "phone": "0333333333",
+      "address": "dấdsds1222",
+      "updatedAt": "2026-11-02T03:48:21.037Z"
     }
   ],
   "orders": [
     {
-      "id": "ord_1",
-      "orderCode": "ORD-89421",
-      "userId": "user_customer",
-      "customerName": "Nguyễn Văn Minh",
-      "customerPhone": "0987654321",
-      "customerEmail": "user@atelier.vn",
-      "shippingAddress": "Số 88 Đường Nguyễn Trãi, Phường 3, Quận 5, TP. Hồ Chí Minh",
-      "paymentMethod": "cod",
-      "paymentStatus": "unpaid",
-      "orderStatus": "confirmed",
-      "totalAmount": 628000,
+      "id": "ord_1793373955880",
+      "orderCode": "ORD-52247",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
       "shippingFee": 0,
-      "discountAmount": 20000,
-      "note": "Giao giờ hành chính giúp mình nhé.",
+      "discountAmount": 0,
+      "createdAt": "2026-10-30T15:25:55.880Z",
+      "userId": "user_1793373960885",
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333333333",
+      "customerEmail": "nguyentantunghdsadj1234@gmail.com",
+      "shippingAddress": "dấdsds1222",
+      "paymentMethod": "cod",
       "items": [
         {
-          "id": "item_1",
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 1,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_7",
+          "productName": "Kính Mát Phi Công Aviator Gọng Kim Loại Mạ Vàng UV400",
+          "price": 299000,
+          "quantity": 1,
+          "color": "Tròng Xanh Rêu Gọng Vàng",
+          "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "subtotal": 488000,
+      "totalAmount": 488000,
+      "note": "aaaa"
+    },
+    {
+      "id": "ord_1793373908922",
+      "orderCode": "ORD-26607",
+      "paymentStatus": "unpaid",
+      "orderStatus": "shipping",
+      "shippingFee": 25000,
+      "discountAmount": 0,
+      "createdAt": "2026-10-30T15:25:08.922Z",
+      "userId": "user_1793373916757",
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333333333",
+      "customerEmail": "nguyentantunghdsadj123@gmail.com",
+      "shippingAddress": "dsdsdsdssdsds",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 1,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "subtotal": 189000,
+      "totalAmount": 214000,
+      "note": "dsds"
+    },
+    {
+      "id": "ord_1793373876673",
+      "orderCode": "ORD-92957",
+      "paymentStatus": "unpaid",
+      "orderStatus": "pending",
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "createdAt": "2026-10-30T15:24:36.673Z",
+      "userId": "user_1793373916757",
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333333333",
+      "customerEmail": "nguyentantunghdsadjz@gmail.com",
+      "shippingAddress": "dấdsds1222",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 3,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "subtotal": 567000,
+      "totalAmount": 567000,
+      "note": "ádsadsadsas"
+    },
+    {
+      "id": "ord_1793373324774",
+      "orderCode": "ORD-18321",
+      "paymentStatus": "unpaid",
+      "orderStatus": "pending",
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "createdAt": "2026-10-30T15:15:24.774Z",
+      "userId": "user_1793373823249",
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333333333",
+      "customerEmail": "nguyentantunghdsadj@gmail.com",
+      "shippingAddress": "dấdsds1222",
+      "paymentMethod": "cod",
+      "items": [
+        {
           "productId": "prod_1",
           "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
           "price": 349000,
@@ -634,19 +820,337 @@
           "image": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80"
         },
         {
-          "id": "item_2",
+          "productId": "prod_1",
+          "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+          "price": 379000,
+          "quantity": 3,
+          "color": "Nâu Espresso",
+          "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "subtotal": 1486000,
+      "totalAmount": 1486000,
+      "note": "đsa"
+    },
+    {
+      "id": "ord_1793351015342",
+      "orderCode": "ORD-93955",
+      "paymentStatus": "unpaid",
+      "orderStatus": "shipping",
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "createdAt": "2026-10-30T09:03:35.342Z",
+      "userId": "user_1793373823249",
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333333333",
+      "customerEmail": "nguyentantunghdsadj@gmail.com",
+      "shippingAddress": "dsdsdsdssdsds",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "productId": "prod_1",
+          "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+          "price": 349000,
+          "quantity": 1,
+          "color": "Đen Onyx",
+          "image": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "subtotal": 349000,
+      "totalAmount": 349000,
+      "note": "dsd"
+    },
+    {
+      "id": "ord_1793346784882",
+      "orderCode": "ORD-69261",
+      "paymentStatus": "unpaid",
+      "orderStatus": "confirmed",
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "createdAt": "2026-10-30T07:53:04.882Z",
+      "userId": null,
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333794941\\",
+      "customerEmail": "nguyentantunghdsadj@gmail.com",
+      "shippingAddress": "dsdsdsdssdsds",
+      "paymentMethod": "cod",
+      "items": [
+        {
           "productId": "prod_3",
           "productName": "Ví Da Gập Đôi Minimalist Slim Bifold",
           "price": 279000,
           "quantity": 1,
           "color": "Đen Huyền Bí",
           "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 1,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_7",
+          "productName": "Kính Mát Phi Công Aviator Gọng Kim Loại Mạ Vàng UV400",
+          "price": 299000,
+          "quantity": 1,
+          "color": "Tròng Xanh Rêu Gọng Vàng",
+          "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
         }
       ],
-      "createdAt": "2026-10-26T02:33:24.980Z"
+      "subtotal": 767000,
+      "totalAmount": 767000,
+      "note": "sdssd"
     },
     {
-      "id": "ord_2",
+      "id": "ord_101",
+      "orderCode": "ORD-77291",
+      "userId": null,
+      "customerName": "Trần Minh Quân",
+      "customerPhone": "0912345678",
+      "customerEmail": "quan.tran@gmail.com",
+      "shippingAddress": "Tòa nhà Landmark 81, 720A Điện Biên Phủ, Phường 22, Bình Thạnh, TP.HCM",
+      "paymentMethod": "bank_transfer",
+      "paymentStatus": "unpaid",
+      "orderStatus": "shipping",
+      "totalAmount": 648000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Giao trong ngày giúp mình nhé.",
+      "items": [
+        {
+          "productId": "prod_1",
+          "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+          "price": 349000,
+          "quantity": 1,
+          "color": "Đen Onyx Khóa Titan",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_7",
+          "productName": "Kính Mát Phi Công Aviator Gọng Kim Loại Mạ Vàng UV400",
+          "price": 299000,
+          "quantity": 1,
+          "color": "Tròng Xanh Rêu Gọng Vàng",
+          "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-30T08:15:00.000Z"
+    },
+    {
+      "id": "ord_102",
+      "orderCode": "ORD-88102",
+      "userId": null,
+      "customerName": "Nguyễn Hải Yến",
+      "customerPhone": "0938889999",
+      "customerEmail": "haiyen.nguyen@gmail.com",
+      "shippingAddress": "45 Lê Duẩn, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+      "paymentMethod": "vnpay",
+      "paymentStatus": "paid",
+      "orderStatus": "confirmed",
+      "totalAmount": 388000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Đóng hộp quà tặng giúp mình nha shop.",
+      "items": [
+        {
+          "productId": "prod_9",
+          "productName": "Dây Chuyền Cuban Link Titan Không Gỉ 7mm Bạc Sáng",
+          "price": 199000,
+          "quantity": 1,
+          "color": "Bạc Sáng 50cm",
+          "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 1,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-30T07:40:00.000Z"
+    },
+    {
+      "id": "ord_103",
+      "orderCode": "ORD-95120",
+      "userId": "user_1793242682449",
+      "customerName": "Nguyễn Tấn Tường Huy",
+      "customerPhone": "0333794941",
+      "customerEmail": "nguyentantuonghuy@gmail.com",
+      "shippingAddress": "39 Đường Số 2, P. Hiệp Bình Chánh, TP. Thủ Đức",
+      "paymentMethod": "cod",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 548000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Gọi trước khi giao hàng.",
+      "items": [
+        {
+          "productId": "prod_9",
+          "productName": "Dây Chuyền Cuban Link Titan Không Gỉ 7mm Bạc Sáng",
+          "price": 199000,
+          "quantity": 1,
+          "color": "Bạc Ánh Kim",
+          "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_1",
+          "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+          "price": 349000,
+          "quantity": 1,
+          "color": "Đen Onyx Khóa Titan",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-29T15:20:00.000Z"
+    },
+    {
+      "id": "ord_104",
+      "orderCode": "ORD-62019",
+      "userId": null,
+      "customerName": "Bùi Thanh Sơn",
+      "customerPhone": "0977112233",
+      "customerEmail": "son.bui@gmail.com",
+      "shippingAddress": "12 Hoàng Hoa Thám, Phường 13, Tân Bình, TP.HCM",
+      "paymentMethod": "cod",
+      "paymentStatus": "unpaid",
+      "orderStatus": "confirmed",
+      "totalAmount": 528000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "",
+      "items": [
+        {
+          "productId": "prod_3",
+          "productName": "Ví Da Gập Đôi Minimalist Slim Bifold",
+          "price": 279000,
+          "quantity": 1,
+          "color": "Nâu Cà Phê",
+          "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_11",
+          "productName": "Túi Bao Tử Đeo Chéo Crossbody Canvas Chống Nước Yame Style",
+          "price": 249000,
+          "quantity": 1,
+          "color": "Đen Streetwear",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-29T11:10:00.000Z"
+    },
+    {
+      "id": "ord_105",
+      "orderCode": "ORD-18920",
+      "userId": null,
+      "customerName": "Đỗ Mỹ Linh",
+      "customerPhone": "0909555666",
+      "customerEmail": "mylinh.do@gmail.com",
+      "shippingAddress": "280 Nguyễn Đình Chiểu, Phường 6, Quận 3, TP.HCM",
+      "paymentMethod": "cod",
+      "paymentStatus": "unpaid",
+      "orderStatus": "cancelled",
+      "totalAmount": 169000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Khách yêu cầu hủy đơn để đổi sang mũ màu khác.",
+      "items": [
+        {
+          "productId": "prod_6",
+          "productName": "Mũ Bucket Canvas 2 Mặt Unisex Reverse Hat",
+          "price": 169000,
+          "quantity": 1,
+          "color": "Be Đen",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-29T09:00:00.000Z"
+    },
+    {
+      "id": "ord_1793187730706",
+      "orderCode": "ORD-46267",
+      "userId": "user_customer",
+      "customerName": "Nguyễn Văn Minh (Khách hàng)",
+      "customerPhone": "0987654321",
+      "customerEmail": "user@atelier.vn",
+      "shippingAddress": "Số 88 Đường Nguyễn Trãi, Phường 3, Quận 5, TP. Hồ Chí Minh",
+      "paymentMethod": "cod",
+      "paymentStatus": "unpaid",
+      "orderStatus": "shipping",
+      "totalAmount": 767000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Giao giờ hành chính",
+      "items": [
+        {
+          "productId": "prod_3",
+          "productName": "Ví Da Gập Đôi Minimalist Slim Bifold",
+          "price": 279000,
+          "quantity": 1,
+          "color": "Đen Huyền Bí",
+          "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 1,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_7",
+          "productName": "Kính Mát Phi Công Aviator Gọng Kim Loại Mạ Vàng UV400",
+          "price": 299000,
+          "quantity": 1,
+          "color": "Tròng Xanh Rêu Gọng Vàng",
+          "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-28T11:42:10.706Z"
+    },
+    {
+      "id": "ord_106",
+      "orderCode": "ORD-83921",
+      "userId": null,
+      "customerName": "Hoàng Văn Đức",
+      "customerPhone": "0944332211",
+      "customerEmail": "duc.hoang@gmail.com",
+      "shippingAddress": "18 Hai Bà Trưng, Phường Tràng Tiền, Hoàn Kiếm, Hà Nội",
+      "paymentMethod": "momo",
+      "paymentStatus": "paid",
+      "orderStatus": "shipping",
+      "totalAmount": 519000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "",
+      "items": [
+        {
+          "productId": "prod_2",
+          "productName": "Dây Nịt Da Sáp Vintage Khóa Kim Cổ Điển",
+          "price": 299000,
+          "quantity": 1,
+          "color": "Nâu Sáp Vintage",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_4",
+          "productName": "Ví Đựng Thẻ Thông Minh Nhôm Titan Bật Thẻ Auto RFID",
+          "price": 220000,
+          "quantity": 1,
+          "color": "Xám Titan Space Gray",
+          "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-28T09:15:00.000Z"
+    },
+    {
+      "id": "ord_107",
       "orderCode": "ORD-91203",
       "userId": "user_customer",
       "customerName": "Nguyễn Văn Minh",
@@ -662,7 +1166,6 @@
       "note": "Kiểm tra kỹ trước khi đóng gói nhé shop.",
       "items": [
         {
-          "id": "item_3",
           "productId": "prod_9",
           "productName": "Dây Chuyền Cuban Link Titan Không Gỉ 7mm Bạc Sáng",
           "price": 199000,
@@ -672,6 +1175,216 @@
         }
       ],
       "createdAt": "2026-10-28T02:33:24.980Z"
+    },
+    {
+      "id": "ord_108",
+      "orderCode": "ORD-71932",
+      "userId": null,
+      "customerName": "Đặng Quốc Bảo",
+      "customerPhone": "0966442200",
+      "customerEmail": "bao.dang@gmail.com",
+      "shippingAddress": "68 Cầu Giấy, Phường Quan Hoa, Cầu Giấy, Hà Nội",
+      "paymentMethod": "vnpay",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 548000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Đã nhận hàng ưng ý.",
+      "items": [
+        {
+          "productId": "prod_7",
+          "productName": "Kính Mát Phi Công Aviator Gọng Kim Loại Mạ Vàng UV400",
+          "price": 299000,
+          "quantity": 1,
+          "color": "Tròng Xanh Rêu Gọng Vàng",
+          "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_8",
+          "productName": "Kính Râm Gọng Vuông Dày Retro Black Noir Y2K",
+          "price": 249000,
+          "quantity": 1,
+          "color": "Đen Toàn Phần",
+          "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-27T16:30:00.000Z"
+    },
+    {
+      "id": "ord_109",
+      "orderCode": "ORD-48209",
+      "userId": null,
+      "customerName": "Vũ Thị Mai",
+      "customerPhone": "0918776655",
+      "customerEmail": "mai.vu@gmail.com",
+      "shippingAddress": "15 Trần Phú, Phường 4, Quận 5, TP.HCM",
+      "paymentMethod": "cod",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 458000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "",
+      "items": [
+        {
+          "productId": "prod_12",
+          "productName": "Túi Đeo Vai Mini Messenger Bag Street Chic",
+          "price": 289000,
+          "quantity": 1,
+          "color": "Đen Carbon",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_6",
+          "productName": "Mũ Bucket Canvas 2 Mặt Unisex Reverse Hat",
+          "price": 169000,
+          "quantity": 1,
+          "color": "Be Đen",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-27T10:00:00.000Z"
+    },
+    {
+      "id": "ord_1",
+      "orderCode": "ORD-89421",
+      "userId": "user_customer",
+      "customerName": "Nguyễn Văn Minh",
+      "customerPhone": "0987654321",
+      "customerEmail": "user@atelier.vn",
+      "shippingAddress": "Số 88 Đường Nguyễn Trãi, Phường 3, Quận 5, TP. Hồ Chí Minh",
+      "paymentMethod": "cod",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 628000,
+      "shippingFee": 0,
+      "discountAmount": 20000,
+      "note": "Giao giờ hành chính giúp mình nhé.",
+      "items": [
+        {
+          "productId": "prod_1",
+          "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+          "price": 349000,
+          "quantity": 1,
+          "color": "Đen Onyx Khóa Titan",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_3",
+          "productName": "Ví Da Gập Đôi Minimalist Slim Bifold",
+          "price": 279000,
+          "quantity": 1,
+          "color": "Đen Huyền Bí",
+          "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-26T02:33:24.980Z"
+    },
+    {
+      "id": "ord_110",
+      "orderCode": "ORD-67210",
+      "userId": null,
+      "customerName": "Phạm Minh Tuấn",
+      "customerPhone": "0903123456",
+      "customerEmail": "tuan.pm@gmail.com",
+      "shippingAddress": "102 Nguyễn Văn Cừ, Phường Nguyễn Cư Trinh, Quận 1, TP.HCM",
+      "paymentMethod": "cod",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 358000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "",
+      "items": [
+        {
+          "productId": "prod_9",
+          "productName": "Dây Chuyền Cuban Link Titan Không Gỉ 7mm Bạc Sáng",
+          "price": 199000,
+          "quantity": 1,
+          "color": "Bạc Sáng 50cm",
+          "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_10",
+          "productName": "Vòng Tay Nam Lắc Titan Khóa Hộp HipHop Chunky Chain",
+          "price": 159000,
+          "quantity": 1,
+          "color": "Bạc Mờ",
+          "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-25T14:45:00.000Z"
+    },
+    {
+      "id": "ord_111",
+      "orderCode": "ORD-39401",
+      "userId": null,
+      "customerName": "Lê Thu Hà",
+      "customerPhone": "0937665544",
+      "customerEmail": "thuha.le@gmail.com",
+      "shippingAddress": "78 Bạch Đằng, Phường 24, Bình Thạnh, TP.HCM",
+      "paymentMethod": "momo",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 438000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "",
+      "items": [
+        {
+          "productId": "prod_11",
+          "productName": "Túi Bao Tử Đeo Chéo Crossbody Canvas Chống Nước Yame Style",
+          "price": 249000,
+          "quantity": 1,
+          "color": "Đen Streetwear",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_5",
+          "productName": "Nón Lưỡi Trai Snapback Streetwear Atelier Signature",
+          "price": 189000,
+          "quantity": 1,
+          "color": "Đen Trắng",
+          "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-25T09:30:00.000Z"
+    },
+    {
+      "id": "ord_112",
+      "orderCode": "ORD-58192",
+      "userId": null,
+      "customerName": "Trần Hoàng Long",
+      "customerPhone": "0989001122",
+      "customerEmail": "hoanglong.tran@gmail.com",
+      "shippingAddress": "55 Hàng Khay, Phường Tràng Tiền, Hoàn Kiếm, Hà Nội",
+      "paymentMethod": "vnpay",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "totalAmount": 628000,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "note": "Sản phẩm đóng gói rất kỹ, da thật 100%!",
+      "items": [
+        {
+          "productId": "prod_1",
+          "productName": "Thắt Lưng Da Bò Ý Khóa Tự Động Black Onyx",
+          "price": 349000,
+          "quantity": 1,
+          "color": "Đen Onyx Khóa Titan",
+          "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "productId": "prod_3",
+          "productName": "Ví Da Gập Đôi Minimalist Slim Bifold",
+          "price": 279000,
+          "quantity": 1,
+          "color": "Đen Huyền Bí",
+          "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "createdAt": "2026-10-24T16:20:00.000Z"
     }
   ],
   "reviews": [
@@ -696,6 +1409,88 @@
       "comment": "Dây chuyền titan sáng bóng, đeo tắm rửa thể thao thoải mái không hề bị đen xỉn hay ngứa da. Rất hài lòng.",
       "isVerified": true,
       "createdAt": "2026-10-25T02:33:24.980Z"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "blog_1",
+      "title": "5 Cách Phối Thắt Lưng Da Bò Với Âu Phục Chuẩn Quý Ông Đương Đại",
+      "slug": "5-cach-phoi-that-lung-da-bo-voi-au-phuc",
+      "summary": "Thắt lưng không chỉ giữ trang phục chỉn chu mà còn là điểm nhấn thể hiện đẳng cấp và gu thẩm mỹ tinh tế của người đàn ông thành đạt.",
+      "content": "\n      <h3>1. Quy tắc bất biến: Đồng điệu màu sắc giữa Thắt Lưng và Giày Tây</h3>\n      <p>Một trong những nguyên tắc thời trang kinh điển nhưng thường bị lãng quên nhất: Màu của thắt lưng phải luôn hài hòa với màu của đôi giày bạn đang mang. Nếu bạn diện một đôi giày Oxford đen bóng, chiếc thắt lưng da bò Ý màu Black Onyx là sự lựa chọn duy nhất đúng chuẩn.</p>\n      \n      <h3>2. Độ rộng bản dây lý tưởng cho trang phục Formal</h3>\n      <p>Đối với suit hay quần âu công sở, độ rộng bản thắt lưng hoàn hảo nhất nằm trong khoảng từ 3.2cm đến 3.5cm. Bản dây quá to (trên 3.8cm) sẽ mang cảm giác phong cách bụi bặm, thường chỉ phù hợp với quần jeans hoặc kaki thô.</p>\n\n      <h3>3. Khóa tự động mạ titan vs Khóa xỏ kim truyền thống</h3>\n      <p>Khóa tự động (Automatic Buckle) mang lại sự tiện lợi vượt bậc khi bạn không cần phải bấm lỗ làm hỏng kết cấu da. Thiết kế mặt khóa trơn phủ PVD titan mờ đem lại vẻ đẹp tối giản, sắc sảo và hiện đại cho các quý ông văn phòng thời đại số.</p>\n\n      <h3>4. Bảo quản bề mặt da sau một ngày dài sử dụng</h3>\n      <p>Đừng cuộn tròn thắt lưng quá chặt trong ngăn kéo. Hãy treo thắt lưng thẳng đứng nơi khô ráo, tránh ánh nắng trực tiếp để các thớ da bò tự nhiên được phục hồi độ đàn hồi và không bị nếp gấp.</p>\n    ",
+      "category": "Phong Cách & Phối Đồ",
+      "author": "Tuấn Trần (Fashion Editor)",
+      "authorAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+      "coverImage": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1200&q=80",
+      "readTime": "4 phút đọc",
+      "views": 1820,
+      "createdAt": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "blog_2",
+      "title": "Xu Hướng Kính Mát Phi Công Aviator & Khung Kim Loại Phân Cực 2026",
+      "slug": "xu-huong-kinh-mat-phi-cong-aviator-2026",
+      "summary": "Chiếc kính râm Aviator huyền thoại quay trở lại mạnh mẽ trong các sàn diễn thời trang quốc tế với tròng phân cực Polarized UV400 và gọng titan siêu nhẹ.",
+      "content": "\n      <h3>1. Di sản vượt thời gian của dòng kính phi công</h3>\n      <p>Được phát triển ban đầu dành cho các phi công chiến đấu vào thập niên 1930, kiểu dáng Aviator dáng giọt nước chưa từng lỗi thời trong gần một thế kỷ. Năm 2026, các nhà mốt tái định nghĩa phong cách này bằng khung viền thanh mảnh hơn, tối giản hóa các chi tiết rườm rà.</p>\n\n      <h3>2. Tại sao bạn nhất định phải chọn tròng Polarized UV400?</h3>\n      <p>Tia UV và ánh sáng chói phản xạ từ mặt đường nhựa hay kính xe hơi có thể gây mỏi mắt nghiêm trọng. Tròng kính phân cực cao cấp của Atelier không chỉ ngăn chặn 99.9% tia tử ngoại mà còn tăng cường độ tương phản quang học, giúp tầm nhìn luôn trong trẻo và chân thực.</p>\n\n      <h3>3. Cách chọn gọng kính phù hợp với từng khuôn mặt</h3>\n      <p>Kính Aviator bo tròn mềm mại là vũ khí đắc lực giúp cân bằng những khuôn mặt góc cạnh (mặt vuông, chữ điền). Nếu bạn sở hữu gương mặt tròn, hãy ưu tiên các mẫu gọng phi công có cầu kính kép ngang dứt khoát.</p>\n    ",
+      "category": "Xu Hướng Phụ Kiện",
+      "author": "Minh Thảo (Stylist)",
+      "authorAvatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
+      "coverImage": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1200&q=80",
+      "readTime": "5 phút đọc",
+      "views": 2450,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "blog_3",
+      "title": "Nghệ Thuật Mix & Match Trang Sức Titan Streetwear Cho Giới Trẻ",
+      "slug": "nghe-thuat-mix-match-trang-suc-titan-streetwear",
+      "summary": "Từ dây chuyền Cuban link to bản đến những chiếc nhẫn họa tiết Aztec, khám phá cách tạo điểm nhấn cá tính mà không bị rườm rà hay phô trương.",
+      "content": "\n      <h3>1. Trang sức titan 316L - Vật liệu vàng của giới mộ điệu</h3>\n      <p>Khác với trang sức hợp kim thông thường dễ gỉ sét và gây dị ứng, titan phẫu thuật 316L sở hữu độ bền vĩnh cửu, không phai màu khi tiếp xúc với mồ hôi, nước biển và nước hoa. Độ đầm tay và ánh kim sáng bóng làm nên sức hút đặc biệt.</p>\n\n      <h3>2. Công thức Layering dây chuyền chuẩn phong cách Hip-hop</h3>\n      <p>Hãy phối một sợi dây chuyền xích mảnh dài 60cm bên ngoài, kết hợp cùng một sợi Cuban link 7mm ngắn 50cm sát xương quai xanh. Sự chênh lệch về độ dày và chiều dài sẽ tạo nên chiều sâu thị giác cực kỳ lôi cuốn.</p>\n\n      <h3>3. Nguyên tắc “Less is More” khi đeo nhẫn và lắc tay</h3>\n      <p>Đừng đeo kín tất cả các ngón tay. Bạn chỉ nên tạo điểm nhấn tối đa 2 chiếc nhẫn trên một bàn tay: Một chiếc bản to ở ngón trỏ hoặc ngón cái, và một chiếc nhẫn trơn mảnh ở ngón áp út đối xứng.</p>\n    ",
+      "category": "Mẹo Phối Đồ",
+      "author": "Hoàng Long (Creative Director)",
+      "authorAvatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
+      "coverImage": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80",
+      "readTime": "3 phút đọc",
+      "views": 3100,
+      "createdAt": "2026-10-24T00:00:00.000Z"
+    }
+  ],
+  "stores": [
+    {
+      "id": "store_1",
+      "name": "Flagship Store Bến Thành (TP.HCM)",
+      "address": "128 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh",
+      "phone": "028 3822 9999",
+      "hours": "08:30 - 22:30 (Mở cửa cả tuần)",
+      "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
+      "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5177583688537!2d106.6894084!3d10.7716003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f39001b972d%3A0xe6ec00155a0f5e1f!2zMTI4IE5ndXnhu4VuIFRyw6NpLCBQaMaw4budbmcgQuG6v24gVGjDoG5oLCBRdeG6rW4gMSwgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s"
+    },
+    {
+      "id": "store_2",
+      "name": "Showroom Vạn Hạnh Mall (TP.HCM)",
+      "address": "Tầng 3 Vạn Hạnh Mall, 11 Sư Vạn Hạnh, Phường 12, Quận 10, TP. Hồ Chí Minh",
+      "phone": "028 3866 8888",
+      "hours": "09:30 - 22:00",
+      "image": "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=800&q=80",
+      "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.460831627999!2d106.6652417!3d10.7759714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1b7c3aa07d%3A0xc345f061f03f39a0!2zVuG6oW4gSOG6oW5oIE1hbGw!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s"
+    },
+    {
+      "id": "store_3",
+      "name": "Flagship Showroom Tràng Tiền (Hà Nội)",
+      "address": "45 Phố Tràng Tiền, Phường Tràng Tiền, Quận Hoàn Kiếm, Hà Nội",
+      "phone": "024 3936 8888",
+      "hours": "08:30 - 22:00",
+      "image": "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=800&q=80",
+      "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1673995804646!2d105.8543781!3d21.0253874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abec2f5c71d9%3A0x2f90117b3531b9d1!2zNDUgVHLDoG5nIFRp4buBbiwgSG_DoG4gS2nhur9tLCBIw6AgTuG7mWk!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s"
+    },
+    {
+      "id": "store_4",
+      "name": "Showroom Vincom Bà Triệu (Hà Nội)",
+      "address": "Tầng 2 Vincom Center, 191 Bà Triệu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội",
+      "phone": "024 3974 6666",
+      "hours": "09:30 - 22:00",
+      "image": "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
+      "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.484557921966!2d105.8475253!3d21.0132801!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab88e6e5a1b3%3A0xb5b7fb764d6c4664!2zMTkxIELDoCBUcmnhu4d1LCBIYWkgQsOgIFRyxrBuZywgSMOgIE7hu5lp!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s"
     }
   ]
 }

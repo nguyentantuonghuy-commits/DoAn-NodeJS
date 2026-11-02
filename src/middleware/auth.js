@@ -38,6 +38,17 @@ const protect = (req, res, next) => {
       return res.redirect('/login');
     }
 
+    if (user.status === 'locked') {
+      res.clearCookie('token');
+      if (req.originalUrl.startsWith('/api')) {
+        return res.status(403).json({
+          success: false,
+          message: 'Tài khoản của bạn đã bị khóa bởi Quản trị viên. Vui lòng liên hệ bộ phận hỗ trợ.'
+        });
+      }
+      return res.redirect('/login?locked=1');
+    }
+
     req.user = user;
     res.locals.currentUser = user;
     next();
@@ -61,9 +72,11 @@ const optionalAuth = (req, res, next) => {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
       const user = dbStore.findUserById(decoded.id);
-      if (user) {
+      if (user && user.status !== 'locked') {
         req.user = user;
         res.locals.currentUser = user;
+      } else if (user && user.status === 'locked') {
+        res.clearCookie('token');
       }
     } catch (e) {
       // Ignore token failure for public routes

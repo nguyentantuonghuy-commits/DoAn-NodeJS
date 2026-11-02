@@ -4,3 +4,6 @@ node_modules/
 *.log
 .wrangler/
 dist/
+scratch/
+__pycache__/
+*.pyc

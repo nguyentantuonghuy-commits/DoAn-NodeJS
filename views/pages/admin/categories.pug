@@ -3,121 +3,1390 @@ extends ../../layouts/main
 block content
   .admin-layout
     //- Admin Sidebar
-    aside.admin-sidebar
-      .admin-nav
-        a(href="/admin")
-          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
-          | Bảng Điều Khiển
-        a(href="/admin/products")
-          i(data-lucide="package", style="width: 18px; height: 18px;")
-          | Quản Lý Sản Phẩm
-        a.active(href="/admin/categories")
-          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
-          | Quản Lý Danh Mục
-        a(href="/admin/orders")
-          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
-          | Quản Lý Đơn Hàng
-        a(href="/admin/users")
-          i(data-lucide="users", style="width: 18px; height: 18px;")
-          | Quản Lý Người Dùng
-        hr(style="border-color: #1F242C; margin: 16px 0;")
-        a(href="/")
-          i(data-lucide="external-link", style="width: 18px; height: 18px;")
-          | Xem Website
+    include ../../partials/admin-sidebar
 
     //- Main Content
-    main.admin-content
-      .admin-header(style="margin-bottom: 24px;")
-        h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;") Quản Lý Danh Mục Phụ Kiện
-        p(style="color: var(--text-muted); font-size: 0.9375rem;") Danh sách các nhóm phụ kiện thời trang và thêm danh mục mới.
+    main.admin-content(style="padding-bottom: 60px;")
+      
+      //- 1. Header & Breadcrumbs
+      .admin-page-header
+        div
+          .breadcrumb-trail
+            span Atelier System
+            span.breadcrumb-separator /
+            span.current Quản lý danh mục
+          h1(style="font-size: 1.625rem; font-weight: 800; color: var(--text-main); margin: 0; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;")
+            i(data-lucide="folder-tree", style="width: 26px; height: 26px; color: #D97706;")
+            | Quản Lý Danh Mục Phụ Kiện
+          p(style="color: var(--text-muted); font-size: 0.8125rem; margin: 4px 0 0;")
+            | Phân loại phụ kiện thời trang Atelier: thêm mới, cập nhật thông tin, thay đổi ảnh đại diện và bật/tắt hiển thị trên website.
+        
+        .header-actions-group
+          button.btn.btn-sm(
+            type="button",
+            onclick="openCreateCategoryModal()",
+            style="display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; font-size: 0.84rem; font-weight: 700; background: #0F172A; color: #FFFFFF; border-radius: var(--radius-sm); border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2); transition: background 0.2s;"
+          )
+            i(data-lucide="plus-circle", style="width: 16px; height: 16px; color: var(--accent-gold);")
+            | + Thêm Danh Mục Mới
 
-      .categories-split(style="display: grid; grid-template-columns: 1fr 360px; gap: 30px;")
-        //- Categories List Table
-        .admin-card
-          h3(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px;") Danh Sách Danh Mục Hiện Tại
-          .table-responsive
-            table.data-table
-              thead
-                tr
-                  th Hình Ảnh
-                  th Tên Danh Mục
-                  th Đường Dẫn (Slug)
-                  th Số Mẫu
-                  th Thao Tác
-              tbody
-                each cat in categories
-                  tr
-                    td
-                      img(src=cat.image, alt=cat.name, style="width: 44px; height: 50px; object-fit: cover; border-radius: 4px;")
-                    td: strong= cat.name
-                    td: code= cat.slug
-                    td= `${cat.itemCount} sản phẩm`
-                    td
+      //- 2. Quick Stat Metric Cards (4 Cards - Premium Luxury Theme)
+      .kpi-grid-premium(style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 22px; gap: 14px;")
+        
+        //- Card 1: Tổng danh mục
+        .kpi-card-premium(style="--card-accent: #2563EB; --icon-bg: #EFF6FF; --icon-color: #1D4ED8; padding: 16px 18px;")
+          .kpi-header-row(style="margin-bottom: 8px;")
+            .kpi-icon-wrap(style="width: 38px; height: 38px;")
+              i(data-lucide="folder", style="width: 18px; height: 18px;")
+            span.kpi-trend-pill.trend-neutral(style="font-size: 0.7rem; padding: 2px 8px;")
+              | Phân loại
+          .kpi-title-sub(style="font-size: 0.72rem;") Tổng Số Nhóm Danh Mục
+          .kpi-main-number#statTotalCount(style="font-size: 1.5rem; color: #1E293B;")= stats ? `${stats.totalCategories} Nhóm` : `${categories.length} Nhóm`
+          .kpi-footnote(style="font-size: 0.7rem;") Nhóm phụ kiện kinh doanh
+
+        //- Card 2: Đang Mở Bán
+        .kpi-card-premium(style="--card-accent: #059669; --icon-bg: #ECFDF5; --icon-color: #047857; padding: 16px 18px;")
+          .kpi-header-row(style="margin-bottom: 8px;")
+            .kpi-icon-wrap(style="width: 38px; height: 38px;")
+              i(data-lucide="check-circle-2", style="width: 18px; height: 18px;")
+            span.kpi-trend-pill.trend-up(style="font-size: 0.7rem; padding: 2px 8px;")
+              | Khách xem được
+          .kpi-title-sub(style="font-size: 0.72rem;") Đang Mở Bán Trên Web
+          .kpi-main-number#statActiveCount(style="font-size: 1.5rem; color: #047857;")= stats ? `${stats.activeCount} Nhóm` : `${categories.filter(c => !c.isHidden).length} Nhóm`
+          .kpi-footnote(style="font-size: 0.7rem;") Hiển thị trên menu &amp; bộ lọc shop
+
+        //- Card 3: Đã Tạm Ẩn
+        .kpi-card-premium(style="--card-accent: #D97706; --icon-bg: #FEF3C7; --icon-color: #B45309; padding: 16px 18px;")
+          .kpi-header-row(style="margin-bottom: 8px;")
+            .kpi-icon-wrap(style="width: 38px; height: 38px;")
+              i(data-lucide="eye-off", style="width: 18px; height: 18px;")
+            span.kpi-trend-pill.trend-warning(style="font-size: 0.7rem; padding: 2px 8px;")
+              | Tạm ẩn
+          .kpi-title-sub(style="font-size: 0.72rem;") Đã Tạm Ẩn Khỏi Web
+          .kpi-main-number#statHiddenCount(style="font-size: 1.5rem; color: #B45309;")= stats ? `${stats.hiddenCount} Nhóm` : `${categories.filter(c => c.isHidden).length} Nhóm`
+          .kpi-footnote(style="font-size: 0.7rem;") Không hiển thị ngoài web khách
+
+        //- Card 4: Tổng sản phẩm
+        .kpi-card-premium(style="--card-accent: #7C3AED; --icon-bg: #F5F3FF; --icon-color: #6D28D9; padding: 16px 18px;")
+          .kpi-header-row(style="margin-bottom: 8px;")
+            .kpi-icon-wrap(style="width: 38px; height: 38px;")
+              i(data-lucide="package", style="width: 18px; height: 18px;")
+            span.kpi-trend-pill.trend-neutral(style="font-size: 0.7rem; padding: 2px 8px; background: #F5F3FF; color: #7C3AED;")
+              | Kho hàng
+          .kpi-title-sub(style="font-size: 0.72rem;") Mẫu Sản Phẩm Trong Kho
+          .kpi-main-number(style="font-size: 1.5rem; color: #7C3AED;")= stats ? `${stats.totalProducts} Mẫu` : '0 Mẫu'
+          .kpi-footnote(style="font-size: 0.7rem;") Phân bố theo các danh mục
+
+      //- 3. Filter & Search Toolbar (Gõ Chữ Nào Tự Động Lọc Chữ Đó)
+      .admin-card(style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 20px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); margin-bottom: 18px;")
+        .toolbar-inner(style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;")
+          
+          //- Ô tìm kiếm thời gian thực
+          .search-wrap(style="position: relative; flex: 1; min-width: 280px; max-width: 480px;")
+            i(data-lucide="search", style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: #94A3B8; pointer-events: none;")
+            input#catSearchInput.form-control(
+              type="text",
+              placeholder="Tìm nhanh theo tên danh mục, slug, mô tả...",
+              oninput="filterCategories()",
+              style="width: 100%; height: 42px; padding-left: 38px; padding-right: 32px; font-size: 0.84rem; border: 1.5px solid #CBD5E1; border-radius: 6px;"
+            )
+            button#btnSearchClear(
+              type="button",
+              onclick="clearSearchInput()",
+              title="Xóa tìm kiếm",
+              style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer; padding: 2px;"
+            )
+              i(data-lucide="x-circle", style="width: 16px; height: 16px;")
+
+          //- Bộ lọc trạng thái trực quan
+          .filter-tabs(style="display: flex; gap: 6px; background: #F1F5F9; padding: 4px; border-radius: 8px; flex-wrap: wrap;")
+            button.status-pill#pillAll(
+              type="button",
+              onclick="setFilterStatus('all')",
+              style="border: none; background: #FFFFFF; color: #0F172A; font-weight: 700; font-size: 0.8125rem; padding: 7px 14px; border-radius: 6px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.06); transition: all 0.2s;"
+            )
+              | Tất Cả (
+              span#pillCountAll= categories.length
+              | )
+
+            button.status-pill#pillVisible(
+              type="button",
+              onclick="setFilterStatus('visible')",
+              style="border: none; background: transparent; color: #059669; font-weight: 700; font-size: 0.8125rem; padding: 7px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+            )
+              | ● Đang Mở Bán (
+              span#pillCountVisible= categories.filter(c => !c.isHidden).length
+              | )
+
+            button.status-pill#pillHidden(
+              type="button",
+              onclick="setFilterStatus('hidden')",
+              style="border: none; background: transparent; color: #D97706; font-weight: 700; font-size: 0.8125rem; padding: 7px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+            )
+              | ● Đã Tạm Ẩn (
+              span#pillCountHidden= categories.filter(c => c.isHidden).length
+              | )
+
+        //- Thông tin đếm số lượng
+        .filter-result-bar(style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F1F5F9; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: #64748B;")
+          span#filterMatchText Đang hiển thị #{categories.length} trên tổng số #{categories.length} nhóm danh mục
+          span(style="color: #94A3B8; font-size: 0.75rem;") 💡 Mẹo: Bấm nút con mắt ở cột "Trạng Thái" để Ẩn / Mở bán tức thì chỉ với 1 click
+
+      //- 4. Full-Width Categories Data Table
+      .admin-card(style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); padding: 0; margin-bottom: 24px;")
+        .table-responsive
+          table.data-table(style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.84rem;")
+            thead(style="background: #0F172A; color: #FFFFFF;")
+              tr
+                th(style="padding: 14px 16px; font-weight: 700; width: 75px; text-align: center;") Hình Ảnh
+                th(style="padding: 14px 16px; font-weight: 700;") Tên Danh Mục &amp; Mô Tả
+                th(style="padding: 14px 16px; font-weight: 700; width: 140px; text-align: center;") Sản Phẩm
+                th(style="padding: 14px 14px; font-weight: 700; width: 90px; text-align: center;") Thứ Tự
+                th(style="padding: 14px 16px; font-weight: 700; width: 160px; text-align: center;") Trạng Thái
+                th(style="padding: 14px 18px; font-weight: 700; width: 170px; text-align: center;") Thao Tác
+            
+            tbody#categoriesTableBody
+              each cat in categories
+                tr.category-row(
+                  id=`cat-row-${cat.id}`,
+                  data-id=cat.id,
+                  data-name=cat.name.toLowerCase(),
+                  data-slug=cat.slug.toLowerCase(),
+                  data-desc=(cat.description || '').toLowerCase(),
+                  data-hidden=(cat.isHidden ? 'true' : 'false'),
+                  style="border-bottom: 1px solid #F1F5F9; transition: background 0.15s;"
+                  onmouseover="this.style.background='#F8FAFC'"
+                  onmouseout="this.style.background='#FFFFFF'"
+                )
+                  //- 1. Hình ảnh
+                  td(style="padding: 12px 16px; text-align: center; vertical-align: middle;")
+                    .cat-img-box(style="width: 52px; height: 58px; border-radius: 8px; overflow: hidden; border: 1.5px solid #E2E8F0; background: #F1F5F9; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06);")
+                      if cat.image
+                        img.cat-img-thumb(
+                          src=cat.image,
+                          alt=cat.name,
+                          style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s;",
+                          onmouseover="this.style.transform='scale(1.12)'",
+                          onmouseout="this.style.transform='scale(1)'",
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        )
+                        div(style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; color: #94A3B8;")
+                          i(data-lucide=cat.icon || "folder", style="width: 22px; height: 22px;")
+                      else
+                        i(data-lucide=cat.icon || "folder", style="width: 22px; height: 22px; color: #94A3B8;")
+
+                  //- 2. Tên & Mô Tả & Đường dẫn
+                  td(style="padding: 14px 16px; vertical-align: middle;")
+                    div(style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;")
+                      span(style="width: 22px; height: 22px; border-radius: 5px; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;")
+                        i(data-lucide=cat.icon || "tag", style="width: 13px; height: 13px; color: #475569;")
+                      strong.cat-name-text(style="font-size: 0.95rem; font-weight: 800; color: #0F172A;")= cat.name
+                      
+                      //- Hidden badge
+                      span.badge.cat-hidden-badge(
+                        id=`badge-hidden-${cat.id}`,
+                        style=(cat.isHidden ? "background: #FEF3C7; color: #92400E; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;" : "display: none;")
+                      )
+                        i(data-lucide="eye-off", style="width: 10px; height: 10px;")
+                        | Đã Ẩn
+
+                    div(style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;")
+                      span.badge(style="font-family: monospace; font-size: 0.72rem; color: #475569; background: #F1F5F9; border: 1px solid #E2E8F0; padding: 2px 8px; border-radius: 4px;")
+                        = `URL: /shop?category=${cat.slug}`
+
+                    if cat.description
+                      p(style="font-size: 0.78rem; color: #64748B; margin: 0; line-height: 1.4; max-width: 580px;")
+                        = cat.description
+
+                  //- 3. Số sản phẩm (Bấm để xem nhanh danh sách sản phẩm)
+                  td(style="padding: 14px 16px; text-align: center; vertical-align: middle;")
+                    button.btn-cat-quickview(
+                      type="button",
+                      onclick=`openCategoryProductsModal('${cat.id}', '${cat.name.replace(/'/g, "\\'")}', '${cat.slug}', ${cat.itemCount || 0})`,
+                      title="Bấm để xem ngay các sản phẩm thuộc danh mục này",
+                      style="background: #EFF6FF; color: #1D4ED8; font-size: 0.8125rem; font-weight: 800; padding: 6px 14px; border-radius: 20px; border: 1.5px solid #BFDBFE; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(29, 78, 216, 0.08);"
+                      onmouseover="this.style.background='#DBEAFE'; this.style.borderColor='#3B82F6'; this.style.transform='translateY(-1px)';"
+                      onmouseout="this.style.background='#EFF6FF'; this.style.borderColor='#BFDBFE'; this.style.transform='none';"
+                    )
+                      i(data-lucide="package", style="width: 14px; height: 14px; color: #2563EB;")
+                      = `${cat.itemCount || 0} mẫu`
+                      i(data-lucide="eye", style="width: 12px; height: 12px; opacity: 0.7;")
+                    div(
+                      onclick=`openCategoryProductsModal('${cat.id}', '${cat.name.replace(/'/g, "\\'")}', '${cat.slug}', ${cat.itemCount || 0})`,
+                      style="font-size: 0.7rem; color: #2563EB; font-weight: 600; margin-top: 4px; cursor: pointer;"
+                    )
+                      | Xem nhanh &rarr;
+
+                  //- 4. Thứ tự
+                  td(style="padding: 14px 14px; text-align: center; vertical-align: middle;")
+                    span(style="display: inline-block; min-width: 28px; padding: 3px 8px; border-radius: 12px; background: #F1F5F9; border: 1px solid #E2E8F0; font-size: 0.8125rem; font-weight: 800; color: #334155; font-family: monospace;")
+                      = `#${cat.order || 1}`
+
+                  //- 5. Trạng thái (Nút 1-Click Toggle Visibility)
+                  td(style="padding: 14px 16px; text-align: center; vertical-align: middle;")
+                    button.btn-toggle-status(
+                      type="button",
+                      id=`btn-vis-${cat.id}`,
+                      onclick=`toggleCategoryVisibility('${cat.id}')`,
+                      title=(cat.isHidden ? "Bấm để MỞ BÁN lại trên website" : "Bấm để TẠM ẨN khỏi website"),
+                      style=(cat.isHidden ? "border: 1.5px solid #FCD34D; background: #FFFBEB; color: #B45309; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;" : "border: 1.5px solid #A7F3D0; background: #ECFDF5; color: #047857; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;")
+                    )
+                      if cat.isHidden
+                        i(data-lucide="eye-off", style="width: 14px; height: 14px; color: #D97706;")
+                        span.status-text Đã Ẩn
+                      else
+                        i(data-lucide="eye", style="width: 14px; height: 14px; color: #059669;")
+                        span.status-text Mở Bán
+
+                  //- 6. Thao tác (Sửa & Xóa có chữ rõ ràng)
+                  td(style="padding: 14px 18px; text-align: center; vertical-align: middle;")
+                    .actions-group(style="display: inline-flex; align-items: center; gap: 8px; justify-content: center;")
+                      //- Nút Sửa
                       button.btn.btn-sm(
                         type="button",
-                        style="background: #FEE2E2; color: #991B1B;",
-                        onclick=`deleteCategory('${cat.id}', '${cat.name}')`
+                        title="Chỉnh sửa danh mục",
+                        onclick=`openEditCategoryModalById('${cat.id}')`,
+                        style="padding: 6px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1D4ED8; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#EFF6FF'; this.style.borderColor='#3B82F6';"
+                        onmouseout="this.style.background='#FFFFFF'; this.style.borderColor='#CBD5E1';"
                       )
-                        i(data-lucide="trash-2", style="width: 14px; height: 14px;")
+                        i(data-lucide="edit-3", style="width: 13px; height: 13px; color: #2563EB;")
+                        | Sửa
 
-        //- Add Category Form
-        .admin-card
-          h3(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px;") Thêm Danh Mục Mới
-          form(onsubmit="handleAddCategory(event)")
-            .form-group
-              label.form-label Tên danh mục *
-              input#catName.form-control(type="text", placeholder="Ví dụ: Khăn Choàng Lụa", required)
-            .form-group
-              label.form-label Đường dẫn slug (tùy chọn)
-              input#catSlug.form-control(type="text", placeholder="khan-choang-lua")
-            .form-group
-              label.form-label Link hình ảnh đại diện (URL)
-              input#catImage.form-control(type="url", placeholder="https://images.unsplash.com/...", required)
-            .form-group
-              label.form-label Mô tả ngắn danh mục
-              textarea#catDesc.form-control(rows="3", placeholder="Mô tả phong cách danh mục...")
-            button.btn.btn-primary.btn-full(type="submit")
-              i(data-lucide="plus", style="width: 16px; height: 16px;")
-              | Tạo Danh Mục
+                      //- Nút Xóa
+                      button.btn.btn-sm(
+                        type="button",
+                        title="Xóa danh mục này",
+                        onclick=`deleteCategory('${cat.id}', '${cat.name}', ${cat.itemCount || 0})`,
+                        style="padding: 6px 10px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #DC2626; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#FEE2E2'; this.style.borderColor='#EF4444';"
+                        onmouseout="this.style.background='#FEF2F2'; this.style.borderColor='#FECACA';"
+                      )
+                        i(data-lucide="trash-2", style="width: 13px; height: 13px; color: #DC2626;")
+                        | Xóa
+
+        //- Empty Notice khi tìm kiếm không có kết quả
+        #emptySearchNotice(style="display: none; padding: 50px 20px; text-align: center; color: #64748B;")
+          i(data-lucide="folder-search", style="width: 44px; height: 44px; color: #94A3B8; margin-bottom: 12px; display: inline-block;")
+          h4(style="font-size: 1.05rem; font-weight: 800; color: #1E293B; margin: 0 0 6px;") Không tìm thấy danh mục phù hợp
+          p(style="font-size: 0.84rem; margin: 0 0 16px; color: #64748B;") Không có nhóm danh mục nào khớp với từ khóa tìm kiếm hoặc bộ lọc hiện tại.
+          button.btn.btn-secondary(type="button", onclick="clearSearchInput()", style="padding: 8px 18px; font-size: 0.8125rem; font-weight: 700; border-radius: 6px; cursor: pointer;")
+            | Xóa từ khóa tìm kiếm
+
+    //- =========================================================================
+    //- =========================================================================
+    //- MODAL 1: THÊM MỚI DANH MỤC (BỐ CỤC 2 CỘT GỌN GÀNG, HIỂN THỊ ĐỦ TRÊN 1 MÀN HÌNH)
+    //- =========================================================================
+    #createCategoryModal(style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 12px;")
+      .modal-box(style="background: #FFFFFF; width: 100%; max-width: 780px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); overflow: hidden; display: flex; flex-direction: column; max-height: 94vh; animation: modalFadeIn 0.2s ease-out;")
+        
+        //- Modal Header
+        .modal-header(style="padding: 14px 22px; background: #0F172A; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;")
+          div(style="display: flex; align-items: center; gap: 8px;")
+            i(data-lucide="folder-plus", style="width: 20px; height: 20px; color: var(--accent-gold);")
+            h3(style="font-size: 0.95rem; font-weight: 800; margin: 0; color: #FFFFFF;") + Thêm Mới Danh Mục Phụ Kiện
+          button(type="button", onclick="closeCreateCategoryModal()", style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;")
+            i(data-lucide="x", style="width: 20px; height: 20px;")
+
+        //- Modal Body Form
+        form#createCategoryForm(onsubmit="handleCreateCategory(event)", style="display: flex; flex-direction: column; flex: 1; overflow-y: auto;")
+          .modal-body(style="padding: 18px 22px; overflow-y: auto;")
+            .modal-grid-columns(style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start;")
+              
+              //- CỘT TRÁI (Left Column)
+              .modal-col-left(style="display: flex; flex-direction: column; gap: 12px;")
+                //- 1. Tên danh mục *
+                .form-group(style="margin: 0;")
+                  label.form-label(for="newCatName", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                    | Tên danh mục * 
+                    span(style="color: #EF4444;") (Bắt buộc)
+                  input#newCatName.form-control(
+                    type="text",
+                    placeholder="VD: Khăn Choàng Lụa, Đồng Hồ Classic...",
+                    required,
+                    oninput="autoGenerateSlug(this.value, 'newCatSlug')",
+                    style="width: 100%; height: 38px; font-size: 0.84rem; padding: 0 12px; border: 1.5px solid #CBD5E1; border-radius: 6px;"
+                  )
+
+                //- 2. Slug
+                .form-group(style="margin: 0;")
+                  label.form-label(for="newCatSlug", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                    | Đường dẫn URL (Slug)
+                  input#newCatSlug.form-control(
+                    type="text",
+                    placeholder="khan-choang-lua (tự động tạo)",
+                    style="width: 100%; height: 36px; font-size: 0.8rem; font-family: monospace; padding: 0 12px; border: 1px solid #CBD5E1; border-radius: 6px; color: #475569;"
+                  )
+                  div(style="font-size: 0.72rem; color: #64748B; margin-top: 3px;") URL xem sản phẩm: /shop?category=[slug]
+
+                //- 3. Mô tả ngắn
+                .form-group(style="margin: 0;")
+                  label.form-label(for="newCatDesc", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                    | Mô tả phong cách danh mục:
+                  textarea#newCatDesc.form-control(
+                    rows="3",
+                    placeholder="Ví dụ: Khăn lụa tơ tằm dệt tay cao cấp, phong cách thanh lịch hiện đại...",
+                    style="width: 100%; height: 74px; font-size: 0.8125rem; padding: 8px 10px; border: 1px solid #CBD5E1; border-radius: 6px; resize: none;"
+                  )
+
+              //- CỘT PHẢI (Right Column)
+              .modal-col-right(style="display: flex; flex-direction: column; gap: 12px;")
+                //- 1. Icon & Thứ tự hiển thị
+                .form-row(style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 10px; margin: 0;")
+                  .form-group(style="margin: 0;")
+                    label.form-label(for="newCatIcon", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                      | Icon nhận diện:
+                    select#newCatIcon.form-control(style="width: 100%; height: 38px; font-size: 0.8125rem; border: 1px solid #CBD5E1; border-radius: 6px; padding: 0 8px; cursor: pointer;")
+                      option(value="shield") 🛡️ Thắt Lưng (shield)
+                      option(value="credit-card") 💳 Ví Da (credit-card)
+                      option(value="disc") 🧢 Mũ Nón (disc)
+                      option(value="eye") 🕶️ Kính Mát (eye)
+                      option(value="award") 💍 Trang Sức (award)
+                      option(value="briefcase") 💼 Túi & Balo (briefcase)
+                      option(value="watch") ⌚ Đồng Hồ (watch)
+                      option(value="sparkles") ✨ Phụ Kiện Hot (sparkles)
+                      option(value="tag" selected) 🏷️ Nhãn Chung (tag)
+
+                  .form-group(style="margin: 0;")
+                    label.form-label(for="newCatOrder", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                      | Thứ tự (#):
+                    input#newCatOrder.form-control(
+                      type="number",
+                      min="1",
+                      value=(categories.length + 1),
+                      style="width: 100%; height: 38px; font-size: 0.875rem; font-weight: 800; text-align: center; border: 1px solid #CBD5E1; border-radius: 6px;"
+                    )
+
+                //- 2. Ảnh đại diện danh mục
+                .form-group(style="margin: 0; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 12px;")
+                  label.form-label(style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 6px;")
+                    | Hình ảnh đại diện danh mục:
+                  
+                  .img-preview-box(style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;")
+                    div(style="width: 48px; height: 48px; border-radius: 6px; overflow: hidden; border: 1.5px dashed #CBD5E1; background: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;")
+                      img#newCatImgPreview(src="", alt="Preview", style="display: none; width: 100%; height: 100%; object-fit: cover;")
+                      i#newCatImgPlaceholder(data-lucide="image", style="width: 20px; height: 20px; color: #94A3B8;")
+                    
+                    div(style="flex: 1;")
+                      input#newCatFileInput(type="file", accept="image/*", style="display: none;", onchange="handleImageFileUpload(this, 'newCatImage', 'newCatImgPreview', 'newCatImgPlaceholder')")
+                      button.btn(
+                        type="button",
+                        onclick="document.getElementById('newCatFileInput').click()",
+                        style="width: 100%; padding: 7px 10px; font-size: 0.78rem; font-weight: 700; color: #1D4ED8; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;"
+                      )
+                        i(data-lucide="upload-cloud", style="width: 14px; height: 14px;")
+                        | + Tải ảnh từ máy tính
+
+                  input#newCatImage.form-control(
+                    type="text",
+                    placeholder="Hoặc dán URL ảnh online: https://...",
+                    oninput="updateImagePreview(this.value, 'newCatImgPreview', 'newCatImgPlaceholder')",
+                    style="width: 100%; height: 34px; font-size: 0.78rem; border: 1px solid #CBD5E1; border-radius: 6px; padding: 0 10px;"
+                  )
+
+                //- 3. Trạng thái khi tạo mới
+                .form-group(style="margin: 0;")
+                  label.form-label(style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 6px;")
+                    | Trạng thái khi tạo mới:
+                  .status-choices(style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;")
+                    label(
+                      id="lblNewVisOpen",
+                      onclick="setNewCategoryStatus(false)",
+                      style="border: 1.5px solid #059669; background: #ECFDF5; border-radius: 6px; padding: 7px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 700; color: #047857;"
+                    )
+                      input#newRadioVisible(type="radio", name="newVisibility", value="false", checked, style="accent-color: #059669; margin: 0; cursor: pointer;")
+                      | Đang Mở Bán
+                    
+                    label(
+                      id="lblNewVisHidden",
+                      onclick="setNewCategoryStatus(true)",
+                      style="border: 1.5px solid #E2E8F0; background: #FFFFFF; border-radius: 6px; padding: 7px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 700; color: #64748B;"
+                    )
+                      input#newRadioHidden(type="radio", name="newVisibility", value="true", style="accent-color: #D97706; margin: 0; cursor: pointer;")
+                      | Tạm Ẩn
+
+          //- Modal Footer
+          .modal-footer(style="padding: 12px 22px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0;")
+            button.btn.btn-secondary(
+              type="button",
+              onclick="closeCreateCategoryModal()",
+              style="padding: 8px 18px; font-size: 0.84rem; font-weight: 600; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 6px; color: #475569; cursor: pointer;"
+            )
+              | Hủy Bỏ
+            button.btn.btn-primary#btnSubmitCreate(
+              type="submit",
+              style="padding: 8px 22px; font-size: 0.84rem; font-weight: 800; background: #0F172A; color: #FFFFFF; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);"
+            )
+              i(data-lucide="plus-circle", style="width: 15px; height: 15px; color: var(--accent-gold);")
+              span#btnCreateText TẠO DANH MỤC MỚI
+
+    //- =========================================================================
+    //- MODAL 2: CHỈNH SỬA DANH MỤC
+    //- =========================================================================
+    #editCategoryModal(style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 12px;")
+      .modal-box(style="background: #FFFFFF; width: 100%; max-width: 780px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); overflow: hidden; display: flex; flex-direction: column; max-height: 94vh; animation: modalFadeIn 0.2s ease-out;")
+        
+        //- Modal Header
+        .modal-header(style="padding: 14px 22px; background: #0F172A; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;")
+          div(style="display: flex; align-items: center; gap: 8px;")
+            i(data-lucide="edit-3", style="width: 18px; height: 18px; color: var(--accent-gold);")
+            h3#editModalTitle(style="font-size: 0.95rem; font-weight: 800; margin: 0; color: #FFFFFF;") Chỉnh Sửa Danh Mục
+          button(type="button", onclick="closeEditCategoryModal()", style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;")
+            i(data-lucide="x", style="width: 20px; height: 20px;")
+
+        //- Modal Body Form
+        form#editCategoryForm(onsubmit="handleUpdateCategory(event)", style="display: flex; flex-direction: column; flex: 1; overflow-y: auto;")
+          input#editCatId(type="hidden")
+
+          .modal-body(style="padding: 18px 22px; overflow-y: auto;")
+            .modal-grid-columns(style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start;")
+              
+              //- CỘT TRÁI
+              .modal-col-left(style="display: flex; flex-direction: column; gap: 12px;")
+                //- Tên danh mục *
+                .form-group(style="margin: 0;")
+                  label.form-label(for="editCatName", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                    | Tên danh mục *
+                  input#editCatName.form-control(
+                    type="text",
+                    required,
+                    style="width: 100%; height: 38px; font-size: 0.84rem; padding: 0 12px; border: 1.5px solid #CBD5E1; border-radius: 6px;"
+                  )
+
+                //- Slug
+                .form-group(style="margin: 0;")
+                  label.form-label(for="editCatSlug", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                    | Đường dẫn URL (Slug)
+                  input#editCatSlug.form-control(
+                    type="text",
+                    required,
+                    style="width: 100%; height: 36px; font-size: 0.8rem; font-family: monospace; padding: 0 12px; border: 1px solid #CBD5E1; border-radius: 6px; color: #475569;"
+                  )
+
+                //- Mô tả
+                .form-group(style="margin: 0;")
+                  label.form-label(for="editCatDesc", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                    | Mô tả danh mục:
+                  textarea#editCatDesc.form-control(
+                    rows="3",
+                    style="width: 100%; height: 74px; font-size: 0.8125rem; padding: 8px 10px; border: 1px solid #CBD5E1; border-radius: 6px; resize: none;"
+                  )
+
+              //- CỘT PHẢI
+              .modal-col-right(style="display: flex; flex-direction: column; gap: 12px;")
+                //- Icon & Thứ tự
+                .form-row(style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 10px; margin: 0;")
+                  .form-group(style="margin: 0;")
+                    label.form-label(for="editCatIcon", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                      | Icon nhận diện:
+                    select#editCatIcon.form-control(style="width: 100%; height: 38px; font-size: 0.8125rem; border: 1px solid #CBD5E1; border-radius: 6px; padding: 0 8px; cursor: pointer;")
+                      option(value="shield") 🛡️ Thắt Lưng (shield)
+                      option(value="credit-card") 💳 Ví Da (credit-card)
+                      option(value="disc") 🧢 Mũ Nón (disc)
+                      option(value="eye") 🕶️ Kính Mát (eye)
+                      option(value="award") 💍 Trang Sức (award)
+                      option(value="briefcase") 💼 Túi & Balo (briefcase)
+                      option(value="watch") ⌚ Đồng Hồ (watch)
+                      option(value="sparkles") ✨ Phụ Kiện Hot (sparkles)
+                      option(value="tag") 🏷️ Nhãn Chung (tag)
+
+                  .form-group(style="margin: 0;")
+                    label.form-label(for="editCatOrder", style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 5px;")
+                      | Thứ tự (#):
+                    input#editCatOrder.form-control(
+                      type="number",
+                      min="1",
+                      style="width: 100%; height: 38px; font-size: 0.875rem; font-weight: 800; text-align: center; border: 1px solid #CBD5E1; border-radius: 6px;"
+                    )
+
+                //- Ảnh đại diện
+                .form-group(style="margin: 0; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 12px;")
+                  label.form-label(style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 6px;")
+                    | Ảnh đại diện:
+                  
+                  .img-preview-box(style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;")
+                    div(style="width: 48px; height: 48px; border-radius: 6px; overflow: hidden; border: 1.5px dashed #CBD5E1; background: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;")
+                      img#editCatImgPreview(src="", alt="Preview", style="display: none; width: 100%; height: 100%; object-fit: cover;")
+                      i#editCatImgPlaceholder(data-lucide="image", style="width: 20px; height: 20px; color: #94A3B8;")
+                    
+                    div(style="flex: 1;")
+                      input#editCatFileInput(type="file", accept="image/*", style="display: none;", onchange="handleImageFileUpload(this, 'editCatImage', 'editCatImgPreview', 'editCatImgPlaceholder')")
+                      button.btn(
+                        type="button",
+                        onclick="document.getElementById('editCatFileInput').click()",
+                        style="width: 100%; padding: 7px 10px; font-size: 0.78rem; font-weight: 700; color: #1D4ED8; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;"
+                      )
+                        i(data-lucide="upload-cloud", style="width: 14px; height: 14px;")
+                        | + Chọn ảnh mới từ máy tính
+
+                  input#editCatImage.form-control(
+                    type="text",
+                    placeholder="Hoặc dán URL ảnh online: https://...",
+                    oninput="updateImagePreview(this.value, 'editCatImgPreview', 'editCatImgPlaceholder')",
+                    style="width: 100%; height: 34px; font-size: 0.78rem; border: 1px solid #CBD5E1; border-radius: 6px; padding: 0 10px;"
+                  )
+
+                //- Trạng thái Ẩn / Hiện
+                .form-group(style="margin: 0;")
+                  label.form-label(style="display: block; font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 6px;")
+                    | Trạng thái trên website:
+                  .status-choices(style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;")
+                    label(
+                      id="lblEditVisOpen",
+                      onclick="setEditCategoryStatus(false)",
+                      style="border: 1.5px solid #059669; background: #ECFDF5; border-radius: 6px; padding: 7px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 700; color: #047857;"
+                    )
+                      input#editRadioVisible(type="radio", name="editVisibility", value="false", style="accent-color: #059669; margin: 0; cursor: pointer;")
+                      | Đang Mở Bán
+                    
+                    label(
+                      id="lblEditVisHidden",
+                      onclick="setEditCategoryStatus(true)",
+                      style="border: 1.5px solid #E2E8F0; background: #FFFFFF; border-radius: 6px; padding: 7px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 700; color: #64748B;"
+                    )
+                      input#editRadioHidden(type="radio", name="editVisibility", value="true", style="accent-color: #D97706; margin: 0; cursor: pointer;")
+                      | Tạm Ẩn
+
+          //- Modal Footer
+          .modal-footer(style="padding: 12px 22px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0;")
+            button.btn.btn-secondary(
+              type="button",
+              onclick="closeEditCategoryModal()",
+              style="padding: 8px 18px; font-size: 0.84rem; font-weight: 600; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 6px; color: #475569; cursor: pointer;"
+            )
+              | Hủy Bỏ
+            button.btn.btn-primary#btnSubmitEdit(
+              type="submit",
+              style="padding: 8px 22px; font-size: 0.84rem; font-weight: 800; background: #0F172A; color: #FFFFFF; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);"
+            )
+              i(data-lucide="save", style="width: 15px; height: 15px; color: var(--accent-gold);")
+              span#btnEditText Lưu Thay Đổi
+
+    //- =========================================================================
+    //- MODAL 3: XEM NHANH SẢN PHẨM TRONG DANH MỤC (QUICK VIEW PRODUCTS POPUP)
+    //- =========================================================================
+    #categoryProductsModal(style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 16px;")
+      .modal-box(style="background: #FFFFFF; width: 100%; max-width: 960px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); overflow: hidden; display: flex; flex-direction: column; max-height: 88vh; animation: modalFadeIn 0.2s ease-out;")
+        
+        //- Modal Header
+        .modal-header(style="padding: 14px 22px; background: #0F172A; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;")
+          div(style="display: flex; align-items: center; gap: 10px;")
+            i(data-lucide="package", style="width: 20px; height: 20px; color: var(--accent-gold);")
+            div
+              h3(style="font-size: 0.95rem; font-weight: 800; margin: 0; color: #FFFFFF; display: flex; align-items: center; gap: 8px;")
+                | Sản Phẩm Thuộc Danh Mục: 
+                span#quickViewCatName(style="color: var(--accent-gold);") ...
+              span#quickViewCatBadge(style="background: rgba(255,255,255,0.15); color: #E2E8F0; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 2px;") 0 Mẫu
+          
+          div(style="display: flex; align-items: center; gap: 10px;")
+            a#quickViewFullPageLink(
+              href="/admin/products",
+              target="_blank",
+              title="Mở toàn bộ trang quản lý sản phẩm có lọc danh mục này",
+              style="padding: 6px 12px; font-size: 0.75rem; font-weight: 700; color: #E2E8F0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: background 0.2s;"
+              onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+              onmouseout="this.style.background='rgba(255,255,255,0.1)'"
+            )
+              span Mở trang Quản Lý Kho
+              i(data-lucide="external-link", style="width: 13px; height: 13px;")
+            
+            button(type="button", onclick="closeCategoryProductsModal()", style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;")
+              i(data-lucide="x", style="width: 20px; height: 20px;")
+
+        //- Subheader Toolbar inside Modal
+        .modal-toolbar(style="padding: 12px 22px; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; flex-shrink: 0;")
+          div(style="position: relative; width: 320px; max-width: 100%;")
+            i(data-lucide="search", style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94A3B8; pointer-events: none;")
+            input#quickViewSearchInput(
+              type="text",
+              placeholder="Tìm nhanh theo tên, mã SKU...",
+              oninput="filterQuickViewProducts(this.value)",
+              style="width: 100%; height: 34px; padding: 0 10px 0 32px; font-size: 0.8125rem; border: 1px solid #CBD5E1; border-radius: 6px; background: #FFFFFF; outline: none;"
+            )
+          
+          div(style="display: flex; align-items: center; gap: 12px;")
+            span#quickViewSummaryCount(style="font-size: 0.78rem; font-weight: 600; color: #64748B;") Đang tải...
+            a#quickViewAddProductBtn(
+              href="/admin/products/new",
+              target="_blank",
+              style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; color: #FFFFFF; background: #0F172A; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);"
+            )
+              i(data-lucide="plus", style="width: 13px; height: 13px; color: var(--accent-gold);")
+              | + Thêm Sản Phẩm Mới
+
+        //- Modal Body: Scrollable Table
+        .modal-body(style="padding: 0; overflow-y: auto; flex: 1; max-height: calc(88vh - 160px); background: #FFFFFF;")
+          
+          //- Loading Indicator
+          #quickViewLoading(style="display: none; padding: 40px; text-align: center; color: #64748B;")
+            div(style="width: 32px; height: 32px; border: 3px solid #E2E8F0; border-top-color: #2563EB; border-radius: 50%; margin: 0 auto 12px; animation: spin 0.8s linear infinite;")
+            p(style="font-size: 0.84rem; font-weight: 600; margin: 0;") Đang tải dữ liệu sản phẩm trong danh mục...
+          
+          //- Empty State
+          #quickViewEmpty(style="display: none; padding: 50px 20px; text-align: center;")
+            div(style="width: 56px; height: 56px; border-radius: 50%; background: #EFF6FF; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;")
+              i(data-lucide="inbox", style="width: 26px; height: 26px; color: #3B82F6;")
+            h4(style="font-size: 0.95rem; font-weight: 700; color: #1E293B; margin: 0 0 6px;") Danh mục này chưa có sản phẩm nào
+            p(style="font-size: 0.8125rem; color: #64748B; margin: 0 0 16px; max-width: 400px; margin-left: auto; margin-right: auto;") Bạn có thể thêm sản phẩm mới vào danh mục này để khách hàng có thể xem và đặt mua trên website.
+            a#emptyAddBtn(href="/admin/products/new", target="_blank", class="btn btn-sm", style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; font-size: 0.8125rem; font-weight: 700; background: #0F172A; color: #FFFFFF; border-radius: 6px; text-decoration: none;")
+              i(data-lucide="plus", style="width: 14px; height: 14px; color: var(--accent-gold);")
+              | Thêm sản phẩm đầu tiên
+
+          //- Products Table
+          table#quickViewTable(style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;")
+            thead(style="position: sticky; top: 0; background: #F1F5F9; z-index: 2; border-bottom: 1.5px solid #CBD5E1;")
+              tr
+                th(style="padding: 10px 16px; font-weight: 800; color: #475569; width: 60px; text-align: center;") Ảnh
+                th(style="padding: 10px 16px; font-weight: 800; color: #475569;") Sản phẩm & SKU
+                th(style="padding: 10px 16px; font-weight: 800; color: #475569;") Giá bán / Biến thể
+                th(style="padding: 10px 16px; font-weight: 800; color: #475569; text-align: center;") Tồn kho
+                th(style="padding: 10px 16px; font-weight: 800; color: #475569; text-align: center;") Trạng thái
+                th(style="padding: 10px 16px; font-weight: 800; color: #475569; text-align: right; width: 150px;") Thao tác
+            tbody#quickViewTableBody
+              //- Rendered dynamically via JS
+
+        //- Modal Footer
+        .modal-footer(style="padding: 10px 22px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;")
+          div(style="font-size: 0.78rem; color: #64748B;")
+            | Nhấp 
+            strong "Sửa" 
+            | để cập nhật giá, kho hoặc biến thể sản phẩm.
+          button.btn.btn-secondary(
+            type="button",
+            onclick="closeCategoryProductsModal()",
+            style="padding: 7px 18px; font-size: 0.8125rem; font-weight: 600; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 6px; color: #475569; cursor: pointer;"
+          )
+            | Đóng cửa sổ
+
+  //- Modal CSS animation
+  style.
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
 
   script.
-    async function handleAddCategory(e) {
+    // 1. Data Store from Server
+    const allCategoriesData = !{JSON.stringify(categories)};
+    let currentFilterStatus = 'all';
+
+    function removeVietnameseTones(str) {
+      if (!str) return '';
+      str = String(str).toLowerCase();
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+      str = str.replace(/đ/g, 'd');
+      str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, '');
+      return str.trim();
+    }
+
+    function autoGenerateSlug(text, targetInputId) {
+      const target = document.getElementById(targetInputId);
+      if (!target) return;
+      const slug = removeVietnameseTones(text)
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      target.value = slug;
+    }
+
+    // 2. Real-time Instant Filter & Search (Gõ chữ nào tự động lọc danh mục đó)
+    function filterCategories() {
+      const rawQuery = (document.getElementById('catSearchInput')?.value || '').trim().toLowerCase();
+      const normQuery = removeVietnameseTones(rawQuery);
+      const clearBtn = document.getElementById('btnSearchClear');
+
+      if (clearBtn) {
+        clearBtn.style.display = rawQuery ? 'block' : 'none';
+      }
+
+      const rows = document.querySelectorAll('#categoriesTableBody tr.category-row');
+      let visibleCount = 0;
+
+      rows.forEach(r => {
+        const name = r.dataset.name || '';
+        const slug = r.dataset.slug || '';
+        const desc = r.dataset.desc || '';
+        const isHidden = r.dataset.hidden === 'true';
+
+        // Search match
+        let matchesSearch = true;
+        if (rawQuery) {
+          const normName = removeVietnameseTones(name);
+          const normDesc = removeVietnameseTones(desc);
+          matchesSearch = name.includes(rawQuery) || 
+                          normName.includes(normQuery) || 
+                          slug.includes(rawQuery) || 
+                          desc.includes(rawQuery) || 
+                          normDesc.includes(normQuery);
+        }
+
+        // Status match
+        let matchesStatus = true;
+        if (currentFilterStatus === 'visible') {
+          matchesStatus = !isHidden;
+        } else if (currentFilterStatus === 'hidden') {
+          matchesStatus = isHidden;
+        }
+
+        if (matchesSearch && matchesStatus) {
+          r.style.display = '';
+          visibleCount++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      // Update match count text
+      const matchText = document.getElementById('filterMatchText');
+      if (matchText) {
+        matchText.textContent = `Đang hiển thị ${visibleCount} trên tổng số ${rows.length} nhóm danh mục`;
+      }
+
+      // Empty state
+      const emptyNotice = document.getElementById('emptySearchNotice');
+      if (emptyNotice) {
+        emptyNotice.style.display = (visibleCount === 0) ? 'block' : 'none';
+      }
+    }
+
+    function clearSearchInput() {
+      const input = document.getElementById('catSearchInput');
+      if (input) {
+        input.value = '';
+        filterCategories();
+        input.focus();
+      }
+    }
+
+    function setFilterStatus(status) {
+      currentFilterStatus = status;
+
+      const pillAll = document.getElementById('pillAll');
+      const pillVis = document.getElementById('pillVisible');
+      const pillHid = document.getElementById('pillHidden');
+
+      [pillAll, pillVis, pillHid].forEach(p => {
+        if (p) {
+          p.style.background = 'transparent';
+          p.style.boxShadow = 'none';
+        }
+      });
+
+      if (status === 'all' && pillAll) {
+        pillAll.style.background = '#FFFFFF';
+        pillAll.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+      } else if (status === 'visible' && pillVis) {
+        pillVis.style.background = '#FFFFFF';
+        pillVis.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+      } else if (status === 'hidden' && pillHid) {
+        pillHid.style.background = '#FFFFFF';
+        pillHid.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+      }
+
+      filterCategories();
+    }
+
+    // 3. Image Upload Helpers
+    function updateImagePreview(url, previewImgId, placeholderId) {
+      const img = document.getElementById(previewImgId);
+      const icon = document.getElementById(placeholderId);
+      if (url && url.trim()) {
+        if (img) {
+          img.src = url.trim();
+          img.style.display = 'block';
+        }
+        if (icon) icon.style.display = 'none';
+      } else {
+        if (img) {
+          img.src = '';
+          img.style.display = 'none';
+        }
+        if (icon) icon.style.display = 'block';
+      }
+    }
+
+    async function handleImageFileUpload(input, targetInputId, targetPreviewId, targetPlaceholderId) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        showToast('Đang tải ảnh lên...', 'info');
+        const res = await fetch('/api/products/upload-image', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success && data.imageUrl) {
+          const targetInput = document.getElementById(targetInputId);
+          if (targetInput) targetInput.value = data.imageUrl;
+          updateImagePreview(data.imageUrl, targetPreviewId, targetPlaceholderId);
+          showToast('Đã tải ảnh lên thành công!', 'success');
+        } else {
+          showToast(data.message || 'Lỗi khi tải ảnh lên', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối khi tải ảnh', 'error');
+      }
+      input.value = '';
+    }
+
+    // 4. Radio Status Choice Styling
+    function setNewCategoryStatus(isHidden) {
+      const rVis = document.getElementById('newRadioVisible');
+      const rHid = document.getElementById('newRadioHidden');
+      const lblVis = document.getElementById('lblNewVisOpen');
+      const lblHid = document.getElementById('lblNewVisHidden');
+
+      if (rVis) rVis.checked = !isHidden;
+      if (rHid) rHid.checked = isHidden;
+
+      if (isHidden) {
+        if (lblHid) {
+          lblHid.style.border = '1.5px solid #D97706';
+          lblHid.style.background = '#FFFBEB';
+          lblHid.style.color = '#B45309';
+        }
+        if (lblVis) {
+          lblVis.style.border = '1.5px solid #E2E8F0';
+          lblVis.style.background = '#FFFFFF';
+          lblVis.style.color = '#64748B';
+        }
+      } else {
+        if (lblVis) {
+          lblVis.style.border = '1.5px solid #059669';
+          lblVis.style.background = '#ECFDF5';
+          lblVis.style.color = '#047857';
+        }
+        if (lblHid) {
+          lblHid.style.border = '1.5px solid #E2E8F0';
+          lblHid.style.background = '#FFFFFF';
+          lblHid.style.color = '#64748B';
+        }
+      }
+    }
+
+    function setEditCategoryStatus(isHidden) {
+      const rVis = document.getElementById('editRadioVisible');
+      const rHid = document.getElementById('editRadioHidden');
+      const lblVis = document.getElementById('lblEditVisOpen');
+      const lblHid = document.getElementById('lblEditVisHidden');
+
+      if (rVis) rVis.checked = !isHidden;
+      if (rHid) rHid.checked = isHidden;
+
+      if (isHidden) {
+        if (lblHid) {
+          lblHid.style.border = '1.5px solid #D97706';
+          lblHid.style.background = '#FFFBEB';
+          lblHid.style.color = '#B45309';
+        }
+        if (lblVis) {
+          lblVis.style.border = '1.5px solid #E2E8F0';
+          lblVis.style.background = '#FFFFFF';
+          lblVis.style.color = '#64748B';
+        }
+      } else {
+        if (lblVis) {
+          lblVis.style.border = '1.5px solid #059669';
+          lblVis.style.background = '#ECFDF5';
+          lblVis.style.color = '#047857';
+        }
+        if (lblHid) {
+          lblHid.style.border = '1.5px solid #E2E8F0';
+          lblHid.style.background = '#FFFFFF';
+          lblHid.style.color = '#64748B';
+        }
+      }
+    }
+
+    // 5. 1-Click Toggle Visibility (Ẩn / Hiện Tức Thì)
+    async function toggleCategoryVisibility(id) {
+      const btn = document.getElementById(`btn-vis-${id}`);
+      const row = document.getElementById(`cat-row-${id}`);
+      const badge = document.getElementById(`badge-hidden-${id}`);
+      if (!btn) return;
+
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+
+      try {
+        const res = await fetch(`/api/categories/${id}/toggle-visibility`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+
+        if (data.success && data.data) {
+          const cat = data.data;
+          const isHidden = cat.isHidden;
+
+          // Update local data store
+          const targetInStore = allCategoriesData.find(c => c.id === id);
+          if (targetInStore) targetInStore.isHidden = isHidden;
+
+          // Update Row Dataset
+          if (row) row.dataset.hidden = isHidden ? 'true' : 'false';
+
+          // Update Button UI
+          if (isHidden) {
+            btn.style.border = '1.5px solid #FCD34D';
+            btn.style.background = '#FFFBEB';
+            btn.style.color = '#B45309';
+            btn.title = 'Bấm để MỞ BÁN lại trên website';
+            btn.innerHTML = '<i data-lucide="eye-off" style="width: 14px; height: 14px; color: #D97706;"></i><span class="status-text">Đã Ẩn</span>';
+            if (badge) badge.style.display = 'inline-flex';
+          } else {
+            btn.style.border = '1.5px solid #A7F3D0';
+            btn.style.background = '#ECFDF5';
+            btn.style.color = '#047857';
+            btn.title = 'Bấm để TẠM ẨN khỏi website';
+            btn.innerHTML = '<i data-lucide="eye" style="width: 14px; height: 14px; color: #059669;"></i><span class="status-text">Mở Bán</span>';
+            if (badge) badge.style.display = 'none';
+          }
+
+          if (window.lucide) window.lucide.createIcons();
+          updateHeaderStats();
+          filterCategories();
+          showToast(data.message, isHidden ? 'warning' : 'success');
+        } else {
+          showToast(data.message || 'Lỗi khi thay đổi trạng thái', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }
+    }
+
+    function updateHeaderStats() {
+      const rows = document.querySelectorAll('#categoriesTableBody tr.category-row');
+      let act = 0;
+      let hid = 0;
+      rows.forEach(r => {
+        if (r.dataset.hidden === 'true') hid++;
+        else act++;
+      });
+
+      const sAct = document.getElementById('statActiveCount');
+      const sHid = document.getElementById('statHiddenCount');
+      const pVis = document.getElementById('pillCountVisible');
+      const pHid = document.getElementById('pillCountHidden');
+
+      if (sAct) sAct.textContent = `${act} Nhóm`;
+      if (sHid) sHid.textContent = `${hid} Nhóm`;
+      if (pVis) pVis.textContent = act;
+      if (pHid) pHid.textContent = hid;
+    }
+
+    // 6. Modal 1: Create Category Modal Handlers
+    function openCreateCategoryModal() {
+      const modal = document.getElementById('createCategoryModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        const form = document.getElementById('createCategoryForm');
+        if (form) form.scrollTop = 0;
+        const body = modal.querySelector('.modal-body');
+        if (body) body.scrollTop = 0;
+
+        const nameInput = document.getElementById('newCatName');
+        if (nameInput) {
+          setTimeout(() => {
+            if (form) form.scrollTop = 0;
+            if (body) body.scrollTop = 0;
+            nameInput.focus({ preventScroll: true });
+          }, 60);
+        }
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function closeCreateCategoryModal() {
+      const modal = document.getElementById('createCategoryModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleCreateCategory(e) {
       e.preventDefault();
-      const name = document.getElementById('catName').value.trim();
-      const slug = document.getElementById('catSlug').value.trim();
-      const image = document.getElementById('catImage').value.trim();
-      const description = document.getElementById('catDesc').value.trim();
+      const name = document.getElementById('newCatName').value.trim();
+      const slug = document.getElementById('newCatSlug').value.trim();
+      const icon = document.getElementById('newCatIcon').value;
+      const order = Number(document.getElementById('newCatOrder').value) || 1;
+      const image = document.getElementById('newCatImage').value.trim();
+      const description = document.getElementById('newCatDesc').value.trim();
+      const isHidden = document.getElementById('newRadioHidden').checked;
+
+      if (!name) {
+        showToast('Vui lòng nhập tên danh mục!', 'warning');
+        document.getElementById('newCatName').focus({ preventScroll: true });
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitCreate');
+      const btnText = document.getElementById('btnCreateText');
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.textContent = 'Đang tạo...';
 
       try {
         const res = await fetch('/api/categories', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, slug, image, description })
+          body: JSON.stringify({ name, slug, icon, order, image, description, isHidden })
         });
         const data = await res.json();
+
         if (data.success) {
           showToast('Tạo danh mục mới thành công!', 'success');
-          setTimeout(() => location.reload(), 800);
+          setTimeout(() => location.reload(), 600);
         } else {
           showToast(data.message || 'Lỗi khi tạo danh mục', 'error');
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.textContent = 'TẠO DANH MỤC MỚI';
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.textContent = 'TẠO DANH MỤC MỚI';
+      }
+    }
+
+    // 7. Modal 2: Edit Category Modal Handlers
+    function openEditCategoryModalById(id) {
+      const cat = allCategoriesData.find(c => c.id === id);
+      if (!cat) return;
+
+      const modal = document.getElementById('editCategoryModal');
+      const title = document.getElementById('editModalTitle');
+
+      document.getElementById('editCatId').value = cat.id || '';
+      document.getElementById('editCatName').value = cat.name || '';
+      document.getElementById('editCatSlug').value = cat.slug || '';
+      document.getElementById('editCatIcon').value = cat.icon || 'tag';
+      document.getElementById('editCatOrder').value = cat.order || 1;
+      document.getElementById('editCatImage').value = cat.image || '';
+      document.getElementById('editCatDesc').value = cat.description || '';
+
+      updateImagePreview(cat.image || '', 'editCatImgPreview', 'editCatImgPlaceholder');
+      setEditCategoryStatus(!!cat.isHidden);
+
+      if (title) title.textContent = `Chỉnh Sửa Danh Mục: ${cat.name}`;
+      if (modal) {
+        modal.style.display = 'flex';
+        const form = document.getElementById('editCategoryForm');
+        if (form) form.scrollTop = 0;
+        const body = modal.querySelector('.modal-body');
+        if (body) body.scrollTop = 0;
+
+        const nameInput = document.getElementById('editCatName');
+        if (nameInput) {
+          setTimeout(() => {
+            if (form) form.scrollTop = 0;
+            if (body) body.scrollTop = 0;
+            nameInput.focus({ preventScroll: true });
+          }, 60);
+        }
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function closeEditCategoryModal() {
+      const modal = document.getElementById('editCategoryModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleUpdateCategory(e) {
+      e.preventDefault();
+      const id = document.getElementById('editCatId').value;
+      const name = document.getElementById('editCatName').value.trim();
+      const slug = document.getElementById('editCatSlug').value.trim();
+      const icon = document.getElementById('editCatIcon').value;
+      const order = Number(document.getElementById('editCatOrder').value) || 1;
+      const image = document.getElementById('editCatImage').value.trim();
+      const description = document.getElementById('editCatDesc').value.trim();
+      const isHidden = document.getElementById('editRadioHidden').checked;
+
+      if (!id || !name) {
+        showToast('Vui lòng nhập tên danh mục!', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitEdit');
+      const btnText = document.getElementById('btnEditText');
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.textContent = 'Đang lưu...';
+
+      try {
+        const res = await fetch(`/api/categories/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, slug, icon, order, image, description, isHidden })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Cập nhật danh mục thành công!', 'success');
+          setTimeout(() => location.reload(), 600);
+        } else {
+          showToast(data.message || 'Lỗi khi cập nhật danh mục', 'error');
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.textContent = 'Lưu Thay Đổi';
+        }
+      } catch (err) {
+        showToast('Có lỗi kết nối máy chủ', 'error');
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.textContent = 'Lưu Thay Đổi';
+      }
+    }
+
+    // 8. Delete Category with Safety Warning Check
+    async function deleteCategory(id, name, itemCount) {
+      let confirmMsg = `Bạn có chắc chắn muốn xóa danh mục "${name}" không?`;
+      if (itemCount > 0) {
+        confirmMsg = `⚠️ CẢNH BÁO: Danh mục "${name}" hiện đang có ${itemCount} mẫu sản phẩm trong kho!\n\nNếu xóa danh mục này, các sản phẩm sẽ bị mất nhóm phân loại trên website.\n\nBạn có chắc chắn VẪN MUỐN XÓA danh mục này không?`;
+      }
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        showToast('Đang xóa danh mục...', 'info');
+        const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message || 'Đã xóa danh mục thành công!', 'success');
+          const row = document.getElementById(`cat-row-${id}`);
+          if (row) {
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+              row.remove();
+              updateHeaderStats();
+              filterCategories();
+            }, 300);
+          } else {
+            setTimeout(() => location.reload(), 600);
+          }
+        } else {
+          showToast(data.message || 'Lỗi khi xóa danh mục', 'error');
         }
       } catch (err) {
         showToast('Có lỗi kết nối máy chủ', 'error');
       }
     }
 
-    async function deleteCategory(id, name) {
-      if (!confirm(`Bạn có chắc muốn xóa danh mục "${name}" không?`)) return;
+    // 9. Quick View Category Products Logic
+    let currentCategoryProducts = [];
+
+    async function openCategoryProductsModal(catId, catName, catSlug, itemCount) {
+      const modal = document.getElementById('categoryProductsModal');
+      const titleName = document.getElementById('quickViewCatName');
+      const badge = document.getElementById('quickViewCatBadge');
+      const fullPageLink = document.getElementById('quickViewFullPageLink');
+      const addBtn = document.getElementById('quickViewAddProductBtn');
+      const emptyAddBtn = document.getElementById('emptyAddBtn');
+      const searchInput = document.getElementById('quickViewSearchInput');
+      const tableBody = document.getElementById('quickViewTableBody');
+      const loading = document.getElementById('quickViewLoading');
+      const empty = document.getElementById('quickViewEmpty');
+      const table = document.getElementById('quickViewTable');
+      const summaryText = document.getElementById('quickViewSummaryCount');
+
+      if (!modal) return;
+
+      if (searchInput) searchInput.value = '';
+      if (titleName) titleName.textContent = catName;
+      if (badge) badge.textContent = `${itemCount} Mẫu`;
+      if (summaryText) summaryText.textContent = `Đang tải sản phẩm...`;
+      if (fullPageLink) fullPageLink.href = `/admin/products?category=${catSlug}`;
+      if (addBtn) addBtn.href = `/admin/products/new?category=${catSlug}`;
+      if (emptyAddBtn) emptyAddBtn.href = `/admin/products/new?category=${catSlug}`;
+
+      modal.style.display = 'flex';
+      if (loading) loading.style.display = 'block';
+      if (table) table.style.display = 'none';
+      if (empty) empty.style.display = 'none';
+      if (tableBody) tableBody.innerHTML = '';
+
+      if (window.lucide) window.lucide.createIcons();
+
       try {
-        const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/categories/${catId}/products`);
         const data = await res.json();
-        if (data.success) {
-          showToast('Đã xóa danh mục!', 'success');
-          setTimeout(() => location.reload(), 800);
+
+        if (loading) loading.style.display = 'none';
+
+        if (data.success && Array.isArray(data.data)) {
+          currentCategoryProducts = data.data;
+          renderQuickViewProducts(currentCategoryProducts);
         } else {
-          showToast(data.message || 'Lỗi khi xóa', 'error');
+          currentCategoryProducts = [];
+          if (empty) empty.style.display = 'block';
+          if (summaryText) summaryText.textContent = `0 sản phẩm`;
         }
       } catch (err) {
-        showToast('Có lỗi kết nối máy chủ', 'error');
+        if (loading) loading.style.display = 'none';
+        showToast('Lỗi khi tải danh sách sản phẩm', 'error');
+        if (empty) empty.style.display = 'block';
       }
     }
+
+    function closeCategoryProductsModal() {
+      const modal = document.getElementById('categoryProductsModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function renderQuickViewProducts(products) {
+      const table = document.getElementById('quickViewTable');
+      const tableBody = document.getElementById('quickViewTableBody');
+      const empty = document.getElementById('quickViewEmpty');
+      const summaryText = document.getElementById('quickViewSummaryCount');
+      const badge = document.getElementById('quickViewCatBadge');
+
+      if (badge) badge.textContent = `${products.length} Mẫu`;
+      if (summaryText) summaryText.textContent = `Đang hiển thị ${products.length} sản phẩm`;
+
+      if (!products || products.length === 0) {
+        if (table) table.style.display = 'none';
+        if (empty) empty.style.display = 'block';
+        return;
+      }
+
+      if (table) table.style.display = 'table';
+      if (empty) empty.style.display = 'none';
+
+      const nf = new Intl.NumberFormat('vi-VN');
+
+      tableBody.innerHTML = products.map(p => {
+        const img = (p.images && p.images[0]) ? p.images[0] : 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=400&q=80';
+        
+        let priceStr = nf.format(p.price) + 'đ';
+        if (p.hasVariants && p.variants && p.variants.length > 1) {
+          const prices = p.variants.map(v => v.price).filter(Boolean);
+          if (prices.length > 0) {
+            const minP = Math.min(...prices);
+            const maxP = Math.max(...prices);
+            priceStr = (minP !== maxP) ? `${nf.format(minP)}đ - ${nf.format(maxP)}đ` : `${nf.format(minP)}đ`;
+          }
+        }
+
+        let variantsBadge = '';
+        if (p.hasVariants && p.variants && p.variants.length) {
+          variantsBadge = `<span style="font-size: 0.65rem; font-weight: 700; color: #1D4ED8; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 1px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; margin-top: 3px;"><i data-lucide="layers" style="width: 10px; height: 10px;"></i>${p.variants.length} màu</span>`;
+        }
+
+        let stockBadge = '';
+        const stockNum = Number(p.stock) || 0;
+        if (stockNum <= 0) {
+          stockBadge = `<span style="background: #FEE2E2; color: #991B1B; font-weight: 700; font-size: 0.72rem; padding: 3px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #EF4444;"></span>Hết hàng (0)</span>`;
+        } else if (stockNum <= 10) {
+          stockBadge = `<span style="background: #FEF3C7; color: #92400E; font-weight: 700; font-size: 0.72rem; padding: 3px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #F59E0B;"></span>Sắp hết (${stockNum})</span>`;
+        } else {
+          stockBadge = `<span style="background: #ECFDF5; color: #065F46; font-weight: 700; font-size: 0.72rem; padding: 3px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>Còn hàng (${stockNum})</span>`;
+        }
+
+        const isHidden = !!p.isHidden;
+        const statusBadge = isHidden ?
+          `<span style="background: #FFFBEB; color: #B45309; border: 1px solid #FCD34D; font-weight: 700; font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="eye-off" style="width: 11px; height: 11px;"></i>Đã Ẩn</span>` :
+          `<span style="background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; font-weight: 700; font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="eye" style="width: 11px; height: 11px;"></i>Mở Bán</span>`;
+
+        let tags = '';
+        if (p.isSale) tags += `<span style="background: #FEE2E2; color: #DC2626; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">Sale</span>`;
+        if (p.isFeatured) tags += `<span style="background: #FEF3C7; color: #B45309; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">Hot</span>`;
+
+        return `
+          <tr style="border-bottom: 1px solid #F1F5F9; transition: background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+            <td style="padding: 10px 16px; text-align: center; vertical-align: middle;">
+              <img src="${img}" alt="${p.name}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+            </td>
+            <td style="padding: 10px 16px; vertical-align: middle;">
+              <div style="font-weight: 700; color: #1E293B; line-height: 1.3; margin-bottom: 3px;">
+                ${p.name}
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #64748B;">
+                <span style="font-family: monospace; background: #F1F5F9; padding: 1px 5px; border-radius: 3px;">SKU: ${p.id}</span>
+                ${tags}
+              </div>
+            </td>
+            <td style="padding: 10px 16px; vertical-align: middle;">
+              <div style="font-weight: 800; color: #0F172A;">${priceStr}</div>
+              ${variantsBadge}
+            </td>
+            <td style="padding: 10px 16px; text-align: center; vertical-align: middle;">
+              ${stockBadge}
+            </td>
+            <td style="padding: 10px 16px; text-align: center; vertical-align: middle;">
+              ${statusBadge}
+            </td>
+            <td style="padding: 10px 16px; text-align: right; vertical-align: middle;">
+              <div style="display: inline-flex; align-items: center; gap: 6px;">
+                <a href="/admin/products/edit/${p.id}" target="_blank" title="Chỉnh sửa sản phẩm" style="padding: 5px 9px; font-size: 0.75rem; font-weight: 700; color: #1D4ED8; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                  <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> Sửa
+                </a>
+                <a href="/product/${p.slug}" target="_blank" title="Xem trên web khách hàng" style="padding: 5px 9px; font-size: 0.75rem; font-weight: 700; color: #475569; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                  <i data-lucide="globe" style="width: 12px; height: 12px;"></i> Web
+                </a>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function filterQuickViewProducts(query) {
+      if (!query || !query.trim()) {
+        renderQuickViewProducts(currentCategoryProducts);
+        return;
+      }
+      const rawQ = query.trim().toLowerCase();
+      const normQ = removeVietnameseTones(rawQ);
+      const filtered = currentCategoryProducts.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const normName = removeVietnameseTones(name);
+        const id = (p.id || '').toLowerCase();
+        const slug = (p.slug || '').toLowerCase();
+        return name.includes(rawQ) || normName.includes(normQ) || id.includes(rawQ) || slug.includes(rawQ);
+      });
+      renderQuickViewProducts(filtered);
+    }
+
+    // Global Keydown & Click Outside Listeners
+    window.addEventListener('click', (e) => {
+      const modalCreate = document.getElementById('createCategoryModal');
+      const modalEdit = document.getElementById('editCategoryModal');
+      const modalProducts = document.getElementById('categoryProductsModal');
+      if (e.target === modalCreate) closeCreateCategoryModal();
+      if (e.target === modalEdit) closeEditCategoryModal();
+      if (e.target === modalProducts) closeCategoryProductsModal();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeCreateCategoryModal();
+        closeEditCategoryModal();
+        closeCategoryProductsModal();
+      }
+    });
+
+    // Run lucide icons on load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) window.lucide.createIcons();
+    });

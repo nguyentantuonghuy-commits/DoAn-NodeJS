@@ -14,11 +14,117 @@ block content
       //- Left Profile Sidebar
       aside.profile-sidebar
         .user-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px; text-align: center; margin-bottom: 24px;")
-          img(src=user.avatar, alt=user.name, style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 14px; border: 3px solid var(--border-subtle);")
+          .avatar-container(style="position: relative; width: 96px; height: 96px; margin: 0 auto 14px;")
+            img#profile-avatar-img(
+              src=user.avatar,
+              alt=user.name,
+              style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: block;"
+            )
+            button.avatar-upload-trigger(
+              type="button",
+              onclick="document.getElementById('avatar-input').click()",
+              title="Đổi ảnh đại diện",
+              style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--text-main); color: #FFF; border: 2px solid #FFF; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s;"
+            )
+              i(data-lucide="camera", style="width: 16px; height: 16px;")
+
+          input#avatar-input(
+            type="file",
+            accept="image/png, image/jpeg, image/jpg, image/webp",
+            style="display: none;",
+            onchange="handleAvatarUpload(this)"
+          )
+
           h2(style="font-size: 1.125rem; font-weight: 700; margin-bottom: 4px;")= user.name
           p(style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 12px;")= user.email
-          span.badge(class=(user.role === 'admin' ? 'badge-hot' : 'badge-new'))
-            = user.role === 'admin' ? 'Quản Trị Viên' : 'Thành Viên Thân Thiết'
+          
+          if user.role === 'admin'
+            span.badge.badge-hot 🛡️ Quản Trị Viên (Admin)
+          else if membershipTier
+            span.badge(style=`background: ${membershipTier.bg}; color: ${membershipTier.color}; border: 1px solid ${membershipTier.color}40; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;`)
+              if membershipTier.level === 'vip'
+                | 👑 #{membershipTier.name}
+              else if membershipTier.level === 'gold'
+                | 🌟 #{membershipTier.name}
+              else if membershipTier.level === 'silver'
+                | 🥈 #{membershipTier.name}
+              else
+                | 🌱 #{membershipTier.name}
+          else
+            span.badge.badge-new 🌱 Thành Viên Mới
+
+          .avatar-actions(style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;")
+            button.btn.btn-sm.btn-secondary(
+              type="button",
+              onclick="document.getElementById('avatar-input').click()",
+              style="font-size: 0.75rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%;"
+            )
+              i(data-lucide="upload", style="width: 14px; height: 14px;")
+              | Đổi Ảnh Đại Diện (Multer)
+            button(
+              type="button",
+              onclick="handleResetDefaultAvatar()",
+              style="background: none; border: none; font-size: 0.72rem; color: var(--text-muted); cursor: pointer; text-decoration: underline; padding: 4px;"
+            )
+              | Đặt lại avatar chữ (Mặc định NT)
+
+        //- Cấp Bậc Hội Viên Thân Thiết (Loyalty Tier Card)
+        if user.role !== 'admin' && membershipTier
+          .loyalty-card(style="background: linear-gradient(135deg, #18181B 0%, #27272A 100%); color: #FFF; border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); position: relative; overflow: hidden;")
+            .loyalty-shine(style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(217,119,6,0.15) 0%, transparent 70%); pointer-events: none;")
+            
+            .loyalty-header(style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;")
+              div
+                span(style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 1px; color: #9CA3AF; font-weight: 600; display: block; margin-bottom: 4px;") Cấp Bậc Hội Viên
+                h3(style="font-size: 1.1rem; font-weight: 800; color: #FFF; margin: 0; display: flex; align-items: center; gap: 6px;")
+                  if membershipTier.level === 'vip'
+                    span 👑
+                  else if membershipTier.level === 'gold'
+                    span 🌟
+                  else if membershipTier.level === 'silver'
+                    span 🥈
+                  else
+                    span 🌱
+                  span(style=`color: ${membershipTier.level === 'new' ? '#E2E8F0' : membershipTier.color};`)= membershipTier.name
+              span(style=`background: ${membershipTier.color}22; color: ${membershipTier.color}; border: 1px solid ${membershipTier.color}55; padding: 4px 8px; border-radius: 6px; font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.5px;`)
+                = membershipTier.shortName
+
+            //- Thống kê đơn & chi tiêu
+            .loyalty-stats(style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08);")
+              div
+                span(style="font-size: 0.7rem; color: #9CA3AF; display: block;") Đơn hợp lệ
+                strong(style="font-size: 0.95rem; color: #FFF;")= `${membershipTier.ordersCount} đơn`
+              div
+                span(style="font-size: 0.7rem; color: #9CA3AF; display: block;") Tích lũy
+                strong(style="font-size: 0.95rem; color: #F59E0B;")= `${membershipTier.totalSpent.toLocaleString('vi-VN')}đ`
+
+            //- Thanh Tiến Trình Thăng Hạng
+            .loyalty-progress-wrap(style="margin-bottom: 14px;")
+              .progress-labels(style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px; color: #D1D5DB;")
+                span Tiến độ thăng hạng
+                strong(style="color: #F59E0B;")= `${membershipTier.progress}%`
+              .progress-track(style="width: 100%; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;")
+                .progress-bar(style=`width: ${membershipTier.progress}%; height: 100%; background: linear-gradient(90deg, #F59E0B, #FBBF24); border-radius: 3px; transition: width 0.4s ease;`)
+
+            //- Thông báo điều kiện thăng hạng
+            if membershipTier.nextTier
+              p(style="font-size: 0.75rem; color: #D1D5DB; margin-bottom: 14px; line-height: 1.4;")
+                | 🎯 #{membershipTier.hintText}
+            else
+              p(style="font-size: 0.75rem; color: #34D399; margin-bottom: 14px; line-height: 1.4;")
+                | 🏆 #{membershipTier.hintText}
+
+            //- Đặc quyền đang áp dụng
+            .loyalty-privilege(style="border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 12px; font-size: 0.72rem; color: #9CA3AF; display: flex; align-items: flex-start; gap: 6px;")
+              i(data-lucide="gift", style="width: 14px; height: 14px; color: #F59E0B; flex-shrink: 0; margin-top: 2px;")
+              span(style="color: #E5E7EB; line-height: 1.35;")= membershipTier.privilege
+
+            //- Voucher chào mừng thành viên mới (Chỉ áp dụng 1 lần, đơn từ 399k)
+            .loyalty-voucher(style="border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 10px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem;")
+              div(style="display: flex; align-items: center; gap: 6px;")
+                i(data-lucide="ticket", style="width: 14px; height: 14px; color: #F43F5E;")
+                span(style="color: #E5E7EB;") Voucher thành viên mới:
+              span.badge(style="background: #E11D48; color: #FFF; font-weight: 800; padding: 2px 8px; border-radius: 4px; font-family: monospace; letter-spacing: 0.5px;") ATELIER100 (-100k)
 
         .profile-nav(style="display: flex; flex-direction: column; gap: 6px; background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px;")
           button.profile-tab-btn.active(type="button", onclick="switchTab('orders')", style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 600; text-align: left; width: 100%;")
@@ -85,10 +191,56 @@ block content
                       span(style="font-size: 0.875rem; color: var(--text-muted); margin-right: 8px;") Tổng tiền:
                       strong(style="color: var(--accent-coral); font-size: 1.25rem;")= new Intl.NumberFormat('vi-VN').format(ord.totalAmount) + 'đ'
           else
-            .empty-orders(style="text-align: center; padding: 60px 20px; background: #FFF; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);")
-              i(data-lucide="package", style="width: 48px; height: 48px; color: var(--text-light); margin-bottom: 12px;")
-              p(style="color: var(--text-muted); margin-bottom: 16px;") Bạn chưa có đơn hàng nào tại Atelier Accessories.
-              a.btn.btn-primary(href="/shop") Mua Sắm Ngay
+            .empty-orders(style="text-align: center; padding: 48px 24px; background: #FFF; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 24px;")
+              i(data-lucide="shopping-bag", style="width: 48px; height: 48px; color: var(--text-light); margin-bottom: 12px;")
+              h3(style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;") Bạn Chưa Có Đơn Hàng Nào
+              p(style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 16px; max-width: 460px; margin-left: auto; margin-right: auto;")
+                | Tài khoản của bạn hiện là 
+                strong(style="color: #475569;") Thành Viên Mới
+                | . Hãy mua sắm đơn hàng đầu tiên để bắt đầu hành trình tích lũy và thăng hạng lên 
+                strong(style="color: #1D4ED8;") Thành Viên Bạc
+                | !
+              a.btn.btn-primary(href="/shop", style="display: inline-flex; align-items: center; gap: 8px;")
+                i(data-lucide="sparkles", style="width: 16px; height: 16px;")
+                | Mua Sắm Ngay &amp; Nhận Ưu Đãi
+
+          //- Bảng Cấp Bậc & Đặc Quyền Hội Viên
+          if user.role !== 'admin'
+            .tier-policy-card(style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 24px; margin-top: 24px;")
+              .policy-header(style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; flex-wrap: wrap; gap: 8px;")
+                h3(style="font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;")
+                  i(data-lucide="award", style="width: 20px; height: 20px; color: var(--accent-gold);")
+                  | Chính Sách Cấp Bậc &amp; Đặc Quyền Hội Viên
+                span(style="font-size: 0.75rem; color: var(--text-muted);") Cập nhật tự động theo số đơn hàng hoàn tất
+              
+              .tier-grid(style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;")
+                .tier-item(style=`padding: 14px; border-radius: 8px; border: 1.5px solid ${membershipTier && membershipTier.level === 'new' ? '#3B82F6' : 'var(--border-subtle)'}; background: ${membershipTier && membershipTier.level === 'new' ? '#EFF6FF' : '#FAFAFA'}; position: relative;`)
+                  if membershipTier && membershipTier.level === 'new'
+                    span(style="position: absolute; top: 8px; right: 8px; font-size: 0.65rem; font-weight: 700; background: #3B82F6; color: #FFF; padding: 2px 6px; border-radius: 4px;") BẠN ĐANG Ở ĐÂY
+                  .tier-name(style="font-weight: 700; font-size: 0.875rem; margin-bottom: 4px; color: #475569;") 🌱 Thành Viên Mới
+                  .tier-cond(style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px;") 0 đơn hoặc dưới 1.000.000đ
+                  .tier-priv(style="font-size: 0.75rem; line-height: 1.4; color: var(--text-main); font-weight: 500;") • Voucher chào mừng 10% đơn đầu
+
+                .tier-item(style=`padding: 14px; border-radius: 8px; border: 1.5px solid ${membershipTier && membershipTier.level === 'silver' ? '#2563EB' : 'var(--border-subtle)'}; background: ${membershipTier && membershipTier.level === 'silver' ? '#EFF6FF' : '#FAFAFA'}; position: relative;`)
+                  if membershipTier && membershipTier.level === 'silver'
+                    span(style="position: absolute; top: 8px; right: 8px; font-size: 0.65rem; font-weight: 700; background: #2563EB; color: #FFF; padding: 2px 6px; border-radius: 4px;") BẠN ĐANG Ở ĐÂY
+                  .tier-name(style="font-weight: 700; font-size: 0.875rem; margin-bottom: 4px; color: #1D4ED8;") 🥈 Thành Viên Bạc
+                  .tier-cond(style="font-size: 0.72rem; color: #1D4ED8; font-weight: 600; margin-bottom: 8px;") Từ 2 đơn VÀ tích lũy ≥ 1.000.000đ
+                  .tier-priv(style="font-size: 0.75rem; line-height: 1.4; color: var(--text-main); font-weight: 500;") • Tích lũy 3% giá trị đơn<br>• Đổi trả 30 ngày tận nơi
+
+                .tier-item(style=`padding: 14px; border-radius: 8px; border: 1.5px solid ${membershipTier && membershipTier.level === 'gold' ? '#D97706' : 'var(--border-subtle)'}; background: ${membershipTier && membershipTier.level === 'gold' ? '#FFFBEB' : '#FAFAFA'}; position: relative;`)
+                  if membershipTier && membershipTier.level === 'gold'
+                    span(style="position: absolute; top: 8px; right: 8px; font-size: 0.65rem; font-weight: 700; background: #D97706; color: #FFF; padding: 2px 6px; border-radius: 4px;") BẠN ĐANG Ở ĐÂY
+                  .tier-name(style="font-weight: 700; font-size: 0.875rem; margin-bottom: 4px; color: #B45309;") 🌟 Thành Viên Vàng
+                  .tier-cond(style="font-size: 0.72rem; color: #B45309; font-weight: 600; margin-bottom: 8px;") Từ 4 đơn VÀ tích lũy ≥ 3.000.000đ
+                  .tier-priv(style="font-size: 0.75rem; line-height: 1.4; color: var(--text-main); font-weight: 500;") • Giảm 5% mọi đơn hàng<br>• Quà tặng sinh nhật độc quyền
+
+                .tier-item(style=`padding: 14px; border-radius: 8px; border: 1.5px solid ${membershipTier && membershipTier.level === 'vip' ? '#D97706' : 'var(--border-subtle)'}; background: ${membershipTier && membershipTier.level === 'vip' ? '#FFFBEB' : '#FAFAFA'}; position: relative;`)
+                  if membershipTier && membershipTier.level === 'vip'
+                    span(style="position: absolute; top: 8px; right: 8px; font-size: 0.65rem; font-weight: 700; background: #D97706; color: #FFF; padding: 2px 6px; border-radius: 4px;") BẠN ĐANG Ở ĐÂY
+                  .tier-name(style="font-weight: 700; font-size: 0.875rem; margin-bottom: 4px; color: #D97706;") 👑 Thành Viên VIP
+                  .tier-cond(style="font-size: 0.72rem; color: #D97706; font-weight: 600; margin-bottom: 8px;") Từ 6 đơn VÀ ≥ 6.000.000đ (hoặc ≥ 8.000.000đ)
+                  .tier-priv(style="font-size: 0.75rem; line-height: 1.4; color: var(--text-main); font-weight: 500;") • Giảm 10% trọn đời<br>• Freeship hỏa tốc toàn quốc
 
         //- TAB 2: USER INFO
         #tab-info.tab-content(style="display: none;")
@@ -107,21 +259,38 @@ block content
               label.form-label Địa chỉ nhận hàng mặc định:
               input.form-control(type="text", value=user.address || 'Chưa cập nhật', readonly)
 
-        //- TAB 3: CHANGE PASSWORD
+        //- TAB 3: CHANGE PASSWORD / SECURITY
         #tab-password.tab-content(style="display: none;")
           .admin-card
-            h2(style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;") Đổi Mật Khẩu
-            form(onsubmit="handleChangePassword(event)")
-              .form-group
-                label.form-label Mật khẩu hiện tại *
-                input#currentPassword.form-control(type="password", required)
-              .form-group
-                label.form-label Mật khẩu mới (tối thiểu 6 ký tự) *
-                input#newPassword.form-control(type="password", required)
-              .form-group
-                label.form-label Xác nhận mật khẩu mới *
-                input#confirmPassword.form-control(type="password", required)
-              button.btn.btn-primary(type="submit") Cập Nhật Mật Khẩu
+            if user.authProvider === 'google' || user.googleId
+              h2(style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;") Bảo Mật Tài Khoản
+              .google-security-box(style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: var(--radius-md); padding: 28px; text-align: center;")
+                .google-icon-wrapper(style="width: 56px; height: 56px; border-radius: 50%; background: #FFF; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 16px;")
+                  svg(width="28", height="28", viewBox="0 0 24 24")
+                    path(fill="#4285F4", d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z")
+                    path(fill="#34A853", d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z")
+                    path(fill="#FBBC05", d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z")
+                    path(fill="#EA4335", d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z")
+                h3(style="font-size: 1.15rem; font-weight: 700; color: #1E293B; margin-bottom: 8px;") Tài Khoản Đang Được Bảo Vệ Bởi Google
+                p(style="color: #64748B; font-size: 0.875rem; max-width: 500px; margin: 0 auto 20px; line-height: 1.6;")
+                  | Bạn đang đăng nhập bằng công nghệ Xác Thực Một Lần (Single Sign-On) của Google. Hệ thống không lưu trữ mật khẩu cục bộ trên website. Toàn bộ bảo mật, mật khẩu và xác thực 2 bước (2FA) đều do Google trực tiếp quản lý và bảo vệ.
+                a.btn.btn-outline(href="https://myaccount.google.com/security", target="_blank", rel="noopener noreferrer", style="display: inline-flex; align-items: center; gap: 8px;")
+                  i(data-lucide="shield", style="width: 16px; height: 16px;")
+                  | Quản Lý Mật Khẩu &amp; Bảo Mật Tại Google
+                  i(data-lucide="external-link", style="width: 14px; height: 14px;")
+            else
+              h2(style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;") Đổi Mật Khẩu
+              form(onsubmit="handleChangePassword(event)")
+                .form-group
+                  label.form-label Mật khẩu hiện tại *
+                  input#currentPassword.form-control(type="password", required)
+                .form-group
+                  label.form-label Mật khẩu mới (tối thiểu 6 ký tự) *
+                  input#newPassword.form-control(type="password", required)
+                .form-group
+                  label.form-label Xác nhận mật khẩu mới *
+                  input#confirmPassword.form-control(type="password", required)
+                button.btn.btn-primary(type="submit") Cập Nhật Mật Khẩu
 
   script.
     function switchTab(tabName) {
@@ -187,5 +356,72 @@ block content
         }
       } catch (err) {
         showToast('Có lỗi xảy ra', 'error');
+      }
+    }
+
+    async function handleAvatarUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Kích thước ảnh tối đa là 5MB', 'error');
+        input.value = '';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      showToast('Đang tải ảnh đại diện lên...', 'info');
+
+      try {
+        const res = await fetch('/api/users/avatar', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message, 'success');
+          // Cập nhật avatar trên trang Profile
+          const img = document.getElementById('profile-avatar-img');
+          if (img) img.src = data.avatar;
+          // Cập nhật các avatar trên header
+          document.querySelectorAll('.user-avatar-btn img, .user-avatar-mini img, .admin-user-pill img').forEach(el => {
+            el.src = data.avatar;
+          });
+        } else {
+          showToast(data.message || 'Lỗi khi tải ảnh lên', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ khi upload ảnh', 'error');
+      } finally {
+        input.value = '';
+      }
+    }
+
+    async function handleResetDefaultAvatar() {
+      if (!confirm('Bạn có muốn đặt lại avatar chữ cái mặc định (NT)?')) return;
+      showToast('Đang khôi phục avatar mặc định...', 'info');
+
+      try {
+        const res = await fetch('/api/users/avatar/default', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message, 'success');
+          const img = document.getElementById('profile-avatar-img');
+          if (img) img.src = data.avatar;
+          document.querySelectorAll('.user-avatar-btn img, .user-avatar-mini img, .admin-user-pill img').forEach(el => {
+            el.src = data.avatar;
+          });
+        } else {
+          showToast(data.message || 'Lỗi khôi phục avatar', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ', 'error');
       }
     }

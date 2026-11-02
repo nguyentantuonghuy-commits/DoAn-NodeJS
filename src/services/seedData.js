@@ -10,7 +10,7 @@ const categories = [
     name: 'Thắt Lưng Da',
     slug: 'that-lung-da',
     description: 'Thắt lưng da bò thật 100%, khóa kim loại titan chống gỉ cao cấp.',
-    image: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
     icon: 'shield',
     itemCount: 4,
     order: 1
@@ -79,14 +79,50 @@ const products = [
     price: 349000,
     originalPrice: 499000,
     discount: 30,
-    stock: 45,
+    stock: 65,
+    hasVariants: true,
+    variants: [
+      {
+        id: 'var_prod_1_1',
+        name: 'Đen Onyx',
+        color: '#111827',
+        price: 349000,
+        originalPrice: 499000,
+        stock: 30,
+        sku: 'prod_1-den',
+        image: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80'
+      },
+      {
+        id: 'var_prod_1_2',
+        name: 'Nâu Espresso',
+        color: '#4A2C2A',
+        price: 379000,
+        originalPrice: 529000,
+        stock: 20,
+        sku: 'prod_1-nau',
+        image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80'
+      },
+      {
+        id: 'var_prod_1_3',
+        name: 'Xanh Navy',
+        color: '#1E3A8A',
+        price: 399000,
+        originalPrice: 550000,
+        stock: 15,
+        sku: 'prod_1-xanh',
+        image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80'
+      }
+    ],
     colors: [
       { name: 'Đen Onyx', hex: '#111827', image: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80' },
-      { name: 'Nâu Espresso', hex: '#4A2C2A', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80' }
+      { name: 'Nâu Espresso', hex: '#4A2C2A', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80' },
+      { name: 'Xanh Navy', hex: '#1E3A8A', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80' }
     ],
     images: [
       'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80'
     ],
     description: 'Thắt lưng da bò nhập khẩu nguyên miếng, gia công xử lý cạnh viền mịn màng. Hệ thống khóa răng trượt tự động cao cấp làm từ hợp kim kẽm mạ titan không phai màu.',
     highlights: ['Da bò thật 100% nguyên tấm', 'Khóa tự động không cần bấm lỗ', 'Bảo hành bong tróc 24 tháng'],
@@ -115,10 +151,10 @@ const products = [
     discount: 25,
     stock: 30,
     colors: [
-      { name: 'Nâu Da Bò', hex: '#8B4513', image: 'https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80' }
+      { name: 'Nâu Da Bò', hex: '#8B4513', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80' }
     ],
     images: [
-      'https://images.unsplash.com/photo-1603400521630-9f2de124b32b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80'
     ],
     description: 'Chất liệu da sáp ngựa điên (Crazy Horse Leather) tạo nên vẻ đẹp phong trần bụi bặm, càng dùng lâu da càng bóng đẹp và đậm chất cá tính.',
@@ -391,10 +427,10 @@ const products = [
     discount: 24,
     stock: 45,
     colors: [
-      { name: 'Bạc Titan', hex: '#E5E7EB', image: 'https://images.unsplash.com/photo-1611591475870-ef0218730b2d?auto=format&fit=crop&w=800&q=80' }
+      { name: 'Bạc Titan', hex: '#E5E7EB', image: 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80' }
     ],
     images: [
-      'https://images.unsplash.com/photo-1611591475870-ef0218730b2d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80'
     ],
     description: 'Điểm nhấn quyền lực trên cổ tay của phái mạnh. Thiết kế xích đan cài tinh xảo kết hợp khóa hộp double-lock tiện lợi, tôn vẻ nam tính mạnh mẽ.',
@@ -530,7 +566,7 @@ const orders = [
         price: 349000,
         quantity: 1,
         color: 'Đen Onyx',
-        image: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80'
+        image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80'
       },
       {
         id: 'item_2',
@@ -621,7 +657,7 @@ const blogs = [
     category: 'Phong Cách & Phối Đồ',
     author: 'Tuấn Trần (Fashion Editor)',
     authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1200&q=80',
     readTime: '4 phút đọc',
     views: 1820,
     createdAt: new Date('2026-10-15')

@@ -142,7 +142,7 @@ erDiagram
 
 ---
 
-## 6. DANH SÁCH 26 RESTFUL API ENDPOINTS
+## 6. DANH SÁCH 29 RESTFUL API ENDPOINTS
 
 ### A. Authentication & User Profile (`/api/auth`)
 1. `POST /api/auth/register` - Đăng ký tài khoản mới (Hash mật khẩu, validate email, cấp JWT).
@@ -150,37 +150,40 @@ erDiagram
 3. `POST /api/auth/logout` - Đăng xuất (Xóa phiên cookie).
 4. `GET /api/auth/me` - Xem thông tin tài khoản hiện tại (Cần đăng nhập).
 5. `PUT /api/auth/change-password` - Đổi mật khẩu tài khoản (Kiểm tra mật khẩu cũ, hash mật khẩu mới).
+6. `POST /api/auth/forgot-password` - Yêu cầu quên mật khẩu (Sinh mã OTP 6 số, gửi email qua Gmail SMTP với Google App Password, có chế độ Mock Dev).
+7. `POST /api/auth/verify-reset-otp` - Xác thực mã OTP 6 số và cấp **JWT Reset Token** (thời hạn 15 phút, chống brute-force 5 lần).
+8. `POST /api/auth/reset-password` - Đặt lại mật khẩu mới thông qua JWT Reset Token (xác thực token, hash bcrypt mật khẩu mới).
 
 ### B. Category Resource (`/api/categories`)
-6. `GET /api/categories` - Lấy danh sách toàn bộ danh mục phụ kiện.
-7. `GET /api/categories/:id` - Lấy thông tin chi tiết 1 danh mục theo ID hoặc Slug.
-8. `POST /api/categories` - Tạo danh mục mới (**Admin only**).
-9. `PUT /api/categories/:id` - Cập nhật danh mục (**Admin only**).
-10. `DELETE /api/categories/:id` - Xóa danh mục (**Admin only**).
+9. `GET /api/categories` - Lấy danh sách toàn bộ danh mục phụ kiện.
+10. `GET /api/categories/:id` - Lấy thông tin chi tiết 1 danh mục theo ID hoặc Slug.
+11. `POST /api/categories` - Tạo danh mục mới (**Admin only**).
+12. `PUT /api/categories/:id` - Cập nhật danh mục (**Admin only**).
+13. `DELETE /api/categories/:id` - Xóa danh mục (**Admin only**).
 
 ### C. Product Resource (`/api/products`)
-11. `GET /api/products` - Lấy danh sách sản phẩm (Hỗ trợ **Search `?search=...`**, **Filter theo Category `?category=...`**, **Lọc giá `?priceMin=...&priceMax=...`**, **Flash sale `?isSale=true`**, **Sort `?sort=popular|price_asc|price_desc`**, **Pagination `?page=1&limit=12`**).
-12. `GET /api/products/:id` - Xem chi tiết 1 sản phẩm kèm reviews và thông số kỹ thuật.
-13. `POST /api/products` - Thêm mới sản phẩm phụ kiện (**Admin only**, có backend validation).
-14. `PUT /api/products/:id` - Cập nhật sản phẩm (**Admin only**).
-15. `DELETE /api/products/:id` - Xóa sản phẩm khỏi hệ thống (**Admin only**).
+14. `GET /api/products` - Lấy danh sách sản phẩm (Hỗ trợ **Search `?search=...`**, **Filter theo Category `?category=...`**, **Lọc giá `?priceMin=...&priceMax=...`**, **Flash sale `?isSale=true`**, **Sort `?sort=popular|price_asc|price_desc`**, **Pagination `?page=1&limit=12`**).
+15. `GET /api/products/:id` - Xem chi tiết 1 sản phẩm kèm reviews và thông số kỹ thuật.
+16. `POST /api/products` - Thêm mới sản phẩm phụ kiện (**Admin only**, có backend validation).
+17. `PUT /api/products/:id` - Cập nhật sản phẩm (**Admin only**).
+18. `DELETE /api/products/:id` - Xóa sản phẩm khỏi hệ thống (**Admin only**).
 
 ### D. Relation API: Product Reviews (`/api/products/:id/reviews`)
-16. `GET /api/products/:id/reviews` - Lấy danh sách tất cả đánh giá của một sản phẩm.
-17. `POST /api/products/:id/reviews` - Gửi đánh giá sao và nhận xét cho sản phẩm (**User only**).
+19. `GET /api/products/:id/reviews` - Lấy danh sách tất cả đánh giá của một sản phẩm.
+20. `POST /api/products/:id/reviews` - Gửi đánh giá sao và nhận xét cho sản phẩm (**User only**).
 
 ### E. Order Resource & Business Logic APIs (`/api/orders`)
-18. `GET /api/orders` - Lấy danh sách đơn hàng (User chỉ xem đơn của mình; Admin xem được toàn bộ đơn).
-19. `GET /api/orders/:id` - Xem chi tiết một đơn hàng kèm các dòng sản phẩm `items`.
-20. `POST /api/orders` - Đặt hàng mới (Checkout validation tên, SĐT, địa chỉ, giỏ hàng).
-21. `PATCH /api/orders/:id/confirm` - **API Nghiệp vụ**: Xác nhận đơn hàng (**Admin only**, chuyển trạng thái từ `pending` sang `confirmed`).
-22. `PATCH /api/orders/:id/cancel` - **API Nghiệp vụ**: Hủy đơn hàng (**Khách hàng hủy đơn pending của mình** hoặc Admin hủy).
-23. `PATCH /api/orders/:id/status` - **API Nghiệp vụ**: Cập nhật tiến độ giao hàng (`shipping`, `completed`).
+21. `GET /api/orders` - Lấy danh sách đơn hàng (User chỉ xem đơn của mình; Admin xem được toàn bộ đơn).
+22. `GET /api/orders/:id` - Xem chi tiết một đơn hàng kèm các dòng sản phẩm `items`.
+23. `POST /api/orders` - Đặt hàng mới (Checkout validation tên, SĐT, địa chỉ, giỏ hàng).
+24. `PATCH /api/orders/:id/confirm` - **API Nghiệp vụ**: Xác nhận đơn hàng (**Admin only**, chuyển trạng thái từ `pending` sang `confirmed`).
+25. `PATCH /api/orders/:id/cancel` - **API Nghiệp vụ**: Hủy đơn hàng (**Khách hàng hủy đơn pending của mình** hoặc Admin hủy).
+26. `PATCH /api/orders/:id/status` - **API Nghiệp vụ**: Cập nhật tiến độ giao hàng (`shipping`, `completed`).
 
 ### F. User Management & Authorization (`/api/users`)
-24. `GET /api/users` - Lấy danh sách tài khoản người dùng trong hệ thống (**Admin only**).
-25. `PATCH /api/users/:id/role` - Phân quyền tài khoản chuyển đổi giữa `admin` và `user` (**Admin only**).
-26. `DELETE /api/users/:id` - Xóa tài khoản người dùng (**Admin only**, chống tự xóa chính mình).
+27. `GET /api/users` - Lấy danh sách tài khoản người dùng trong hệ thống (**Admin only**).
+28. `PATCH /api/users/:id/role` - Phân quyền tài khoản chuyển đổi giữa `admin` và `user` (**Admin only**).
+29. `DELETE /api/users/:id` - Xóa tài khoản người dùng (**Admin only**, chống tự xóa chính mình).
 
 ---
 

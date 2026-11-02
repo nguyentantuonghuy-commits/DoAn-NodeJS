@@ -3,11 +3,12 @@ const dbStore = require('../../services/dbStore');
 // @desc    Render Homepage
 // @route   GET /
 const renderHome = (req, res) => {
-  const categories = dbStore.getCategories();
+  const categories = dbStore.getCategories(false);
   const flashSaleData = dbStore.getProducts({ isSale: true, limit: 4 });
   const featuredData = dbStore.getProducts({ isFeatured: true, limit: 8 });
   const bestSellersData = dbStore.getProducts({ sort: 'best_seller', limit: 8 });
-  const reviews = dbStore.data.reviews.slice(0, 3);
+  const newArrivalsData = dbStore.getProducts({ sort: 'newest', limit: 8 });
+  const reviews = dbStore.data.reviews ? dbStore.data.reviews.slice(0, 4) : [];
 
   res.render('pages/home', {
     title: 'Atelier Accessories | Đẳng Cấp Phụ Kiện Thời Trang Đương Đại',
@@ -15,8 +16,10 @@ const renderHome = (req, res) => {
     flashSaleProducts: flashSaleData.products,
     featuredProducts: featuredData.products,
     bestSellerProducts: bestSellersData.products,
+    newArrivalProducts: newArrivalsData.products,
     reviews,
-    currentPath: '/'
+    currentPath: '/',
+    query: req.query
   });
 };
 
@@ -25,7 +28,7 @@ const renderHome = (req, res) => {
 const renderShop = (req, res) => {
   const { search, category, sort = 'newest', page = 1, priceMin, priceMax, isSale } = req.query;
 
-  const categories = dbStore.getCategories();
+  const categories = dbStore.getCategories(false);
   const activeCategory = category ? dbStore.getCategoryBySlug(category) || dbStore.getCategoryById(category) : null;
 
   const data = dbStore.getProducts({
@@ -56,10 +59,10 @@ const renderProductDetail = (req, res) => {
   const { slug } = req.params;
   const product = dbStore.getProductBySlug(slug) || dbStore.getProductById(slug);
 
-  if (!product) {
+  if (!product || (product.isHidden && (!req.user || req.user.role !== 'admin'))) {
     return res.status(404).render('pages/404', {
       title: 'Không Tìm Thấy Sản Phẩm | Atelier Accessories',
-      message: 'Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã ngừng kinh doanh.'
+      message: 'Sản phẩm bạn đang tìm kiếm hiện đang tạm ẩn hoặc đã ngừng kinh doanh.'
     });
   }
 
@@ -108,12 +111,63 @@ const renderOrderSuccess = (req, res) => {
   });
 };
 
+// @desc    Render Track Order Page (Public)
+// @route   GET /track-order
+const renderTrackOrder = (req, res) => {
+  try {
+    const { code, phone, query } = req.query;
+    const initialQuery = code || phone || query || '';
+
+    let initialOrder = null;
+    if (initialQuery) {
+      const allOrders = dbStore.getAllOrders();
+      const cleanQ = initialQuery.toLowerCase().replace(/\s+/g, '');
+      const digits = cleanQ.replace(/[^\d]/g, '');
+
+      initialOrder = allOrders.find(o => 
+        (o.orderCode && o.orderCode.toLowerCase() === cleanQ) ||
+        (o.id && o.id.toLowerCase() === cleanQ)
+      );
+
+      // If not matched by code, try by phone
+      if (!initialOrder && digits.length >= 8) {
+        initialOrder = allOrders.find(o => {
+          if (!o.customerPhone) return false;
+          const p = o.customerPhone.replace(/[^\d]/g, '');
+          return p === digits || p.endsWith(digits) || digits.endsWith(p);
+        });
+      }
+    }
+
+    res.render('pages/track-order', {
+      title: 'Tra Cứu Đơn Hàng | Atelier Accessories',
+      currentPath: '/track-order',
+      initialQuery,
+      initialOrder
+    });
+  } catch (error) {
+    console.error('Error rendering track order page:', error);
+    res.status(500).render('pages/404', {
+      title: 'Lỗi Tra Cứu Đơn Hàng',
+      message: 'Đã xảy ra lỗi khi tải trang tra cứu đơn hàng.'
+    });
+  }
+};
+
 // @desc    Render Login Page
 // @route   GET /login
 const renderLogin = (req, res) => {
   if (req.user) return res.redirect('/profile');
+  let errorMessage = null;
+  if (req.query.locked) {
+    errorMessage = 'Tài khoản của bạn đã bị khóa bởi Quản trị viên. Vui lòng liên hệ bộ phận hỗ trợ.';
+  } else if (req.query.error) {
+    errorMessage = decodeURIComponent(req.query.error);
+  }
   res.render('pages/auth/login', {
     title: 'Đăng Nhập | Atelier Accessories',
+    errorMessage,
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     currentPath: '/login'
   });
 };
@@ -122,20 +176,39 @@ const renderLogin = (req, res) => {
 // @route   GET /register
 const renderRegister = (req, res) => {
   if (req.user) return res.redirect('/profile');
+  let errorMessage = null;
+  if (req.query.error) {
+    errorMessage = decodeURIComponent(req.query.error);
+  }
   res.render('pages/auth/register', {
     title: 'Tạo Tài Khoản Mới | Atelier Accessories',
+    errorMessage,
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     currentPath: '/register'
+  });
+};
+
+// @desc    Render Forgot Password Page
+// @route   GET /forgot-password
+const renderForgotPassword = (req, res) => {
+  if (req.user) return res.redirect('/profile');
+  res.render('pages/auth/forgot-password', {
+    title: 'Khôi Phục Mật Khẩu | Atelier Accessories',
+    currentPath: '/forgot-password'
   });
 };
 
 // @desc    Render User Profile & Order History
 // @route   GET /profile
 const renderProfile = (req, res) => {
+  const { getMembershipTier } = require('../../utils/membershipHelper');
   const orders = dbStore.getOrdersByUserId(req.user.id);
+  const membershipTier = getMembershipTier(req.user, orders);
   res.render('pages/profile', {
     title: 'Hồ Sơ Của Tôi | Atelier Accessories',
     user: req.user,
     orders,
+    membershipTier,
     currentPath: '/profile'
   });
 };
@@ -219,8 +292,10 @@ module.exports = {
   renderCart,
   renderCheckout,
   renderOrderSuccess,
+  renderTrackOrder,
   renderLogin,
   renderRegister,
+  renderForgotPassword,
   renderProfile,
   renderAbout,
   renderContact,

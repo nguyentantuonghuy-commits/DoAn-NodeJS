@@ -3,119 +3,605 @@ extends ../../layouts/main
 block content
   .admin-layout
     //- Admin Sidebar
-    aside.admin-sidebar
-      .admin-nav
-        a(href="/admin")
-          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
-          | Bảng Điều Khiển
-        a.active(href="/admin/products")
-          i(data-lucide="package", style="width: 18px; height: 18px;")
-          | Quản Lý Sản Phẩm
-        a(href="/admin/categories")
-          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
-          | Quản Lý Danh Mục
-        a(href="/admin/orders")
-          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
-          | Quản Lý Đơn Hàng
-        a(href="/admin/users")
-          i(data-lucide="users", style="width: 18px; height: 18px;")
-          | Quản Lý Người Dùng
-        hr(style="border-color: #1F242C; margin: 16px 0;")
-        a(href="/")
-          i(data-lucide="external-link", style="width: 18px; height: 18px;")
-          | Xem Website
-        a(href="/logout", style="color: var(--accent-coral);")
-          i(data-lucide="log-out", style="width: 18px; height: 18px;")
-          | Đăng Xuất
+    include ../../partials/admin-sidebar
 
     //- Main Content
-    main.admin-content
-      .admin-header(style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;")
+    main.admin-content(style="padding-bottom: 60px;")
+      
+      //- Header & Breadcrumbs
+      .admin-page-header
         div
-          h1(style="font-size: 1.875rem; font-weight: 800; margin-bottom: 4px;") Quản Lý Sản Phẩm Phụ Kiện
-          p(style="color: var(--text-muted); font-size: 0.9375rem;") Xem, thêm mới, cập nhật giá và tồn kho sản phẩm.
-        a.btn.btn-primary(href="/admin/products/new")
-          i(data-lucide="plus", style="width: 18px; height: 18px;")
-          | Thêm Sản Phẩm Mới
+          .breadcrumb-trail
+            span Atelier System
+            span.breadcrumb-separator /
+            span.current Quản lý sản phẩm
+          h1(style="font-size: 1.625rem; font-weight: 800; color: var(--text-main); margin: 0; letter-spacing: -0.02em;") Quản Lý Sản Phẩm Phụ Kiện
+          p(style="color: var(--text-muted); font-size: 0.8125rem; margin: 4px 0 0;") Danh mục sản phẩm thời trang Atelier: cập nhật giá bán, kiểm soát kho, ẩn/hiện sản phẩm và tình trạng kinh doanh.
+        
+        .header-actions-group
+          a.btn.btn-sm(href="/admin/products/new", style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; font-size: 0.8125rem; font-weight: 700; background: #0F172A; color: #FFFFFF; border-radius: var(--radius-sm); box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15); transition: background 0.2s;")
+            i(data-lucide="plus", style="width: 15px; height: 15px; color: var(--accent-gold);")
+            | Thêm Sản Phẩm Mới
 
-      //- Filter Bar
-      .admin-card(style="padding: 16px 20px; margin-bottom: 24px;")
-        form(action="/admin/products", method="GET", style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;")
-          input.form-control(
-            type="text",
-            name="search",
-            placeholder="Tìm theo tên sản phẩm...",
-            value=(query && query.search ? query.search : ''),
-            style="max-width: 280px;"
-          )
-          select.form-control(name="category", style="max-width: 220px;")
+      //- Quick Stat Metric Cards (5 Cards)
+      if stats
+        .kpi-grid-premium(style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 22px; gap: 14px;")
+          //- Card 1: Total
+          .kpi-card-premium(style="--card-accent: #2563EB; --icon-bg: #EFF6FF; --icon-color: #1D4ED8; padding: 16px 18px;")
+            .kpi-header-row(style="margin-bottom: 8px;")
+              .kpi-icon-wrap(style="width: 36px; height: 36px;")
+                i(data-lucide="package", style="width: 18px; height: 18px;")
+              span.kpi-trend-pill.trend-neutral(style="font-size: 0.7rem; padding: 2px 8px;")
+                | #{categories.length} Danh mục
+            .kpi-title-sub(style="font-size: 0.72rem;") Tổng Mẫu Sản Phẩm
+            .kpi-main-number#kpiTotalCount(style="font-size: 1.5rem; color: #1E293B;")= `${stats.totalProducts} Mẫu`
+            .kpi-footnote(style="font-size: 0.7rem;") Toàn bộ danh mục phụ kiện
+
+          //- Card 2: Active / Visible
+          .kpi-card-premium(style="--card-accent: #059669; --icon-bg: #ECFDF5; --icon-color: #047857; padding: 16px 18px;")
+            .kpi-header-row(style="margin-bottom: 8px;")
+              .kpi-icon-wrap(style="width: 36px; height: 36px;")
+                i(data-lucide="eye", style="width: 18px; height: 18px;")
+              span.kpi-trend-pill.trend-up(style="font-size: 0.7rem; padding: 2px 8px;")
+                | Sẵn sàng bán
+            .kpi-title-sub(style="font-size: 0.72rem;") Đang Mở Bán
+            .kpi-main-number#kpiActiveCount(style="font-size: 1.5rem; color: #047857;")= `${stats.activeCount || (stats.totalProducts - (stats.hiddenCount || 0))} Mẫu`
+            .kpi-footnote(style="font-size: 0.7rem;") Khách hàng xem và mua được
+
+          //- Card 3: Hidden (Tạm Ẩn)
+          .kpi-card-premium(style="--card-accent: #D97706; --icon-bg: #FEF3C7; --icon-color: #B45309; padding: 16px 18px;")
+            .kpi-header-row(style="margin-bottom: 8px;")
+              .kpi-icon-wrap(style="width: 36px; height: 36px;")
+                i(data-lucide="eye-off", style="width: 18px; height: 18px;")
+              span.kpi-trend-pill.trend-neutral(style="font-size: 0.7rem; padding: 2px 8px; background: #FEF3C7; color: #B45309;")
+                | Tạm dừng bán
+            .kpi-title-sub(style="font-size: 0.72rem;") Đã Tạm Ẩn
+            .kpi-main-number#kpiHiddenCount(style="font-size: 1.5rem; color: #B45309;")= `${stats.hiddenCount || 0} Mẫu`
+            .kpi-footnote(style="font-size: 0.7rem;") Không hiển thị trên web khách
+
+          //- Card 4: Inventory
+          .kpi-card-premium(style="--card-accent: #6366F1; --icon-bg: #EEF2FF; --icon-color: #4F46E5; padding: 16px 18px;")
+            .kpi-header-row(style="margin-bottom: 8px;")
+              .kpi-icon-wrap(style="width: 36px; height: 36px;")
+                i(data-lucide="layers", style="width: 18px; height: 18px;")
+              span.kpi-trend-pill.trend-up(style="font-size: 0.7rem; padding: 2px 8px;")
+                | Kho hàng
+            .kpi-title-sub(style="font-size: 0.72rem;") Tổng Tồn Kho
+            .kpi-main-number(style="font-size: 1.5rem; color: #4F46E5;")= `${stats.totalStock} Chiếc`
+            .kpi-footnote(style="font-size: 0.7rem;") Tổng các dòng phụ kiện
+
+          //- Card 5: Stock Alert
+          .kpi-card-premium(style="--card-accent: #DC2626; --icon-bg: #FEF2F2; --icon-color: #B91C1C; padding: 16px 18px;")
+            .kpi-header-row(style="margin-bottom: 8px;")
+              .kpi-icon-wrap(style="width: 36px; height: 36px;")
+                i(data-lucide="alert-triangle", style="width: 18px; height: 18px;")
+              span.kpi-trend-pill(class=(stats.outOfStockCount > 0 ? 'trend-danger' : (stats.lowStockCount > 0 ? 'trend-danger' : 'trend-neutral')), style="font-size: 0.7rem; padding: 2px 8px;")
+                = stats.outOfStockCount > 0 ? `${stats.outOfStockCount} hết hàng` : (stats.lowStockCount > 0 ? `${stats.lowStockCount} sắp hết` : 'Ổn định')
+            .kpi-title-sub(style="font-size: 0.72rem;") Cảnh Báo Tồn Kho
+            .kpi-main-number(style="font-size: 1.5rem; color: #B91C1C;")= `${stats.lowStockCount + stats.outOfStockCount} Mẫu`
+            .kpi-footnote(style="font-size: 0.7rem;") Cần bổ sung nguồn cung
+
+      //- Advanced Filter & Search Bar with Instant Real-Time Filtering
+      .admin-card(style="padding: 18px 20px; margin-bottom: 22px; border: 1px solid var(--border-subtle);")
+        form#filterForm(action="/admin/products", method="GET", onsubmit="return false;", style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;")
+          //- Search input with clear button
+          .filter-input-wrap(style="position: relative; flex: 1.4; min-width: 250px;")
+            i(data-lucide="search", style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-muted); pointer-events: none;")
+            input#searchInput.form-control(
+              type="text",
+              name="search",
+              placeholder="Gõ từ khóa để lọc ngay (tên, SKU prod_1...)",
+              value=(query && query.search ? query.search : ''),
+              autocomplete="off",
+              style="padding-left: 36px; padding-right: 32px; height: 38px; font-size: 0.8125rem;"
+            )
+            button#searchClearBtn(
+              type="button",
+              title="Xóa nhanh từ khóa",
+              style="display: none; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: var(--text-muted); padding: 4px;"
+            )
+              i(data-lucide="x", style="width: 14px; height: 14px;")
+
+          //- Filter by category
+          select#categorySelect.form-control(name="category", style="max-width: 175px; height: 38px; font-size: 0.8125rem; cursor: pointer;")
             option(value="") Tất cả danh mục
             each cat in categories
-              option(value=cat.slug, selected=(query && query.category === cat.slug))= cat.name
-          button.btn.btn-secondary(type="submit") Lọc Dữ Liệu
-          if query && (query.search || query.category)
-            a.btn.btn-sm(href="/admin/products", style="color: var(--text-muted);") Xóa lọc
+              option(
+                value=cat.slug,
+                data-id=cat.id,
+                selected=(query && (query.category === cat.slug || query.category === cat.id))
+              )= cat.name
 
-      //- Products Table
-      .admin-card
+          //- Filter by stock status
+          select#stockStatusSelect.form-control(name="stockStatus", style="max-width: 165px; height: 38px; font-size: 0.8125rem; cursor: pointer;")
+            option(value="") Tất cả trạng thái kho
+            option(value="in_stock", selected=(query && query.stockStatus === 'in_stock')) Còn hàng (&gt; 0)
+            option(value="low_stock", selected=(query && query.stockStatus === 'low_stock')) Sắp hết hàng (&le; 10)
+            option(value="out_of_stock", selected=(query && query.stockStatus === 'out_of_stock')) Hết hàng (0)
+
+          //- Filter by visibility status (Ẩn / Hiện)
+          select#visibilitySelect.form-control(name="visibility", style="max-width: 160px; height: 38px; font-size: 0.8125rem; cursor: pointer; font-weight: 600; color: #334155;")
+            option(value="") Tất cả hiển thị
+            option(value="visible", selected=(query && query.visibility === 'visible')) Đang hiển thị
+            option(value="hidden", selected=(query && query.visibility === 'hidden')) Đã ẩn (Tạm dừng)
+
+          //- Sort options
+          select#sortSelect.form-control(name="sort", style="max-width: 150px; height: 38px; font-size: 0.8125rem; cursor: pointer;")
+            option(value="newest", selected=(!query || !query.sort || query.sort === 'newest')) Mới nhất
+            option(value="popular", selected=(query && query.sort === 'popular')) Bán chạy nhất
+            option(value="price_asc", selected=(query && (query.sort === 'price_asc' || query.sort === 'price-asc'))) Giá tăng dần
+            option(value="price_desc", selected=(query && (query.sort === 'price_desc' || query.sort === 'price-desc'))) Giá giảm dần
+            option(value="stock_asc", selected=(query && query.sort === 'stock_asc')) Tồn kho ít nhất
+
+          //- Reset Filter Button
+          button#resetFilterBtn.btn.btn-sm(
+            type="button",
+            onclick="resetAllFilters()",
+            style="display: inline-flex; align-items: center; gap: 5px; height: 38px; padding: 0 12px; font-size: 0.78rem; color: #E11D48; background: #FFF1F2; border: 1px solid #FFE4E6; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;"
+          )
+            i(data-lucide="rotate-ccw", style="width: 13px; height: 13px;")
+            | Đặt lại
+
+        //- Active Live Summary Bar
+        #liveFilterSummary.active-filter-summary(style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-subtle); display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);")
+          #liveFilterCriteria
+            span Đang hiển thị toàn bộ kho sản phẩm
+          div
+            | Tìm thấy 
+            strong#liveResultCount(style="color: var(--accent-gold); font-size: 0.875rem;") #{products ? products.length : 0}
+            |  sản phẩm phù hợp
+
+      //- Products Table Card
+      .admin-card(style="padding: 0; overflow: hidden; border: 1px solid var(--border-subtle); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);")
         .table-responsive
-          table.data-table
+          table.data-table(style="margin: 0;")
             thead
               tr
-                th Hình Ảnh
-                th Tên Sản Phẩm
-                th Danh Mục
-                th Giá Bán
-                th Tồn Kho
-                th Đã Bán
-                th Đánh Giá
-                th Thao Tác
+                th(style="width: 64px; text-align: center;") Ảnh
+                th Thông Tin Sản Phẩm
+                th(style="width: 145px;") Danh Mục
+                th(style="width: 135px;") Giá Bán
+                th(style="width: 125px;") Tồn Kho
+                th(style="width: 80px; text-align: center;") Đã Bán
+                th(style="width: 100px; text-align: center;") Đánh Giá
+                th(style="width: 155px; text-align: right; padding-right: 20px;") Thao Tác
             tbody
               if products && products.length
                 each p in products
-                  tr
-                    td
-                      img(src=p.images[0], alt=p.name, style="width: 50px; height: 60px; object-fit: cover; border-radius: 4px; background: var(--bg-tertiary);")
-                    td
-                      strong: a(href=`/product/${p.slug}`, target="_blank", style="color: var(--text-main);")= p.name
-                      div(style="font-size: 0.75rem; color: var(--text-muted);")= `SKU: ${p.id}`
-                    td= p.categoryName || 'Phụ kiện'
-                    td
-                      strong= new Intl.NumberFormat('vi-VN').format(p.price) + 'đ'
-                      if p.originalPrice > p.price
-                        div(style="font-size: 0.75rem; color: var(--text-light); text-decoration: line-through;")
-                          = new Intl.NumberFormat('vi-VN').format(p.originalPrice) + 'đ'
-                    td
-                      if p.stock <= 5
-                        span.badge.badge-soft-red= `${p.stock} cái`
-                      else
-                        span= `${p.stock} cái`
-                    td= p.soldCount
-                    td
-                      span(style="color: #F59E0B; font-weight: 700;")= `★ ${p.rating}`
-                    td
-                      div(style="display: flex; gap: 8px;")
-                        a.btn.btn-sm.btn-secondary(href=`/admin/products/edit/${p.id}`, title="Chỉnh sửa")
-                          i(data-lucide="edit", style="width: 14px; height: 14px;")
-                          | Sửa
-                        button.btn.btn-sm(
-                          type="button",
-                          style="background: #FEE2E2; color: #991B1B;",
-                          onclick=`deleteProduct('${p.id}', '${p.name}')`,
-                          title="Xóa sản phẩm"
+                  tr.product-row(
+                    id=`row-${p.id}`,
+                    data-id=p.id,
+                    data-name=p.name,
+                    data-search-text=`${p.name} ${p.id} ${p.categoryName || ''} ${p.description || ''}`,
+                    data-category=p.category,
+                    data-category-slug=(p.categorySlug || ''),
+                    data-stock=p.stock,
+                    data-stock-status=(p.stock <= 0 ? 'out_of_stock' : (p.stock <= 10 ? 'low_stock' : 'in_stock')),
+                    data-is-hidden=(p.isHidden ? 'true' : 'false'),
+                    data-price=p.price,
+                    data-sold=(p.soldCount || 0),
+                    data-rating=(p.rating || 5),
+                    data-created=(p.createdAt ? new Date(p.createdAt).getTime() : 0),
+                    style=(p.isHidden ? 'opacity: 0.82; background: #FFFDF7;' : '')
+                  )
+                    //- 1. Image
+                    td(style="text-align: center; padding: 10px;")
+                      a(href=`/product/${p.slug}`, target="_blank", title="Xem chi tiết trên website")
+                        img(
+                          src=p.images[0],
+                          alt=p.name,
+                          style="width: 48px; height: 56px; object-fit: cover; border-radius: 6px; background: #F1F5F9; border: 1px solid rgba(15, 23, 42, 0.06); transition: transform 0.2s;",
+                          onmouseover="this.style.transform='scale(1.08)'",
+                          onmouseout="this.style.transform='scale(1)'"
                         )
-                          i(data-lucide="trash-2", style="width: 14px; height: 14px;")
-                          | Xóa
-              else
-                tr
-                  td(colspan="8", style="text-align: center; color: var(--text-muted); padding: 40px;") Không tìm thấy sản phẩm nào.
 
-        //- Pagination
-        include ../../partials/pagination
+                    //- 2. Product Name & SKU & Badges
+                    td
+                      div(style="line-height: 1.35;")
+                        a(
+                          href=`/admin/products/edit/${p.id}`,
+                          style="color: var(--text-main); font-weight: 700; font-size: 0.875rem; text-decoration: none; display: inline-block; margin-bottom: 4px;",
+                          title="Nhấp để chỉnh sửa sản phẩm"
+                        )= p.name
+                        
+                        .sku-badge-group(style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;")
+                          span(style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace; background: #F1F5F9; padding: 2px 6px; border-radius: 4px;")= `SKU: ${p.id}`
+                          
+                          if p.hasVariants && p.variants && p.variants.length
+                            span.badge(style="background: #EFF6FF; color: #1D4ED8; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px; display: inline-flex; align-items: center; gap: 3px;")
+                              i(data-lucide="layers", style="width: 10px; height: 10px;")
+                              = `${p.variants.length} Màu Sắc`
+
+                          //- Hidden status badge
+                          span.badge.badge-hidden-indicator(
+                            id=`badge-hidden-${p.id}`,
+                            style=(p.isHidden ? "background: #FEF3C7; color: #92400E; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px; display: inline-flex; align-items: center; gap: 3px;" : "background: #FEF3C7; color: #92400E; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px; display: none; align-items: center; gap: 3px;")
+                          )
+                            i(data-lucide="eye-off", style="width: 10px; height: 10px;")
+                            | Đã Ẩn
+
+                          if p.isFeatured
+                            span.badge(style="background: #FEF3C7; color: #B45309; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;") Nổi Bật
+                          if p.isSale
+                            span.badge(style="background: #FEE2E2; color: #DC2626; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;") Flash Sale
+
+                    //- 3. Category
+                    td
+                      span(style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.8125rem; font-weight: 600; color: #334155; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 4px 10px; border-radius: 12px;")
+                        i(data-lucide="tag", style="width: 12px; height: 12px; color: var(--text-muted);")
+                        = p.categoryName || 'Phụ kiện'
+
+                    //- 4. Price
+                    td
+                      div
+                        strong(style="color: var(--text-main); font-size: 0.875rem; font-weight: 700;")
+                          = (p.hasVariants && p.variants && p.variants.length > 1 ? 'Từ ' : '') + new Intl.NumberFormat('vi-VN').format(p.price) + 'đ'
+                        if p.originalPrice > p.price
+                          div(style="display: flex; align-items: center; gap: 6px; margin-top: 2px;")
+                            span(style="font-size: 0.72rem; color: var(--text-muted); text-decoration: line-through;")
+                              = new Intl.NumberFormat('vi-VN').format(p.originalPrice) + 'đ'
+                            if p.discount
+                              span(style="font-size: 0.65rem; font-weight: 700; color: #DC2626; background: #FEE2E2; padding: 1px 4px; border-radius: 3px;")
+                                = `-${p.discount}%`
+
+                    //- 5. Stock status
+                    td
+                      if p.stock <= 0
+                        span.badge(style="background: #FEE2E2; color: #991B1B; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;")
+                          i(data-lucide="x-circle", style="width: 12px; height: 12px;")
+                          | Hết hàng
+                      else if p.stock <= 10
+                        span.badge(style="background: #FEF3C7; color: #92400E; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;")
+                          i(data-lucide="alert-circle", style="width: 12px; height: 12px;")
+                          = `${p.stock} cái (Sắp hết)`
+                      else
+                        span(style="color: #047857; font-weight: 600; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 4px;")
+                          i(data-lucide="check", style="width: 13px; height: 13px;")
+                          = `${p.stock} cái`
+
+                    //- 6. Sold Count
+                    td(style="text-align: center; font-size: 0.8125rem; font-weight: 600; color: #475569;")
+                      = p.soldCount || 0
+
+                    //- 7. Rating
+                    td(style="text-align: center;")
+                      div(style="display: inline-flex; align-items: center; gap: 4px; color: #D97706; font-weight: 700; font-size: 0.8125rem;")
+                        span ★
+                        span= p.rating || 5.0
+                      if p.reviewsCount
+                        div(style="font-size: 0.6875rem; color: var(--text-muted);")= `(${p.reviewsCount} review)`
+
+                    //- 8. Actions
+                    td(style="text-align: right; padding-right: 20px;")
+                      div(style="display: inline-flex; gap: 5px; align-items: center;")
+                        //- 8a. Preview Link
+                        a.btn.btn-sm.btn-outline(
+                          href=`/product/${p.slug}`,
+                          target="_blank",
+                          title="Xem trên website khách hàng",
+                          style="padding: 6px 8px; border-radius: 4px;"
+                        )
+                          i(data-lucide="external-link", style="width: 13px; height: 13px;")
+
+                        //- 8b. Toggle Hide/Show Button
+                        button.btn.btn-sm.btn-toggle-hidden(
+                          type="button",
+                          id=`btn-toggle-hidden-${p.id}`,
+                          style=(p.isHidden ? "background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; padding: 6px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s;" : "background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; padding: 6px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s;"),
+                          onclick=`toggleVisibility('${p.id}')`,
+                          title=(p.isHidden ? "Bật hiển thị lại trên website" : "Ẩn sản phẩm này khỏi website (tạm ngưng bán)"),
+                          data-hidden=(p.isHidden ? 'true' : 'false')
+                        )
+                          i(data-lucide=(p.isHidden ? "eye" : "eye-off"), style="width: 13px; height: 13px;")
+
+                        //- 8c. Edit Button
+                        a.btn.btn-sm.btn-secondary(
+                          href=`/admin/products/edit/${p.id}`,
+                          title="Chỉnh sửa sản phẩm",
+                          style="padding: 6px 9px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"
+                        )
+                          i(data-lucide="edit", style="width: 13px; height: 13px;")
+                          | Sửa
+
+                        //- 8d. Delete Button
+                        button.btn.btn-sm.btn-outline-danger(
+                          type="button",
+                          style="padding: 6px 8px; border-radius: 4px; cursor: pointer;",
+                          onclick=`deleteProduct('${p.id}', '${p.name}')`,
+                          title="Xóa vĩnh viễn sản phẩm"
+                        )
+                          i(data-lucide="trash-2", style="width: 13px; height: 13px;")
+
+              //- Live Filter Empty Row
+              tr#liveEmptyRow(style="display: none;")
+                td(colspan="8", style="text-align: center; padding: 50px 20px;")
+                  div(style="max-width: 380px; margin: 0 auto; text-align: center;")
+                    .empty-icon-wrap(style="width: 54px; height: 54px; border-radius: 50%; background: #F1F5F9; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--text-muted);")
+                      i(data-lucide="search-x", style="width: 26px; height: 26px;")
+                    h3(style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;") Không tìm thấy sản phẩm phù hợp
+                    p(style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 18px;") Không có sản phẩm nào khớp với từ khóa tìm kiếm hoặc bộ lọc hiện tại của bạn.
+                    button.btn.btn-sm.btn-secondary(type="button", onclick="resetAllFilters()", style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; cursor: pointer;")
+                      i(data-lucide="rotate-ccw", style="width: 14px; height: 14px;")
+                      | Xóa toàn bộ bộ lọc
+
+        //- Pagination footer
+        if pagination && pagination.totalPages > 1
+          .admin-pagination-wrapper(style="padding: 16px 20px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;")
+            div(style="font-size: 0.78rem; color: var(--text-muted);")
+              | Hiển thị trang 
+              strong(style="color: var(--text-main);")= pagination.page
+              |  / 
+              strong(style="color: var(--text-main);")= pagination.totalPages
+              |  (Tổng cộng #{pagination.total} sản phẩm)
+            include ../../partials/pagination
 
   script.
+    // Vietnamese Tone Stripper for 100% Accurate Accent-Insensitive Search
+    function removeVietnameseTones(str) {
+      if (!str) return '';
+      str = str.toLowerCase();
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+      str = str.replace(/đ/g, 'd');
+      str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, '');
+      str = str.replace(/\u02C6|\u0306|\u031B/g, '');
+      return str.trim();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Real-Time Instant Filtering Engine
+    function applyLiveFilter() {
+      const searchInput = document.getElementById('searchInput');
+      const categorySelect = document.getElementById('categorySelect');
+      const stockSelect = document.getElementById('stockStatusSelect');
+      const visibilitySelect = document.getElementById('visibilitySelect');
+      const sortSelect = document.getElementById('sortSelect');
+      const clearBtn = document.getElementById('searchClearBtn');
+
+      const rawQuery = (searchInput.value || '').trim().toLowerCase();
+      const normQuery = removeVietnameseTones(rawQuery);
+      const selectedCat = (categorySelect.value || '').trim().toLowerCase();
+      const selectedStock = (stockSelect.value || '').trim();
+      const selectedVis = (visibilitySelect.value || '').trim();
+      const selectedSort = (sortSelect.value || 'newest').trim();
+
+      // Show / hide search clear button
+      if (clearBtn) {
+        clearBtn.style.display = rawQuery ? 'block' : 'none';
+      }
+
+      const rows = Array.from(document.querySelectorAll('tr.product-row'));
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const name = (row.dataset.name || '').toLowerCase();
+        const nameNorm = removeVietnameseTones(name);
+        const sku = (row.dataset.id || '').toLowerCase();
+        const searchText = (row.dataset.searchText || '').toLowerCase();
+        const searchNorm = removeVietnameseTones(searchText);
+        
+        const cat = (row.dataset.category || '').toLowerCase();
+        const catSlug = (row.dataset.categorySlug || '').toLowerCase();
+        const stockStatus = row.dataset.stockStatus;
+        const isHidden = row.dataset.isHidden === 'true';
+
+        // 1. Search Query Match (Exact or Accent-insensitive on name, sku, category or full text)
+        let matchSearch = true;
+        if (rawQuery) {
+          matchSearch = sku.includes(rawQuery) || 
+                        name.includes(rawQuery) || 
+                        nameNorm.includes(normQuery) || 
+                        searchText.includes(rawQuery) ||
+                        searchNorm.includes(normQuery);
+        }
+
+        // 2. Category Match
+        let matchCat = true;
+        if (selectedCat) {
+          matchCat = (cat === selectedCat || catSlug === selectedCat);
+        }
+
+        // 3. Stock Status Match
+        let matchStock = true;
+        if (selectedStock) {
+          matchStock = (stockStatus === selectedStock);
+        }
+
+        // 4. Visibility Match (Tất cả / Đang hiển thị / Đã ẩn)
+        let matchVis = true;
+        if (selectedVis === 'visible') {
+          matchVis = !isHidden;
+        } else if (selectedVis === 'hidden') {
+          matchVis = isHidden;
+        }
+
+        const matchesAll = matchSearch && matchCat && matchStock && matchVis;
+        if (matchesAll) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Sort rows in DOM based on selectedSort
+      if (visibleCount > 1) {
+        const tbody = document.querySelector('table.data-table tbody');
+        const sortedRows = rows.slice().sort((a, b) => {
+          if (selectedSort === 'price_asc') {
+            return Number(a.dataset.price) - Number(b.dataset.price);
+          } else if (selectedSort === 'price_desc') {
+            return Number(b.dataset.price) - Number(a.dataset.price);
+          } else if (selectedSort === 'stock_asc') {
+            return Number(a.dataset.stock) - Number(b.dataset.stock);
+          } else if (selectedSort === 'popular') {
+            return Number(b.dataset.sold) - Number(a.dataset.sold);
+          } else { // newest
+            return Number(b.dataset.created) - Number(a.dataset.created);
+          }
+        });
+        sortedRows.forEach(r => tbody.appendChild(r));
+      }
+
+      // Empty state row
+      const emptyRow = document.getElementById('liveEmptyRow');
+      if (emptyRow) {
+        emptyRow.style.display = (visibleCount === 0) ? '' : 'none';
+      }
+
+      // Update Result Counter
+      const counterEl = document.getElementById('liveResultCount');
+      if (counterEl) {
+        counterEl.textContent = `${visibleCount}`;
+      }
+
+      // Update Summary Text
+      const criteriaEl = document.getElementById('liveFilterCriteria');
+      if (criteriaEl) {
+        if (rawQuery || selectedCat || selectedStock || selectedVis) {
+          let criteriaArr = [];
+          if (rawQuery) criteriaArr.push(`Từ khóa "<strong>${escapeHtml(rawQuery)}</strong>"`);
+          if (selectedCat) {
+            const catName = categorySelect.options[categorySelect.selectedIndex]?.text || 'Danh mục';
+            criteriaArr.push(`Danh mục: <strong>${escapeHtml(catName)}</strong>`);
+          }
+          if (selectedStock) {
+            const stockName = stockSelect.options[stockSelect.selectedIndex]?.text || 'Kho';
+            criteriaArr.push(`Kho: <strong>${escapeHtml(stockName)}</strong>`);
+          }
+          if (selectedVis) {
+            criteriaArr.push(selectedVis === 'hidden' ? '<span style="color:#B45309;font-weight:700;">Đã ẩn</span>' : '<span style="color:#047857;font-weight:700;">Đang hiển thị</span>');
+          }
+          criteriaEl.innerHTML = 'Đang lọc theo: ' + criteriaArr.join(' &bull; ');
+        } else {
+          criteriaEl.innerHTML = '<span>Đang hiển thị toàn bộ kho sản phẩm</span>';
+        }
+      }
+
+      // Push state into URL without refreshing page
+      const params = new URLSearchParams();
+      if (rawQuery) params.set('search', rawQuery);
+      if (selectedCat) params.set('category', selectedCat);
+      if (selectedStock) params.set('stockStatus', selectedStock);
+      if (selectedVis) params.set('visibility', selectedVis);
+      if (selectedSort && selectedSort !== 'newest') params.set('sort', selectedSort);
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    // Reset All Filters
+    function resetAllFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categorySelect').value = '';
+      document.getElementById('stockStatusSelect').value = '';
+      document.getElementById('visibilitySelect').value = '';
+      document.getElementById('sortSelect').value = 'newest';
+      applyLiveFilter();
+    }
+
+    // Toggle Product Visibility (Ẩn / Hiện) with Instant Visual Feedback
+    async function toggleVisibility(id) {
+      const row = document.getElementById(`row-${id}`);
+      const btn = document.getElementById(`btn-toggle-hidden-${id}`);
+      const badge = document.getElementById(`badge-hidden-${id}`);
+      if (!btn) return;
+
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+
+      try {
+        const res = await fetch(`/api/products/${id}/toggle-visibility`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+
+        if (data.success && data.data) {
+          const isHidden = data.data.isHidden === true;
+          
+          // Update Row Dataset & Appearance
+          if (row) {
+            row.dataset.isHidden = isHidden ? 'true' : 'false';
+            if (isHidden) {
+              row.style.background = '#FFFDF7';
+              row.style.opacity = '0.82';
+            } else {
+              row.style.background = '';
+              row.style.opacity = '1';
+            }
+          }
+
+          // Update Status Badge
+          if (badge) {
+            badge.style.display = isHidden ? 'inline-flex' : 'none';
+          }
+
+          // Update Button Styling & Icon
+          btn.dataset.hidden = isHidden ? 'true' : 'false';
+          btn.title = isHidden ? 'Bật hiển thị lại trên website' : 'Ẩn sản phẩm này khỏi website (tạm ngưng bán)';
+          if (isHidden) {
+            btn.style.background = '#FEF3C7';
+            btn.style.color = '#92400E';
+            btn.style.borderColor = '#FDE68A';
+            btn.innerHTML = `<i data-lucide="eye" style="width: 13px; height: 13px;"></i>`;
+          } else {
+            btn.style.background = '#F1F5F9';
+            btn.style.color = '#475569';
+            btn.style.borderColor = '#E2E8F0';
+            btn.innerHTML = `<i data-lucide="eye-off" style="width: 13px; height: 13px;"></i>`;
+          }
+
+          if (window.lucide) {
+            window.lucide.createIcons();
+          }
+
+          showToast(data.message, 'success');
+
+          // Refresh Top KPI Counters
+          updateKpiCounters();
+
+          // Re-evaluate live filter in case user is viewing filtered state
+          applyLiveFilter();
+        } else {
+          showToast(data.message || 'Lỗi khi cập nhật trạng thái ẩn', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }
+    }
+
+    // Refresh KPI Counter Cards in DOM
+    function updateKpiCounters() {
+      const allRows = document.querySelectorAll('tr.product-row');
+      let hiddenCount = 0;
+      allRows.forEach(r => {
+        if (r.dataset.isHidden === 'true') hiddenCount++;
+      });
+      const activeCount = allRows.length - hiddenCount;
+
+      const hiddenKpi = document.getElementById('kpiHiddenCount');
+      if (hiddenKpi) hiddenKpi.textContent = `${hiddenCount} Mẫu`;
+
+      const activeKpi = document.getElementById('kpiActiveCount');
+      if (activeKpi) activeKpi.textContent = `${activeCount} Mẫu`;
+    }
+
+    // Delete Product
     async function deleteProduct(id, name) {
-      if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${name}" không? Thao tác này không thể hoàn tác.`)) {
+      if (!confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm: "${name}" không?\n\nThao tác này sẽ xóa sản phẩm khỏi kho và không thể hoàn tác.`)) {
         return;
       }
 
@@ -126,7 +612,10 @@ block content
         const data = await res.json();
         if (data.success) {
           showToast('Xóa sản phẩm thành công!', 'success');
-          setTimeout(() => location.reload(), 800);
+          const row = document.getElementById(`row-${id}`);
+          if (row) row.remove();
+          updateKpiCounters();
+          applyLiveFilter();
         } else {
           showToast(data.message || 'Lỗi khi xóa sản phẩm', 'error');
         }
@@ -134,3 +623,40 @@ block content
         showToast('Có lỗi kết nối máy chủ', 'error');
       }
     }
+
+    // Attach Event Listeners on DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchInput');
+      const categorySelect = document.getElementById('categorySelect');
+      const stockSelect = document.getElementById('stockStatusSelect');
+      const visibilitySelect = document.getElementById('visibilitySelect');
+      const sortSelect = document.getElementById('sortSelect');
+      const clearBtn = document.getElementById('searchClearBtn');
+
+      // Instant live search typing
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          applyLiveFilter();
+        });
+        searchInput.addEventListener('keyup', () => {
+          applyLiveFilter();
+        });
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          searchInput.focus();
+          applyLiveFilter();
+        });
+      }
+
+      // Instant dropdown changes
+      if (categorySelect) categorySelect.addEventListener('change', applyLiveFilter);
+      if (stockSelect) stockSelect.addEventListener('change', applyLiveFilter);
+      if (visibilitySelect) visibilitySelect.addEventListener('change', applyLiveFilter);
+      if (sortSelect) sortSelect.addEventListener('change', applyLiveFilter);
+
+      // Initial filter apply if URL contains params
+      applyLiveFilter();
+    });

@@ -1,64 +1,243 @@
 extends ../../layouts/main
 
 block content
+  script(src="/js/chart.min.js")
+  
   .admin-layout
-    //- Admin Sidebar
-    aside.admin-sidebar
-      .admin-nav
-        a.active(href="/admin")
-          i(data-lucide="layout-dashboard", style="width: 18px; height: 18px;")
-          | Bảng Điều Khiển
-        a(href="/admin/products")
-          i(data-lucide="package", style="width: 18px; height: 18px;")
-          | Quản Lý Sản Phẩm
-        a(href="/admin/categories")
-          i(data-lucide="folder-tree", style="width: 18px; height: 18px;")
-          | Quản Lý Danh Mục
-        a(href="/admin/orders")
-          i(data-lucide="shopping-cart", style="width: 18px; height: 18px;")
-          | Quản Lý Đơn Hàng
-        a(href="/admin/users")
-          i(data-lucide="users", style="width: 18px; height: 18px;")
-          | Quản Lý Người Dùng
-        hr(style="border-color: #1F242C; margin: 16px 0;")
-        a(href="/")
-          i(data-lucide="external-link", style="width: 18px; height: 18px;")
-          | Xem Website
-        a(href="/logout", style="color: var(--accent-coral);")
-          i(data-lucide="log-out", style="width: 18px; height: 18px;")
-          | Đăng Xuất
+    //- Admin Sidebar Navigation
+    include ../../partials/admin-sidebar
 
-    //- Main Admin Content
-    main.admin-content
-      .admin-header(style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;")
+    //- Main Admin Analytics Content
+    main.admin-content(style="padding-bottom: 60px;")
+      
+      //- Clean Human-Crafted Admin Page Header
+      .admin-page-header
         div
-          h1(style="font-size: 1.875rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;") Bảng Điều Khiển Quản Trị
-          p(style="color: var(--text-muted); font-size: 0.9375rem;") Tổng quan số liệu kinh doanh và tình trạng vận hành hệ thống Atelier.
-        a.btn.btn-primary(href="/admin/products/new")
-          i(data-lucide="plus", style="width: 18px; height: 18px;")
-          | Thêm Sản Phẩm Mới
+          .breadcrumb-trail
+            span Atelier System
+            span.breadcrumb-separator /
+            span.current Tổng quan kinh doanh
+          h1(style="font-size: 1.625rem; font-weight: 800; color: var(--text-main); margin: 0; letter-spacing: -0.02em;") Bảng Điều Khiển Quản Trị
+          p(style="color: var(--text-muted); font-size: 0.8125rem; margin: 4px 0 0;") Số liệu doanh số và tình trạng vận hành hệ thống Atelier.
+        
+        .header-actions-group
+          .date-filter-chip
+            i(data-lucide="calendar", style="width: 14px; height: 14px; color: var(--text-muted);")
+            span 7 ngày gần nhất
+          
+          a.btn.btn-sm.btn-secondary(href="/admin/orders", style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.8125rem; font-weight: 600; border-radius: var(--radius-sm);")
+            i(data-lucide="shopping-cart", style="width: 14px; height: 14px;")
+            | Quản Lý Đơn Hàng
 
-      //- 4 KPI CARDS
-      .kpi-grid
-        .kpi-card
-          .kpi-label Tổng Doanh Thu
-          .kpi-value(style="color: var(--accent-emerald);")
+          a.btn.btn-sm(href="/admin/products/new", style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 0.8125rem; font-weight: 700; background: #0F172A; color: #FFFFFF; border-radius: var(--radius-sm); transition: background 0.2s;")
+            i(data-lucide="plus", style="width: 15px; height: 15px; color: var(--accent-gold);")
+            | Thêm Sản Phẩm Mới
+
+      //- 1. ROW 1: 4 CORE KPI CARDS
+      .kpi-grid-premium
+        //- KPI 1: Doanh Thu Thuần
+        .kpi-card-premium(style="--card-accent: #D97706; --icon-bg: #FEF3C7; --icon-color: #D97706;")
+          .kpi-header-row
+            .kpi-icon-wrap
+              i(data-lucide="wallet", style="width: 22px; height: 22px;")
+            span.kpi-trend-pill.trend-up
+              i(data-lucide="check-circle", style="width: 12px; height: 12px;")
+              | #{stats.validOrdersCount} Đơn Hợp Lệ
+          .kpi-title-sub Tổng Doanh Thu Thuần
+          .kpi-main-number(style="color: #B45309;")
             = new Intl.NumberFormat('vi-VN').format(stats.totalRevenue) + 'đ'
-        .kpi-card
-          .kpi-label Tổng Đơn Hàng
-          .kpi-value= stats.totalOrders
-        .kpi-card
-          .kpi-label Đơn Chờ Xác Nhận
-          .kpi-value(style="color: var(--accent-gold);")= stats.pendingOrders
-        .kpi-card
-          .kpi-label Sản Phẩm Phụ Kiện
-          .kpi-value= stats.totalProducts
+          .kpi-footnote
+            | Đã trừ #{stats.cancelledOrders} đơn hủy &bull; Hoàn tất #{stats.completedOrders} đơn
 
-      //- RECENT ORDERS TABLE
-      .admin-card
-        .card-header(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;")
-          h3(style="font-size: 1.125rem; font-weight: 700;") Đơn Hàng Mới Nhất
-          a.btn.btn-sm.btn-secondary(href="/admin/orders") Xem Tất Cả Đơn &rarr;
+        //- KPI 2: Tổng Đơn Hàng
+        .kpi-card-premium(style="--card-accent: #2563EB; --icon-bg: #EFF6FF; --icon-color: #1D4ED8;")
+          .kpi-header-row
+            .kpi-icon-wrap
+              i(data-lucide="shopping-bag", style="width: 22px; height: 22px;")
+            span.kpi-trend-pill.trend-neutral
+              | Giao đạt #{stats.fulfillmentRate}%
+          .kpi-title-sub Tổng Đơn Hàng Ghi Nhận
+          .kpi-main-number= `${stats.totalOrders} Đơn`
+          .kpi-footnote
+            strong(style="color: #D97706;")= `${stats.pendingOrders} Chờ duyệt`
+            |  &bull; #{stats.shippingOrders} Đang giao &bull; #{stats.completedOrders} Hoàn thành
+
+        //- KPI 3: Giá Trị Đơn Trung Bình (AOV)
+        .kpi-card-premium(style="--card-accent: #059669; --icon-bg: #ECFDF5; --icon-color: #047857;")
+          .kpi-header-row
+            .kpi-icon-wrap
+              i(data-lucide="pie-chart", style="width: 22px; height: 22px;")
+            span.kpi-trend-pill.trend-up
+              | TB #{stats.avgItemsPerOrder} món / đơn
+          .kpi-title-sub Giá Trị Đơn Trung Bình (AOV)
+          .kpi-main-number(style="color: #047857;")
+            = new Intl.NumberFormat('vi-VN').format(stats.aov) + 'đ'
+          .kpi-footnote
+            | Đã bán #{stats.totalItemsSold} phụ kiện &bull; TB #{stats.avgItemsPerOrder} món/đơn
+
+        //- KPI 4: Cảnh Báo Tồn Kho & Sản Phẩm
+        .kpi-card-premium(style="--card-accent: #DC2626; --icon-bg: #FEF2F2; --icon-color: #B91C1C;")
+          .kpi-header-row
+            .kpi-icon-wrap
+              i(data-lucide="layers", style="width: 22px; height: 22px;")
+            if stats.lowStockCount > 0
+              span.kpi-trend-pill.trend-danger
+                i(data-lucide="alert-triangle", style="width: 12px; height: 12px;")
+                | #{stats.lowStockCount} mẫu sắp hết
+            else
+              span.kpi-trend-pill.trend-up
+                | Tồn kho an toàn
+          .kpi-title-sub Kho Hàng Phụ Kiện
+          .kpi-main-number= `${stats.totalStock} Chiếc`
+          .kpi-footnote
+            | #{stats.totalProducts} Mẫu phụ kiện &bull; #{stats.totalCustomers} Khách hàng thân thiết
+
+      //- 2. ROW 2: PRIMARY CHARTS (Timeline Revenue Area Chart + Category Doughnut Chart)
+      .charts-grid-row
+        //- Chart 1: Doanh Thu & Đơn Hàng Theo Ngày (Spline Area Chart)
+        .chart-card-box
+          .chart-card-header
+            div
+              h3.chart-card-title
+                i(data-lucide="activity", style="width: 18px; height: 18px; color: #D97706;")
+                | Doanh Thu &amp; Đơn Hàng Theo Ngày
+              p(style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0;") Dòng tiền bán hàng thực tế đã trừ đơn hủy.
+            .chart-legend-badge
+              span(style="display: inline-block; width: 10px; height: 10px; background: #D97706; border-radius: 50%; margin-right: 5px;")
+              | Doanh Thu (VNĐ) &bull; 
+              span(style="display: inline-block; width: 10px; height: 10px; background: #2563EB; border-radius: 50%; margin-right: 5px; margin-left: 8px;")
+              | Số Đơn
+          
+          div(style="position: relative; height: 320px; width: 100%;")
+            canvas#revenueTimelineChart
+
+        //- Chart 2: Cơ Cấu Doanh Thu Theo Danh Mục (Doughnut Chart)
+        .chart-card-box
+          .chart-card-header
+            div
+              h3.chart-card-title
+                i(data-lucide="pie-chart", style="width: 18px; height: 18px; color: #2563EB;")
+                | Doanh Thu Theo Danh Mục
+              p(style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0;") Tỷ trọng đóng góp của 6 dòng sản phẩm phụ kiện.
+            span.badge.badge-new 6 Danh Mục
+          
+          div(style="position: relative; height: 260px; width: 100%;")
+            canvas#categoryRevenueChart
+          
+          .cat-quick-summary(style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border-subtle); font-size: 0.75rem; color: var(--text-muted); text-align: center;")
+            | Nhấp vào từng phần để xem chi tiết doanh thu.
+
+      //- 3. ROW 3: SECONDARY CHARTS (Order Status Pipeline + Payment Gateways)
+      .charts-grid-halves
+        //- Chart 3: Trạng Thái Đơn Hàng (Bar Chart)
+        .chart-card-box
+          .chart-card-header
+            div
+              h3.chart-card-title
+                i(data-lucide="git-commit", style="width: 18px; height: 18px; color: #059669;")
+                | Tiến Độ Xử Lý Đơn Hàng
+              p(style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0;") Phân bổ các giai đoạn từ tiếp nhận đến hoàn tất.
+            span.chart-legend-badge= `Tổng ${stats.totalOrders} đơn`
+          
+          div(style="position: relative; height: 220px; width: 100%;")
+            canvas#orderStatusChart
+
+          .order-status-pills(style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle);")
+            span.badge.badge-soft-amber= `Chờ duyệt: ${stats.pendingOrders}`
+            span.badge.badge-soft-blue= `Đã xác nhận: ${stats.confirmedOrders}`
+            span.badge.badge-soft-blue= `Đang giao: ${stats.shippingOrders}`
+            span.badge.badge-soft-green= `Hoàn thành: ${stats.completedOrders}`
+            span.badge.badge-soft-red= `Đã hủy: ${stats.cancelledOrders}`
+
+        //- Chart 4: Phương Thức Thanh Toán (Doughnut Chart)
+        .chart-card-box
+          .chart-card-header
+            div
+              h3.chart-card-title
+                i(data-lucide="credit-card", style="width: 18px; height: 18px; color: #7C3AED;")
+                | Cổng Thanh Toán Trực Tuyến
+              p(style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0;") Tỷ lệ tiền mặt COD vs thanh toán điện tử.
+            span.badge.badge-new 4 Cổng
+          
+          div(style="position: relative; height: 220px; width: 100%;")
+            canvas#paymentMethodChart
+
+          .payment-pills(style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle); font-size: 0.75rem;")
+            each pVal, pKey in analytics.paymentMap
+              span(style=`display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; background: ${pVal.color}15; color: ${pVal.color}; font-weight: 700; border: 1px solid ${pVal.color}30;`)
+                = `${pVal.label}: ${pVal.count} đơn (${new Intl.NumberFormat('vi-VN').format(pVal.amount)}đ)`
+
+      //- 4. ROW 4: ACTIONABLE TABLES (Top-Selling Products + Low Stock Watchlist)
+      .charts-grid-row(style="grid-template-columns: 1.25fr 1fr;")
+        //- Bảng 1: Top 5 Sản Phẩm Bán Chạy Nhất (Bestsellers)
+        .admin-card(style="margin-bottom: 0;")
+          .card-header(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);")
+            div
+              h3(style="font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;")
+                i(data-lucide="award", style="width: 18px; height: 18px; color: #D97706;")
+                | Top Phụ Kiện Bán Chạy Nhất
+              p(style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0;") Xếp hạng theo số lượng phụ kiện thực tế đã bán ra.
+            a.btn.btn-sm.btn-secondary(href="/admin/products") Xem Kho Hàng &rarr;
+          
+          .ranking-list(style="display: flex; flex-direction: column;")
+            each prod, idx in topProducts
+              .ranking-item-row
+                .ranking-medal(class=(idx === 0 ? 'medal-1' : (idx === 1 ? 'medal-2' : (idx === 2 ? 'medal-3' : 'medal-default'))))
+                  = idx + 1
+                img(src=prod.image, alt=prod.name, style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-subtle); flex-shrink: 0;")
+                div(style="flex: 1; min-width: 0;")
+                  strong(style="font-size: 0.85rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-main);")
+                    = prod.name
+                  div(style="display: flex; gap: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;")
+                    span.badge.badge-soft-blue(style="font-size: 0.68rem; padding: 1px 6px;")= prod.categoryName
+                    span= `Giá: ${new Intl.NumberFormat('vi-VN').format(prod.price)}đ`
+                div(style="text-align: right; flex-shrink: 0;")
+                  strong(style="font-size: 0.92rem; color: var(--accent-coral); display: block;")
+                    = `${prod.quantitySold} đã bán`
+                  span(style="font-size: 0.72rem; color: var(--text-muted);")
+                    = `Thu: ${new Intl.NumberFormat('vi-VN').format(prod.totalRevenue)}đ`
+
+        //- Bảng 2: Cảnh Báo Tồn Kho Sắp Hết (Inventory Watchlist)
+        .admin-card(style="margin-bottom: 0;")
+          .card-header(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);")
+            div
+              h3(style="font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;")
+                i(data-lucide="alert-triangle", style="width: 18px; height: 18px; color: #DC2626;")
+                | Cảnh Báo Tồn Kho Thấp
+              p(style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0;") Danh sách các mẫu sắp hết hàng cần bổ sung kho.
+            span.badge(class=(stats.lowStockCount > 0 ? 'badge-soft-red' : 'badge-soft-green'))
+              = `${stats.lowStockCount} mẫu cần chú ý`
+          
+          .inventory-list(style="display: flex; flex-direction: column; gap: 14px;")
+            each item in inventoryWatchlist
+              .inventory-item(style="padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);")
+                .inv-info-row(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;")
+                  div(style="display: flex; align-items: center; gap: 10px;")
+                    img(src=item.image, alt=item.name, style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover; flex-shrink: 0;")
+                    div
+                      strong(style="font-size: 0.82rem; color: var(--text-main); display: block; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;")
+                        = item.name
+                      span(style="font-size: 0.72rem; color: var(--text-muted);")= item.categoryName
+                  div(style="text-align: right;")
+                    span.badge(class=item.badgeClass, style="font-size: 0.7rem;")
+                      = `Còn ${item.stock} chiếc`
+                
+                .inventory-progress-track
+                  - var pct = Math.min(100, Math.round((item.stock / 60) * 100))
+                  .inventory-progress-bar(
+                    style=`width: ${pct}%; background: ${item.stock <= 25 ? '#EF4444' : (item.stock <= 35 ? '#F59E0B' : '#10B981')};`
+                  )
+
+      //- 5. ROW 5: RECENT ORDERS TABLE STREAM
+      .admin-card(style="margin-top: 28px;")
+        .card-header(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;")
+          div
+            h3(style="font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;")
+              i(data-lucide="clock", style="width: 20px; height: 20px; color: var(--accent-gold);")
+              | Đơn Hàng Mới Nhất Trên Hệ Thống
+            p(style="font-size: 0.8rem; color: var(--text-muted); margin: 3px 0 0;") Danh sách các giao dịch phát sinh gần đây nhất từ khách hàng.
+          a.btn.btn-sm.btn-secondary(href="/admin/orders", style="display: inline-flex; align-items: center; gap: 6px;")
+            | Xem Toàn Bộ #{stats.totalOrders} Đơn Hàng &rarr;
 
         .table-responsive
           table.data-table
@@ -66,7 +245,9 @@ block content
               tr
                 th Mã Đơn
                 th Khách Hàng
+                th Phụ Kiện Đặt Mua
                 th Ngày Đặt
+                th Phương Thức
                 th Tổng Tiền
                 th Trạng Thái
                 th Thao Tác
@@ -74,12 +255,38 @@ block content
               if recentOrders && recentOrders.length
                 each ord in recentOrders
                   tr
-                    td: strong= ord.orderCode
                     td
-                      div(style="font-weight: 600;")= ord.customerName
+                      strong(style="color: var(--text-main); font-family: monospace; font-size: 0.85rem;")= ord.orderCode
+                    td
+                      div(style="font-weight: 700; color: var(--text-main); font-size: 0.875rem;")= ord.customerName
                       div(style="font-size: 0.75rem; color: var(--text-muted);")= ord.customerPhone
-                    td= new Date(ord.createdAt).toLocaleDateString('vi-VN')
-                    td: strong(style="color: var(--accent-coral);")= new Intl.NumberFormat('vi-VN').format(ord.totalAmount) + 'đ'
+                    td
+                      div(style="font-size: 0.8125rem; color: var(--text-main); max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;")
+                        if ord.items && ord.items.length
+                          strong= ord.items[0].productName
+                          if ord.items.length > 1
+                            span(style="color: var(--accent-gold); font-size: 0.72rem; margin-left: 4px;")= `(+${ord.items.length - 1} món khác)`
+                        else
+                          span(style="color: var(--text-muted);") Không có chi tiết
+                    td
+                      span(style="font-size: 0.8125rem; color: var(--text-muted);")
+                        = new Date(ord.createdAt).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                    td
+                      if ord.paymentMethod === 'vnpay'
+                        span(style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;")
+                          | VNPAY
+                      else if ord.paymentMethod === 'momo'
+                        span(style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; background: #FDF2F8; color: #BE185D; border: 1px solid #FBCFE8;")
+                          | MoMo
+                      else if ord.paymentMethod === 'bank_transfer'
+                        span(style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A;")
+                          | Chuyển Khoản
+                      else
+                        span(style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE;")
+                          | Tiền Mặt COD
+                    td
+                      strong(style="color: var(--accent-coral); font-size: 0.95rem;")
+                        = new Intl.NumberFormat('vi-VN').format(ord.totalAmount) + 'đ'
                     td
                       if ord.orderStatus === 'pending'
                         span.badge.badge-soft-amber Chờ xác nhận
@@ -92,7 +299,258 @@ block content
                       else if ord.orderStatus === 'cancelled'
                         span.badge.badge-soft-red Đã hủy
                     td
-                      a.btn.btn-sm.btn-secondary(href="/admin/orders") Chi tiết
+                      a.btn.btn-sm.btn-secondary(href="/admin/orders", style="font-size: 0.75rem; padding: 5px 12px;") Chi tiết
               else
                 tr
-                  td(colspan="6", style="text-align: center; color: var(--text-muted); padding: 30px;") Chưa có đơn hàng nào.
+                  td(colspan="8", style="text-align: center; color: var(--text-muted); padding: 40px;") Chưa có đơn hàng nào phát sinh.
+
+  //- Chart.js Initialization Script with Real Backend Analytics
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // Common typography and formatting for Chart.js
+      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+      Chart.defaults.color = '#64748B';
+
+      // 1. BIỂU ĐỒ 1: DOANH THU & ĐƠN HÀNG THEO THỜI GIAN (AREA + LINE)
+      const timelineLabels = !{analytics.timelineLabels};
+      const timelineRevenue = !{analytics.timelineRevenue};
+      const timelineOrders = !{analytics.timelineOrders};
+
+      const ctxRev = document.getElementById('revenueTimelineChart').getContext('2d');
+      const gradientRev = ctxRev.createLinearGradient(0, 0, 0, 300);
+      gradientRev.addColorStop(0, 'rgba(217, 119, 6, 0.28)');
+      gradientRev.addColorStop(1, 'rgba(217, 119, 6, 0.01)');
+
+      new Chart(ctxRev, {
+        type: 'line',
+        data: {
+          labels: timelineLabels,
+          datasets: [
+            {
+              label: 'Doanh Thu (VNĐ)',
+              data: timelineRevenue,
+              borderColor: '#D97706',
+              backgroundColor: gradientRev,
+              fill: true,
+              tension: 0.38,
+              borderWidth: 3,
+              pointBackgroundColor: '#FFFFFF',
+              pointBorderColor: '#D97706',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              yAxisID: 'yRevenue',
+              isCurrency: true
+            },
+            {
+              label: 'Số Đơn Hàng',
+              data: timelineOrders,
+              borderColor: '#2563EB',
+              backgroundColor: 'transparent',
+              borderDash: [5, 5],
+              tension: 0.3,
+              borderWidth: 2,
+              pointBackgroundColor: '#2563EB',
+              pointRadius: 4,
+              yAxisID: 'yOrders',
+              isCurrency: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#0F172A',
+              titleFont: { size: 12, weight: 'bold' },
+              bodyFont: { size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              callbacks: {
+                label: function(ctx) {
+                  const val = ctx.raw || 0;
+                  if (ctx.dataset.isCurrency) {
+                    return ' Doanh thu: ' + Number(val).toLocaleString('vi-VN') + 'đ';
+                  }
+                  return ' Đơn hàng: ' + val + ' đơn';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: '600' } }
+            },
+            yRevenue: {
+              type: 'linear',
+              position: 'left',
+              grid: { color: 'rgba(226, 232, 240, 0.6)' },
+              ticks: {
+                callback: function(v) {
+                  return (v >= 1000000 ? (v / 1000000) + 'M' : (v / 1000) + 'K') + 'đ';
+                },
+                font: { size: 10 }
+              }
+            },
+            yOrders: {
+              type: 'linear',
+              position: 'right',
+              grid: { display: false },
+              ticks: {
+                stepSize: 1,
+                font: { size: 10 }
+              }
+            }
+          }
+        }
+      });
+
+      // 2. BIỂU ĐỒ 2: CƠ CẤU DOANH THU THEO DANH MỤC (DOUGHNUT)
+      const categoryLabels = !{analytics.categoryLabels};
+      const categoryRevenues = !{analytics.categoryRevenues};
+      const categoryColors = !{analytics.categoryColors};
+
+      const ctxCat = document.getElementById('categoryRevenueChart').getContext('2d');
+      new Chart(ctxCat, {
+        type: 'doughnut',
+        data: {
+          labels: categoryLabels,
+          datasets: [{
+            data: categoryRevenues,
+            backgroundColor: categoryColors,
+            borderWidth: 2,
+            borderColor: '#FFFFFF',
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '68%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 12,
+                padding: 12,
+                font: { size: 11, weight: '600' }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0F172A',
+              padding: 12,
+              cornerRadius: 8,
+              callbacks: {
+                label: function(ctx) {
+                  const val = ctx.raw || 0;
+                  const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                  const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                  return ' ' + ctx.label + ': ' + Number(val).toLocaleString('vi-VN') + 'đ (' + pct + '%)';
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // 3. BIỂU ĐỒ 3: TRẠNG THÁI ĐƠN HÀNG (HORIZONTAL BAR)
+      const statusLabels = !{analytics.orderStatusLabels};
+      const statusCounts = !{analytics.orderStatusCounts};
+      const statusColors = !{analytics.orderStatusColors};
+
+      const ctxStatus = document.getElementById('orderStatusChart').getContext('2d');
+      new Chart(ctxStatus, {
+        type: 'bar',
+        data: {
+          labels: statusLabels,
+          datasets: [{
+            data: statusCounts,
+            backgroundColor: statusColors,
+            borderRadius: 6,
+            barThickness: 18
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0F172A',
+              padding: 10,
+              cornerRadius: 6,
+              callbacks: {
+                label: function(ctx) {
+                  return ' ' + ctx.raw + ' đơn hàng';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(226, 232, 240, 0.6)' },
+              ticks: { stepSize: 1, font: { size: 11 } }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: '600' } }
+            }
+          }
+        }
+      });
+
+      // 4. BIỂU ĐỒ 4: PHƯƠNG THỨC THANH TOÁN (DOUGHNUT)
+      const payLabels = !{analytics.paymentLabels};
+      const payCounts = !{analytics.paymentCounts};
+      const payColors = !{analytics.paymentColors};
+
+      const ctxPay = document.getElementById('paymentMethodChart').getContext('2d');
+      new Chart(ctxPay, {
+        type: 'doughnut',
+        data: {
+          labels: payLabels,
+          datasets: [{
+            data: payCounts,
+            backgroundColor: payColors,
+            borderWidth: 2,
+            borderColor: '#FFFFFF',
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 10,
+                padding: 10,
+                font: { size: 11, weight: '600' }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0F172A',
+              padding: 10,
+              cornerRadius: 6,
+              callbacks: {
+                label: function(ctx) {
+                  return ' ' + ctx.label + ': ' + ctx.raw + ' đơn hàng';
+                }
+              }
+            }
+          }
+        }
+      });
+    });

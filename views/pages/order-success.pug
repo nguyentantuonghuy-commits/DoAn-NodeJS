@@ -28,6 +28,28 @@ block content
             span(style="color: var(--text-muted);") Tổng thanh toán:
             strong(style="color: var(--accent-coral); font-size: 1.125rem;")= new Intl.NumberFormat('vi-VN').format(order.totalAmount) + 'đ'
 
-      .actions-row(style="display: flex; gap: 14px; justify-content: center;")
+      if !currentUser
+        .member-invite-box(style="background: linear-gradient(135deg, #FAF8F5 0%, #F5EFEB 100%); border: 1px dashed var(--accent-gold); border-radius: var(--radius-md); padding: 22px; margin-bottom: 26px; text-align: left;")
+          .invite-header(style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;")
+            i(data-lucide="gift", style="width: 20px; height: 20px; color: var(--accent-gold);")
+            strong(style="font-size: 1rem; color: var(--text-main);") Kích hoạt tài khoản thành viên Atelier Club
+          p(style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;")
+            | Lưu thông tin đơn hàng này vào tài khoản cá nhân, tích điểm thăng hạng VIP và nhận ngay voucher 
+            strong(style="color: var(--accent-coral);") 100.000đ (Mã: ATELIER100)
+            |  cho đơn hàng kế tiếp từ 399.000đ!
+          .invite-actions(style="display: flex; gap: 10px; flex-wrap: wrap;")
+            - const regParams = order ? `name=${encodeURIComponent(order.customerName)}&email=${encodeURIComponent(order.customerEmail || '')}&phone=${encodeURIComponent(order.customerPhone)}&address=${encodeURIComponent(order.shippingAddress)}` : ''
+            a.btn.btn-sm.btn-primary(href=`/register?${regParams}`, style="background: var(--text-main); border-color: var(--text-main);")
+              i(data-lucide="user-plus", style="width: 15px; height: 15px;")
+              | Tạo Tài Khoản Nhanh
+            if order
+              a.btn.btn-sm.btn-outline(href=`/track-order?code=${order.orderCode}`)
+                i(data-lucide="map-pin", style="width: 15px; height: 15px;")
+                | Theo Dõi Tiến Trình Đơn
+
+      .actions-row(style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;")
         a.btn.btn-primary(href="/shop") Tiếp Tục Mua Sắm
-        a.btn.btn-secondary(href="/profile") Quản Lý Đơn Hàng
+        if currentUser
+          a.btn.btn-secondary(href="/profile") Quản Lý Đơn Hàng
+        else if order
+          a.btn.btn-secondary(href=`/track-order?code=${order.orderCode}`) Tra Cứu Đơn Hàng

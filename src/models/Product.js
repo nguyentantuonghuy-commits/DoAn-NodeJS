@@ -14,6 +14,17 @@ const specSchema = new mongoose.Schema({
   warranty: { type: String, default: '12 tháng chính hãng' }
 }, { _id: false });
 
+const variantSchema = new mongoose.Schema({
+  id: String,
+  name: { type: String, required: true },
+  color: { type: String, default: '' },
+  price: { type: Number, required: true, min: 0 },
+  originalPrice: { type: Number, default: 0 },
+  stock: { type: Number, default: 0, min: 0 },
+  sku: String,
+  image: String
+}, { _id: false });
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -54,6 +65,11 @@ const productSchema = new mongoose.Schema({
     min: [0, 'Tồn kho không được âm'],
     default: 20
   },
+  hasVariants: {
+    type: Boolean,
+    default: false
+  },
+  variants: [variantSchema],
   colors: [colorSchema],
   images: [{
     type: String,
@@ -87,6 +103,10 @@ const productSchema = new mongoose.Schema({
     default: false
   },
   isSale: {
+    type: Boolean,
+    default: false
+  },
+  isHidden: {
     type: Boolean,
     default: false
   },
